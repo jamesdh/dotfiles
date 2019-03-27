@@ -1,0 +1,5 @@
+- hosts: localhost
+  connection: local
+  roles:
+      - { role: ssh, tags: ['ssh']}
+      - { role: osx, tags: ['osx']}

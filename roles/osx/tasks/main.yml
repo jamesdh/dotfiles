@@ -1,0 +1,5 @@
+- name: Install applications
+  import_tasks: apps.yml
+
+- name: Configure OS settings
+  import_tasks: settings.yml

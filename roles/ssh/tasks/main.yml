@@ -1,0 +1,26 @@
+
+- name: Setup SSH dir
+  file: 
+    path: '{{ ssh_dir }}'
+    mode: 0700
+    state: directory
+
+- name: Setup SSH Config
+  copy: 
+    content: '{{ ssh_config }}'
+    dest: '{{ ssh_dir }}/config'
+    mode: 0600
+
+- name: Retrieve Private Keys
+  copy: 
+    content: "{{ lookup('lastpass', 'Key:' + item, field='Private Key') }}"
+    dest: '{{ ssh_dir }}/{{ item }}' 
+    mode: 0600
+  loop: '{{ ssh_keys }}'
+
+- name: Retrieve Public Keys
+  copy: 
+    content: "{{ lookup('lastpass', 'Key:' + item, field='Public Key') }}"
+    dest: '{{ ssh_dir }}/{{ item }}.pub' 
+    mode: 0644
+  loop: '{{ ssh_keys }}'

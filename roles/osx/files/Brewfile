@@ -1,0 +1,106 @@
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/cask-drivers"
+tap "homebrew/cask-versions"
+tap "homebrew/core"
+tap "wagoodman/dive"
+brew "ansible"
+brew "awk"
+brew "aws-shell"
+brew "awscli"
+brew "bash"
+brew "bash-completion"
+brew "bat"
+brew "brew-cask-completion"
+brew "direnv"
+brew "elixir"
+brew "enca"
+brew "exiftool"
+brew "fio"
+brew "git"
+brew "gnu-sed"
+brew "ioping"
+brew "jq"
+brew "lastpass-cli"
+brew "mas"
+brew "node"
+brew "nativefier"
+brew "nvm"
+brew "p7zip"
+brew "pyenv"
+brew "pyenv-virtualenv"
+brew "ruby", link: true
+brew "s3cmd"
+brew "wget"
+brew "yarn", args: ["without-node"]
+brew "youtube-dl"
+brew "wagoodman/dive/dive"
+cask "1password"
+cask "adobe-dng-converter"
+cask "astah-community"
+cask "atom"
+cask "authy"
+cask "bartender"
+cask "caffeine"
+cask "contexts"
+cask "dash"
+cask "dbeaver-community"
+cask "docker"
+cask "dropbox"
+cask "expressvpn"
+cask "firefox"
+cask "flume"
+cask "google-chrome"
+cask "icloud-control"
+cask "intellij-idea"
+cask "iterm2"
+cask "java8"
+cask "kitematic"
+cask "luna-display"
+cask "lunchy"
+cask "messenger"
+cask "namebench"
+cask "p4merge"
+cask "postman"
+cask "pycharm"
+cask "quik"
+cask "rawtherapee"
+cask "selfcontrol"
+cask "sketch"
+cask "skype"
+cask "spotify"
+cask "timing"
+cask "transmission"
+cask "vagrant"
+cask "virtualbox"
+cask "viscosity"
+cask "visual-studio-code"
+cask "vlc"
+cask "vmware-fusion"
+cask "whatsapp"
+cask "zeplin"
+mas "Airmail", id: 918858936
+mas "Be Focused Pro", id: 961632517
+mas "CopyClip", id: 595191960
+mas "Countdowns", id: 926707738
+mas "DaisyDisk", id: 411643860
+mas "DayOne", id: 1055511498
+mas "Display Maid", id: 450063525
+mas "Divvy", id: 413857545
+mas "Fantastical 2", id: 975937182
+mas "GIPHY", id: 668208984
+mas "Helium", id: 1054607607
+mas "LastPass", id: 926036361
+mas "LittleIpsum", id: 405772121
+mas "Monity", id: 915542151
+mas "Notability", id: 736189492
+mas "Pixelmator", id: 407963104
+mas "Pocket", id: 568494494
+mas "Shush", id: 496437906
+mas "Slack", id: 803453959
+mas "The Unarchiver", id: 425424353
+mas "Tomato One", id: 907364780
+mas "Trello", id: 1278508951
+mas "Tweetbot 3", id: 1384080005
+mas "World Clock Pro", id: 858446756
+mas "Xcode 10.2", id: 497799835
