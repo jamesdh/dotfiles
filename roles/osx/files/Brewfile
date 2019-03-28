@@ -32,7 +32,8 @@ brew "pyenv-virtualenv"
 brew "ruby", link: true
 brew "s3cmd"
 brew "wget"
-brew "yarn", args: ["without-node"]
+#brew "yarn", args: ["without-node"]
+brew "yarn"
 brew "youtube-dl"
 brew "wagoodman/dive/dive"
 cask "1password"
