@@ -1,0 +1,18 @@
+
+- include_tasks: defaults.yml
+  vars: 
+    cat: ui
+    domain: "{{ domain_item.key }}"
+    keys: "{{ domain_item.value }}"
+  loop: >
+    {{ defaults.ui 
+    | combine(defaults.devices) 
+    | combine(defaults.finder) 
+    | combine(defaults.dock) 
+    | combine(defaults.safari) 
+    | combine(defaults.timemachine)
+    | combine(defaults.sysapps)
+    | dict2items }}
+  loop_control:
+    label: ""
+    loop_var: domain_item

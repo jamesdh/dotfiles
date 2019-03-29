@@ -31,5 +31,5 @@ login:
 install: login
 	ansible-playbook --ask-become-pass --diff ansible.yml
 
-check: login
+compare: login
 	ansible-playbook --ask-become-pass --check --diff ansible.yml

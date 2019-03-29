@@ -1,0 +1,10 @@
+
+- name: "OSX {{ domain }} defaults"
+  osx_defaults:
+    domain: "{{ domain }}"
+    key: "{{ item.key }}"
+    type: "{{ item.value.type }}"
+    value: "{{ item.value.value }}"
+  loop: "{{ keys | dict2items }}"
+  loop_control:
+    label: "{{item.key}}:{{item.value.type}}:{{item.value.value}}"

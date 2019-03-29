@@ -1,0 +1,119 @@
+defaults:
+  
+  ui: 
+    com.apple.LaunchServices:
+      LSQuarantine: {type: bool, value: false, desc: 'Disable the “Are you sure you want to open this application?” dialog'}
+    com.apple.systempreferences:
+      NSQuitAlwaysKeepsWindows: {type: bool, value: false, desc: 'Disable Resume system-wide'}
+    com.apple.universalaccess:
+      reduceTransparency: {type: bool, value: true, desc: 'Disable transparency in the menu bar and elsewhere'}
+    NSGlobalDomain:
+      NSAutomaticDashSubstitutionEnabled: {type: bool, value: false, desc: 'Disable smart dashes as they’re annoying when coding'}
+      NSAutomaticQuoteSubstitutionEnabled: {type: bool, value: false, desc: 'Disable smart quotes as they’re annoying when coding'}
+      NSWindowResizeTime: {type: float, value: 0.001, desc: 'Increase window resize speed for Cocoa applications'}
+  
+  devices:
+    NSGlobalDomain:
+      com.apple.mouse.tapBehavior: {type: int, value: 1, desc: 'Mouse: enable tap to click'}
+      com.apple.swipescrolldirection: {type: bool, value: false, desc: 'Scroll: Disable "natural" scrolling'}
+      KeyRepeat: {type: int, value: 1, desc: 'Keyboard: Set keypress repeat interval (1 - 15ms, 2 - 30ms, etc)'}
+      InitialKeyRepeat: {type: int, value: 15, desc: 'Keyboard: Set initial keypress wait interval'}
+    com.apple.AppleMultitouchTrackpad:
+      Clicking: {type: int, value: 1, desc: 'Trackpad: enable tap to click'}
+      Dragging: {type: int, value: 1, desc: 'Trackpad: enable "tap and half" drag'}
+      DragLock: {type: int, value: 1, desc: 'Trackpad: enable drag lock'}
+      FirstClickThreshold: {type: int, value: 1, desc: 'Trackpad: first click required force (0 - light, 1 - medium, 2 - firm)'}
+      SecondClickThreshold: {type: int, value: 1, desc: 'Trackpad: second click required force (0 - light, 1 - medium, 2 - firm)'}
+      ActuateDetents: {type: int, value: 1, desc: 'Trackpad: force click'}
+      ForceSuppressed: {type: int, value: 0, desc: 'Trackpad: force click'}
+      TrackpadCornerSecondaryClick: {type: int, value: 0, desc: 'Trackpad: secondary click: disable corners (0 - disabled, 1 - left corner, 2 - right corner)'}
+      TrackpadRightClick: {type: int, value: 1, desc: 'Trackpad: secondary click: enable two-finger tap'}
+      TrackpadFiveFingerPinchGesture: {type: int, value: 0}
+      TrackpadFourFingerHorizSwipeGesture: {type: int, value: 0}
+      TrackpadFourFingerPinchGesture: {type: int, value: 0}
+      TrackpadFourFingerVertSwipeGesture: {type: int, value: 2}
+      TrackpadHandResting: {type: int, value: 1}
+      TrackpadHorizScroll: {type: int, value: 1}
+      TrackpadMomentumScroll: {type: int, value: 1}
+      TrackpadPinch: {type: int, value: 1}
+      TrackpadRotate: {type: int, value: 1}
+      TrackpadScroll: {type: int, value: 1}
+      TrackpadThreeFingerDrag: {type: int, value: 0}
+      TrackpadThreeFingerHorizSwipeGesture: {type: int, value: 1}
+      TrackpadThreeFingerTapGesture: {type: int, value: 0}
+      TrackpadThreeFingerVertSwipeGesture: {type: int, value: 2}
+      TrackpadTwoFingerDoubleTapGesture: {type: int, value: 1}
+      TrackpadTwoFingerFromRightEdgeSwipeGesture: {type: int, value: 3}
+      USBMouseStopsTrackpad: {type: int, value: 0}
+  
+  finder:
+    com.apple.desktopservices:
+      DSDontWriteNetworkStores: {type: bool, value: true, desc: 'Avoid creating .DS_Store files on network volumes'}
+    com.apple.finder:
+      DisableAllAnimations: {type: bool, value: true, desc: 'Finder: disable window animations and Get Info animations'}
+      ShowExternalHardDrivesOnDesktop: {type: bool, value: true, desc: 'Finder: show desktop icons for external drives'}
+      ShowMountedServersOnDesktop: {type: bool, value: true, desc: 'Finder: show desktop icons for mounted servers'}
+      ShowRemovableMediaOnDesktop: {type: bool, value: true, desc: 'Finder: show desktop icons for removable media'}
+      ShowHardDrivesOnDesktop: {type: bool, value: true, desc: 'Finder: show desktop icons for local hard drive'}
+      ShowStatusBar: {type: bool, value: true, desc: 'Finder: show status bar'}
+      ShowPathbar: {type: bool, value: true, desc: 'Finder: show path bar'}
+      FXShowPosixPathInTitle: {type: bool, value: true, desc: 'Finder: display full POSIX path as Finder window title'}
+      FXDefaultSearchScope: {type: string, value: "SCcf", desc: 'Finder: search the current folder by default'}
+      FXEnableExtensionChangeWarning: {type: bool, value: false, desc: 'Finder: disable the warning when changing a file extension'}
+      FXPreferredViewStyle: {type: string, value: "clmv", desc: 'Finder: use column view in all Finder windows by default (`Nlsv`, `icnv`, `clmv`, `Flwv`)'}
+      WarnOnEmptyTrash: {type: bool, value: false, desc: 'Finder: disable the warning before emptying the Trash'}
+    NSGlobalDomain:
+      AppleShowAllExtensions: {type: bool, value: true, desc: 'Finder: show all filename extensions'}
+      # TODO: 
+      # - remove "Recents" from Finder
+      # - remove "Tags" from Finder
+      # - add "Airdrop", "Projects", and homedir to Finder
+      # - make Downloads also use column view
+  
+  dock:
+    com.apple.dashboard:
+      mcx-disabled: {type: bool, value: true, desc: 'Dock: disable Dashboard'}
+    com.apple.dock: 
+      tilesize: {type: int, value: 32, desc: 'Set Dock icons to 32 pixels'}
+      minimize-to-application: {type: bool, value: true, desc: 'Dock: minimize windows into their app icon'}
+      persistent-apps: {type: array, value: [], desc: 'Dock: wipe all (default) app icons'}
+      static-only: {type: bool, value: true, desc: 'Dock: show only open apps'}
+      dashboard-in-overlay: {type: bool, value: true, desc: 'Dock: dont show Dashboard as a Space'}
+      mru-spaces: {type: bool, value: false, desc: 'Dock: dont automatically rearrange Spaces based on most recent use'}
+      orientation: {type: string, value: bottom, desc: 'Dock: move the dock to the bottom of the screen'}
+      autohide: {type: bool, value: true, desc: 'Dock: automatically hide and show the Dock'}
+      showhidden: {type: bool, value: true, desc: 'Dock: make Dock icons of hidden apps translucent'}
+      showLaunchpadGestureEnabled: {type: int, value: 0, desc: 'Dock: disable the Launchpad gesture (pinch with thumb and three fingers)'}
+  
+  safari:
+    com.apple.Safari:
+      AutoOpenSafeDownloads: {type: bool, value: false, desc: 'Safari: prevent Safari from opening ‘safe’ files automatically after downloading'}
+      AutoFillPasswords: {type: bool, value: false, desc: 'Safari: do not offer to save/fill passwords'}
+      UniversalSearchEnabled: {type: bool, value: false, desc: 'Safari: dont send search queries to Apple'}
+      SuppressSearchSuggestions: {type: bool, value: true, desc: 'Safari: dont show search suggestions'}
+      ShowFullURLInSmartSearchField: {type: bool, value: true, desc: 'Safari: show the full URL in the address bar (note: this still hides the scheme)'}
+      HomePage: {type: string, value: 'about:blank', desc: 'Safari: set home page to `about:blank` for faster loading'}
+      "ShowFavoritesBar-v2": {type: bool, value: true, desc: 'Safari: show bookmarks bar by default'}
+      ShowSidebarInTopSites: {type: bool, value: false, desc: 'Safari: hide sidebar in Top Sites'}
+      DebugSnapshotsUpdatePolicy: {type: int, value: 2, desc: 'Safari: disable thumbnail cache for History and Top Sites'}
+      IncludeInternalDebugMenu: {type: bool, value: true, desc: 'Safari: enable debug menu'}
+      FindOnPageMatchesWordStartsOnly: {type: bool, value: false, desc: 'Safari: search banners default to Contains instead of Starts With'}
+      ProxiesInBookmarksBar: {type: array, value: [], desc: 'Safari: remove useless icons from bookmarks bar'}
+      IncludeDevelopMenu: {type: bool, value: true, desc: 'Safari: enable the Develop menu'}
+      WebKitDeveloperExtrasEnabledPreferenceKey: {type: bool, value: true, desc: 'Safari: enable the Web Inspector'}
+    NSGlobalDomain:
+      WebKitDeveloperExtras: {type: bool, value: true, desc: 'Safari: add a context menu item for showing the Web Inspector in web views'}
+  
+  timemachine:
+    com.apple.TimeMachine:
+      DoNotOfferNewDisksForBackup: {type: bool, value: true, desc: 'Prevent Time Machine from prompting to use new hard drives as backup volume'}
+  
+  sysapps: 
+    com.apple.ActivityMonitor:
+      OpenMainWindow: {type: bool, value: true, desc: 'Show the main window when launching'}
+      IconType: {type: int, value: 5, desc: 'Visualize CPU usage in the Dock icon'}
+      ShowCategory: {type: int, value: 0, desc: 'Show all processes'}
+      SortColumn: {type: string, value: 'CPUUsage', desc: 'Sort results by CPU usage'}
+      SortDirection: {type: int, value: 0, desc: 'Sort results descending'}
+      WebKitDeveloperExtras: {type: bool, value: true, desc: 'Enable the WebKit Developer Tools in the Mac App Store'}
+      ShowDebugMenu: {type: bool, value: true, desc: 'Enable Debug Menu in the Mac App Store'}
