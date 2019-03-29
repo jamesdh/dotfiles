@@ -17,10 +17,14 @@
     dest: '{{ ssh_dir }}/{{ item }}' 
     mode: 0600
   loop: '{{ ssh_keys }}'
-
+  loop_control:
+    label: '{{ item }}'
+  
 - name: Retrieve Public Keys
   copy: 
     content: "{{ lookup('lastpass', 'Key:' + item, field='Public Key') }}"
     dest: '{{ ssh_dir }}/{{ item }}.pub' 
     mode: 0644
   loop: '{{ ssh_keys }}'
+  loop_control:
+    label: '{{ item }}'
