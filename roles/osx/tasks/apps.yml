@@ -1,2 +1,22 @@
+# We need some way to show Brewfile differences in "check" mode
+# Hence this bizaro task and subsequent debug task after it
+- name: Diff installed base against Brewfile
+  shell: brew bundle check --verbose --file=roles/osx/files/Brewfile
+  register: brew_diff
+  ignore_errors: true
+  failed_when: false
+  changed_when: brew_diff.rc != 0
+  check_mode: no
+  when: 
+    - ansible_check_mode
+
+- name: Output differences between installed base and Brewfile
+  debug:
+    var: brew_diff.stdout
+  when: 
+    - ansible_check_mode 
+    - brew_diff.rc != 0
+  changed_when: brew_diff.rc != 0
+
 - name: Install Homebrew Apps
   shell: brew bundle --file=roles/osx/files/Brewfile
