@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# Make a dir and cd into it
+mkcd() { mkdir -p "$@" && cd "$@"; }
+
+# Extract most known archives
+# Exclude for now while I evaluate an alias for dtrx
+# extract() {
+#     for arg in $@ ; do
+#         if [ -f $arg ] ; then
+#             case $arg in
+#                 *.tar.bz2)  tar xjf $arg      ;;
+#                 *.tar.gz)   tar xzf $arg      ;;
+#                 *.bz2)      bunzip2 $arg      ;;
+#                 *.gz)       gunzip $arg       ;;
+#                 *.tar)      tar xf $arg       ;;
+#                 *.tbz2)     tar xjf $arg      ;;
+#                 *.tgz)      tar xzf $arg      ;;
+#                 *.zip)      unzip $arg        ;;
+#                 *.Z)        uncompress $arg   ;;
+#                 *.rar)      rar x $arg        ;;  # 'rar' must to be installed
+#                 *.jar)      jar -xvf $arg     ;;  # 'jdk' must to be installed
+#                 *)          echo "'$arg' cannot be extracted via extract()" ;;
+#             esac
+#         else
+#             echo "'$arg' is not a valid file"
+#         fi
+#     done
+# }
+
+# Find text in file aka: ft $filename $text
+ft() {
+    find . -name "$2" -exec grep -il "$1" {} \;
+}
+
+# Copy pub key to remote machine
+authme() {
+  ssh "$@" 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys' < ~/.ssh/personal_rsa.pub
+}
+
+# cd into whatever is the forefront Finder window.
+cdf() {  # short for cdfinder
+  cd "`osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)'`"
+}
+
+# Copy w/ progress
+cp_p() {
+  rsync -WavP --human-readable --progress $1 $2
+}
+
+# Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL.
+# Send a fake UA string for sites that sniff it instead of using the Accept-Encoding header. (Looking at you, ajax.googleapis.com!)
+httpcompression() {
+    encoding="$(curl -LIs -H 'User-Agent: Mozilla/5 Gecko' -H 'Accept-Encoding: gzip,deflate,compress,sdch' "$1" | grep '^Content-Encoding:')" && echo "$1 is encoded using ${encoding#* }" || echo "$1 is not using any encoding"
+}
+
+# All the dig info
+digger() {
+    dig +nocmd "$1" any +multiline +noall +answer
+}
+
+# Escape UTF-8 characters into their 3-byte format
+escape() {
+    printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u)
+    echo # newline
+}
+
+# Decode \x{ABCD}-style Unicode escape sequences
+unidecode() {
+    perl -e "binmode(STDOUT, ':utf8'); print \"$@\""
+    echo # newline
+}
+
+# Default to a local gradlew file if it exists
+gradle() {
+  if [ -e ./gradlew ]; then
+    ./gradlew $@
+  else
+    ~/.sdkman/candidates/gradle/current/bin/gradle $@
+  fi
+}
+
+# Default to a local grailsw file if it exists 
+grails() {
+  if [ -e ./grailsw ]; then
+    ./grailsw $@
+  else
+    ~/.sdkman/candidates/grails/current/bin/grails $@
+  fi
+}
+
+function killz() {
+  sudo kill -9 `ps aux | grep $1 | grep -v grep | awk '{print $2}'`
+}
+
