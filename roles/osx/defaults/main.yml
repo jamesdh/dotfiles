@@ -1,4 +1,3 @@
-home_dir: "{{ansible_env.HOME}}"
 apps_dir: /Applications
 
 finder_dels:

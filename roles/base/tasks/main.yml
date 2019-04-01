@@ -1,0 +1,6 @@
+- name: Create Projects dir
+  file: 
+    path: "{{ projects_dir }}"
+    state: directory
+    mode: 0700
+
