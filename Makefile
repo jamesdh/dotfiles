@@ -31,5 +31,22 @@ login:
 install: login
 	ansible-playbook --ask-become-pass --diff ansible.yml
 
+install.filtered: login list.tags 
+	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
+	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
+	ansible-playbook --ask-become-pass --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
+
 compare: login
 	ansible-playbook --ask-become-pass --check --diff ansible.yml
+
+compare.filtered: login list.tags 
+	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
+	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
+	ansible-playbook --ask-become-pass --check --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
+
+list.tags: 
+	@TAGS=$$(bash -c 'ansible-playbook --list-tags ansible.yml | grep "TASK TAGS"') ;\
+	echo $$TAGS;\
+
+list.tasks:
+	ansible-playbook --list-tasks ansible.yml
