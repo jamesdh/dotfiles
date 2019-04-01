@@ -16,3 +16,24 @@
   loop_control:
     label: ""
     loop_var: domain_item
+  tags: 
+    - defaults
+
+- name: Remove undesired Finder sidebar items
+  shell: "mysides remove '{{ item.key }}'"
+  loop: "{{ finder_dels | dict2items }}"
+  ignore_errors: true
+  tags: 
+    - finder
+
+- name: Add desired Finder sidebar items
+  shell: "mysides add '{{ item.key }}' {{ item.value }}"
+  loop: "{{ finder_adds | dict2items }}"
+  ignore_errors: true
+  tags: 
+    - finder
+
+- name: "Restart Dock"
+  shell: "killall Dock"
+  tags: 
+    - dock

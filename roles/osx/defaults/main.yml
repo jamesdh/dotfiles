@@ -1,3 +1,20 @@
+home_dir: "{{ansible_env.HOME}}"
+apps_dir: /Applications
+
+finder_dels:
+  'Recents.cannedsearch': file:///System/Library/CoreServices/Finder.app/Contents/Resources/MyLibraries/myDocuments.cannedSearch/
+  'Creative Cloud Files': file:///{{home_dir}}/Creative%20Cloud%20Files/
+
+finder_adds:
+  james: "file://{{home_dir}}/"
+  AirDrop: nwnode://domain-AirDrop
+  Applications: "file://{{apps_dir}}/"
+  Desktop: "file://{{home_dir}}/Desktop/"
+  Documents: "file://{{home_dir}}/Documents"
+  Downloads: "file://{{home_dir}}/Downloads/"
+  Dropbox: "file://{{home_dir}}/Dropbox"
+  Projects: "file://{{projects_dir}}"
+
 defaults:
   
   ui: 
