@@ -4,3 +4,20 @@
     state: directory
     mode: 0700
 
+- name: Link dotfiles to home dir
+  file: 
+    src: "roles/base/files/dotfiles/{{ item }}"
+    path: "{{home_dir}}/{{ item }}"
+    state: link
+    force: true
+  loop: 
+    - .aliases
+    - .bash_profile
+    - .bash_prompt
+    - .bashrc
+    - .curlrc
+    - .exports
+    - .functions
+    - .path
+    - .vimrc
+
