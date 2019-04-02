@@ -148,6 +148,20 @@ defaults:
       useDefaultGrid: {type: bool, value: true}
       useGlobalHotkey: {type: bool, value: true}
       useMonitorCycling: {type: bool, value: true}
+    com.contextsformac.Contexts:
+      CTAppearanceTheme: {type: string, value: 'CTAppearanceNamedVibrantDark'}
+      CTKeyboardEventCommandModeActive: {type: bool, value: false}
+      CTPreferenceAppearanceContentSizeCategory: {type: int, value: 1}
+      CTPreferenceAppearanceContrastLevel: {type: int, value: 0}
+      CTPreferenceInputSourceIdToUse: {type: string, value: 'kCTInputSourceIdNone'}
+      CTPreferencePanelDisplayMode: {type: string, value: 'CTDisplayModeMenubarScreen'}
+      CTPreferencePanelRecentItemsSwitcherKeyType: {type: string, value: 'CTPreferencePanelRecentItemsSwitcherKeyType'}
+      CTPreferencePanelWidth: {type: int, value: 0}
+      CTPreferenceSearchShortcutFunctionKeyEnabled: {type: bool, value: false}
+      CTPreferenceSidebarDisplayMode: {type: string, value: 'CTDisplayModeNone'}
+      CTPreferenceSidebarShowDockIconStatus: {type: bool, value: true}
+      CTPreferenceWorkspaceConstrainWindowFrames: {type: bool, value: false}
+      CTPreferenceWorkspacePressDockIconWhenActivatingApplication: {type: bool, value: true}
 
   manual:
     com.mizage.Divvy:
