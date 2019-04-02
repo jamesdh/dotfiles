@@ -12,11 +12,27 @@
     | combine(defaults.safari) 
     | combine(defaults.timemachine)
     | combine(defaults.sysapps)
+    | combine(defaults.userapps)
     | dict2items }}
   loop_control:
     label: ""
     loop_var: domain_item
   tags: 
+    - defaults
+
+# Manually handle dict defaults until https://github.com/ansible/ansible/pull/24808 is fixed
+- name: Manual defaults 
+  shell: "defaults write com.mizage.Divvy {{ item.key }} {{ item.value }}"
+  loop: "{{ defaults.manual['com.mizage.Divvy'] | dict2items }}"
+  loop_control:
+    label: ""
+  tags: 
+    - defaults
+
+# Manually handle divvy shortcuts until the defaults module above supports data types
+- name: Divvy shortcuts config
+  shell: "open {{ divvy.url }}"
+  tags:
     - defaults
 
 - name: Remove undesired Finder sidebar items
