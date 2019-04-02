@@ -6,7 +6,7 @@
 
 - name: Link dotfiles to home dir
   file: 
-    src: "roles/base/files/dotfiles/{{ item }}"
+    src: "{{role_path}}/files/dotfiles/{{ item }}"
     path: "{{home_dir}}/{{ item }}"
     state: link
     force: true
