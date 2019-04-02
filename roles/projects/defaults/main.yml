@@ -1,0 +1,17 @@
+vscode:
+  userpath: "{{ home_dir }}/Library/Application Support/Code/User"
+  extensions: 
+    - marlon407.code-groovy
+    - vscjava.vscode-java-debug
+    - peterjausovec.vscode-docker
+    - mikestead.dotenv
+    - dbaeumer.vscode-eslint
+    - codezombiech.gitignore
+    - eamodio.gitlens
+    - naco-siren.gradle-language
+    - k--kato.intellij-idea-keybindings
+    - wholroyd.jinja
+    - redhat.java
+    - ms-python.python
+    - vscode-icons-team.vscode-icons
+    - redhat.vscode-yaml

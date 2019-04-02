@@ -1,0 +1,8 @@
+{
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.statusBar.feedback.visible": false,
+    "workbench.startupEditor": "newUntitledFile",
+    "window.restoreWindows": "all",
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false
+}
