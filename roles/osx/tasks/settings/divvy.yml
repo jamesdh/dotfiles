@@ -1,0 +1,24 @@
+# Manually handle dict defaults until https://github.com/ansible/ansible/pull/24808 is fixed
+- name: Manual divvy defaults 
+  shell: "defaults write com.mizage.Divvy {{ item.key }} {{ item.value }}"
+  loop: "{{ defaults.manual['com.mizage.Divvy'] | dict2items }}"
+  loop_control:
+    label: ""
+  tags: 
+    - defaults
+
+# Manually handle divvy shortcuts until the defaults module above supports data types
+- name: Divvy shortcuts config
+  shell: "open {{ divvy.url }}"
+  tags:
+    - defaults
+
+- name: Make Divvy start on login
+  shell: "osascript -e 'tell application \"System Events\" to make login item at end with properties {path: \"/Applications/Divvy.app\", hidden: false}'"
+  tags:
+    - defaults
+
+- name: Start Divvy so it responds to the global shortcut
+  shell: "osascript -e 'tell application \"Divvy\" to activate'"
+  tags:
+    - defaults

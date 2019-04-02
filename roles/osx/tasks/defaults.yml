@@ -8,3 +8,5 @@
   loop: "{{ keys | dict2items }}"
   loop_control:
     label: "{{item.key}}:{{item.value.type}}:{{item.value.value}}"
+  tags:
+    - defaults 
