@@ -39,6 +39,5 @@
   tags: 
     - dock
 
-- include_tasks: settings/divvy.yml
-  tags: 
-    - defaults
+- import_tasks: settings/divvy.yml
+- import_tasks: settings/contexts.yml
