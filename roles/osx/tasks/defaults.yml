@@ -5,8 +5,9 @@
     key: "{{ item.key }}"
     type: "{{ item.value.type }}"
     value: "{{ item.value.value }}"
+    host: "{{ item.value.host | default('')}}"
   loop: "{{ keys | dict2items }}"
   loop_control:
-    label: "{{item.key}}:{{item.value.type}}:{{item.value.value}}"
+    label: "{{item.key}}:{{item.value.type}}:{{item.value.value}} {{ item.value.host | default('')}}"
   tags:
     - defaults 
