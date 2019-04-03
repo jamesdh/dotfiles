@@ -41,12 +41,12 @@ defaults:
     com.apple.AppleMultitouchMouse:
       MouseButtonDivision: {type: int, value: 55}
       MouseButtonMode: {type: string, value: 'TwoButton'}
-      MouseHorizontalScroll: {type: bool, value: true}
+      MouseHorizontalScroll: {type: bool, value: false}
       MouseMomentumScroll: {type: bool, value: 1}
       MouseOneFingerDoubleTapGesture: {type: int, value: 0}
       MouseTwoFingerDoubleTapGesture: {type: int, value: 0}
       MouseTwoFingerHorizSwipeGesture: {type: int, value: 1}
-      MouseVerticalScroll: {type: bool, value: false}
+      MouseVerticalScroll: {type: bool, value: true}
       UserPreferences: {type: bool, value: false}
     com.apple.AppleMultitouchTrackpad:
       ActuateDetents: {type: int, value: 1, desc: 'Trackpad: force click'}
@@ -80,12 +80,12 @@ defaults:
     com.apple.driver.AppleBluetoothMultitouch.mouse:
       MouseButtonDivision: {type: int, value: 55}
       MouseButtonMode: {type: string, value: 'TwoButton'}
-      MouseHorizontalScroll: {type: bool, value: true}
+      MouseHorizontalScroll: {type: bool, value: false}
       MouseMomentumScroll: {type: bool, value: 1}
       MouseOneFingerDoubleTapGesture: {type: int, value: 0}
       MouseTwoFingerDoubleTapGesture: {type: int, value: 0}
       MouseTwoFingerHorizSwipeGesture: {type: int, value: 1}
-      MouseVerticalScroll: {type: bool, value: false}
+      MouseVerticalScroll: {type: bool, value: true}
       UserPreferences: {type: bool, value: false}
     
   finder:
