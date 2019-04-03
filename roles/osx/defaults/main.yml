@@ -92,8 +92,10 @@ defaults:
       DSDontWriteNetworkStores: {type: bool, value: true, desc: 'Avoid creating .DS_Store files on network volumes'}
     com.apple.finder:
       DisableAllAnimations: {type: bool, value: true, desc: 'Finder: disable window animations and Get Info animations'}
+      FXArrangeGroupViewBy: {type: string, value: 'Name'}
       FXDefaultSearchScope: {type: string, value: "SCcf", desc: 'Finder: search the current folder by default'}
       FXEnableExtensionChangeWarning: {type: bool, value: false, desc: 'Finder: disable the warning when changing a file extension'}
+      FXPreferredGroupBy: {type: string, value: 'Kind'}
       FXPreferredViewStyle: {type: string, value: "clmv", desc: 'Finder: use column view in all Finder windows by default (`Nlsv`, `icnv`, `clmv`, `Flwv`)'}
       FXShowPosixPathInTitle: {type: bool, value: true, desc: 'Finder: display full POSIX path as Finder window title'}
       NewWindowTarget: {type: string, value: 'PfHm'}
@@ -102,17 +104,16 @@ defaults:
       ShowHardDrivesOnDesktop: {type: bool, value: true, desc: 'Finder: show desktop icons for local hard drive'}
       ShowMountedServersOnDesktop: {type: bool, value: true, desc: 'Finder: show desktop icons for mounted servers'}
       ShowPathbar: {type: bool, value: true, desc: 'Finder: show path bar'}
+      ShowRecentTags: {type: bool, value: false, desc: 'Finder: hide tags from sidebar'}
       ShowRemovableMediaOnDesktop: {type: bool, value: true, desc: 'Finder: show desktop icons for removable media'}
       ShowStatusBar: {type: bool, value: true, desc: 'Finder: show status bar'}
+      SidebarWidth: {type: int, value: 160, desc: 'Finder: set width of left sidebar'}
       WarnOnEmptyTrash: {type: bool, value: false, desc: 'Finder: disable the warning before emptying the Trash'}
       _FXSortFoldersFirst: {type: bool, value: true, desc: 'Finder: keep folders on top when sorting by name'}
     NSGlobalDomain:
       AppleShowAllExtensions: {type: bool, value: true, desc: 'Finder: show all filename extensions'}
       NSNavPanelExpandedStateForSaveMode: {type: bool, value: true, desc: 'Finder: make the expanded save panel the default'}
       NSNavPanelExpandedStateForSaveMode2: {type: bool, value: true, desc: 'Finder: make the expanded save panel the default'}
-      # TODO: 
-      # - remove "Tags" from Finder
-      # - make Downloads also use column view
   
   dock:
     com.apple.dashboard:
