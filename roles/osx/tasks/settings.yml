@@ -34,6 +34,15 @@
   tags: 
     - finder
 
+- name: Show hidden folders
+  command: "chflags nohidden {{ item }}"
+  become: true
+  loop: 
+    - "{{ home_dir }}/Library"
+    - /Volumes
+  tags:
+    - finder
+
 - name: "Restart Dock"
   shell: "killall Dock"
   tags: 

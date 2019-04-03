@@ -1,7 +1,8 @@
 apps_dir: /Applications
 
 finder_dels:
-  'Recents.cannedsearch': file:///System/Library/CoreServices/Finder.app/Contents/Resources/MyLibraries/myDocuments.cannedSearch/
+  Recents.cannedsearch: file:///System/Library/CoreServices/Finder.app/Contents/Resources/MyLibraries/myDocuments.cannedSearch/
+  myDocuments.cannedSearch: file:///System/Library/CoreServices/Finder.app/Contents/Resources/MyLibraries/myDocuments.cannedSearch/
   'Creative Cloud Files': file:///{{home_dir}}/Creative%20Cloud%20Files/
 
 finder_adds:
@@ -19,6 +20,8 @@ defaults:
   ui: 
     com.apple.LaunchServices:
       LSQuarantine: {type: bool, value: false, desc: 'Disable the “Are you sure you want to open this application?” dialog'}
+    com.apple.screensaver:
+      idleTime: {type: int, value: 0, desc: 'Disable the screensaver'}
     com.apple.systempreferences:
       NSQuitAlwaysKeepsWindows: {type: bool, value: false, desc: 'Disable Resume system-wide'}
     com.apple.universalaccess:
@@ -61,12 +64,16 @@ defaults:
       TrackpadTwoFingerDoubleTapGesture: {type: int, value: 1}
       TrackpadTwoFingerFromRightEdgeSwipeGesture: {type: int, value: 3}
       USBMouseStopsTrackpad: {type: int, value: 0}
+    com.apple.BluetoothAudioAgent:
+      "Apple Bitpool Min (editable)": {type: int, value: 60, desc: 'Bluetooth: improve bluetooth audio quality'}
   
   finder:
     com.apple.desktopservices:
       DSDontWriteNetworkStores: {type: bool, value: true, desc: 'Avoid creating .DS_Store files on network volumes'}
     com.apple.finder:
       DisableAllAnimations: {type: bool, value: true, desc: 'Finder: disable window animations and Get Info animations'}
+      NewWindowTarget: {type: string, value: 'PfHm'}
+      NewWindowTargetPath: {type: string, value: 'file://${HOME}'}
       ShowExternalHardDrivesOnDesktop: {type: bool, value: true, desc: 'Finder: show desktop icons for external drives'}
       ShowMountedServersOnDesktop: {type: bool, value: true, desc: 'Finder: show desktop icons for mounted servers'}
       ShowRemovableMediaOnDesktop: {type: bool, value: true, desc: 'Finder: show desktop icons for removable media'}
@@ -78,12 +85,13 @@ defaults:
       FXEnableExtensionChangeWarning: {type: bool, value: false, desc: 'Finder: disable the warning when changing a file extension'}
       FXPreferredViewStyle: {type: string, value: "clmv", desc: 'Finder: use column view in all Finder windows by default (`Nlsv`, `icnv`, `clmv`, `Flwv`)'}
       WarnOnEmptyTrash: {type: bool, value: false, desc: 'Finder: disable the warning before emptying the Trash'}
+      _FXSortFoldersFirst: {type: bool, value: true, desc: 'Finder: keep folders on top when sorting by name'}
     NSGlobalDomain:
       AppleShowAllExtensions: {type: bool, value: true, desc: 'Finder: show all filename extensions'}
+      NSNavPanelExpandedStateForSaveMode: {type: bool, value: true, desc: 'Finder: make the expanded save panel the default'}
+      NSNavPanelExpandedStateForSaveMode2: {type: bool, value: true, desc: 'Finder: make the expanded save panel the default'}
       # TODO: 
-      # - remove "Recents" from Finder
       # - remove "Tags" from Finder
-      # - add "Airdrop", "Projects", and homedir to Finder
       # - make Downloads also use column view
   
   dock:
@@ -133,6 +141,11 @@ defaults:
       SortDirection: {type: int, value: 0, desc: 'Sort results descending'}
       WebKitDeveloperExtras: {type: bool, value: true, desc: 'Enable the WebKit Developer Tools in the Mac App Store'}
       ShowDebugMenu: {type: bool, value: true, desc: 'Enable Debug Menu in the Mac App Store'}
+    com.apple.ImageCapture:
+      disableHotPlug: {type: bool, value: true, host: currentHost, desc: 'Stop Photos from opening automatically'}
+    com.apple.screencapture:
+      location: {type: string, value: '~/Desktop', desc: 'Save screenshots to Desktop'}
+      disable-shadow: {type: bool, value: true, desc: 'Disable shadow in screenshots'}
 
   userapps: 
     com.mizage.Divvy:
