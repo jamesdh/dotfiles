@@ -6,14 +6,13 @@ finder_dels:
   'Creative Cloud Files': file:///{{home_dir}}/Creative%20Cloud%20Files/
 
 finder_adds:
-  james: "file://{{home_dir}}/"
-  AirDrop: nwnode://domain-AirDrop
-  Applications: "file://{{apps_dir}}/"
-  Desktop: "file://{{home_dir}}/Desktop/"
-  Documents: "file://{{home_dir}}/Documents"
-  Downloads: "file://{{home_dir}}/Downloads/"
-  Dropbox: "file://{{home_dir}}/Dropbox"
-  Projects: "file://{{projects_dir}}"
+  - {name: james, path: "file://{{home_dir}}/"}
+  - {name: AirDrop, path: nwnode://domain-AirDrop}
+  - {name: Applications, path: "file://{{apps_dir}}/"}
+  - {name: Desktop, path: "file://{{home_dir}}/Desktop/"}
+  - {name: Documents, path: "file://{{home_dir}}/Documents"}
+  - {name: Downloads, path: "file://{{home_dir}}/Downloads/"}
+  - {name: Projects, path: "file://{{projects_dir}}"}
 
 defaults:
   

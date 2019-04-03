@@ -27,8 +27,8 @@
     - finder
 
 - name: Add desired Finder sidebar items
-  shell: "mysides add '{{ item.key }}' {{ item.value }}"
-  loop: "{{ finder_adds | dict2items }}"
+  shell: "mysides add '{{ item.name }}' {{ item.path }}"
+  loop: "{{ finder_adds }}"
   ignore_errors: true
   tags: 
     - finder
