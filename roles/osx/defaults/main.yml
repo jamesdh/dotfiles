@@ -30,6 +30,7 @@ defaults:
       NSAutomaticDashSubstitutionEnabled: {type: bool, value: false, desc: 'Disable smart dashes as they’re annoying when coding'}
       NSAutomaticQuoteSubstitutionEnabled: {type: bool, value: false, desc: 'Disable smart quotes as they’re annoying when coding'}
       NSWindowResizeTime: {type: float, value: 0.001, desc: 'Increase window resize speed for Cocoa applications'}
+      NSScrollViewRubberbanding: {type: int, value: 0, desc: 'Disable scrolling rubberband effect'}
   
   devices:
     NSGlobalDomain:
