@@ -3,5 +3,5 @@
   roles:
       - { role: base, tags: ['base']}
       - { role: ssh, tags: ['ssh']}
-      - { role: projects, tags: [projects]}
       - { role: osx, tags: ['osx']}
+      - { role: projects, tags: [projects]}
