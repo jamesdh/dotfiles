@@ -1,18 +1,17 @@
 
 - include_tasks: defaults.yml
   vars: 
-    cat: ui
     domain: "{{ domain_item.key }}"
     keys: "{{ domain_item.value }}"
   loop: >
     {{ defaults.ui 
-    | combine(defaults.devices) 
-    | combine(defaults.finder) 
-    | combine(defaults.dock) 
-    | combine(defaults.safari) 
-    | combine(defaults.timemachine)
-    | combine(defaults.sysapps)
-    | combine(defaults.userapps)
+    | combine(defaults.devices, recursive=true) 
+    | combine(defaults.finder, recursive=true) 
+    | combine(defaults.dock, recursive=true) 
+    | combine(defaults.safari, recursive=true) 
+    | combine(defaults.timemachine, recursive=true)
+    | combine(defaults.sysapps, recursive=true)
+    | combine(defaults.userapps, recursive=true)
     | dict2items }}
   loop_control:
     label: ""
