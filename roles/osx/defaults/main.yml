@@ -37,6 +37,16 @@ defaults:
       com.apple.swipescrolldirection: {type: bool, value: false, desc: 'Scroll: Disable "natural" scrolling'}
       KeyRepeat: {type: int, value: 1, desc: 'Keyboard: Set keypress repeat interval (1 - 15ms, 2 - 30ms, etc)'}
       InitialKeyRepeat: {type: int, value: 15, desc: 'Keyboard: Set initial keypress wait interval'}
+    com.apple.AppleMultitouchMouse:
+      MouseButtonDivision: {type: int, value: 55}
+      MouseButtonMode: {type: string, value: 'TwoButton'}
+      MouseHorizontalScroll: {type: bool, value: true}
+      MouseMomentumScroll: {type: bool, value: 1}
+      MouseOneFingerDoubleTapGesture: {type: int, value: 0}
+      MouseTwoFingerDoubleTapGesture: {type: int, value: 0}
+      MouseTwoFingerHorizSwipeGesture: {type: int, value: 1}
+      MouseVerticalScroll: {type: bool, value: false}
+      UserPreferences: {type: bool, value: false}
     com.apple.AppleMultitouchTrackpad:
       Clicking: {type: int, value: 1, desc: 'Trackpad: enable tap to click'}
       Dragging: {type: int, value: 1, desc: 'Trackpad: enable "tap and half" drag'}
@@ -66,7 +76,17 @@ defaults:
       USBMouseStopsTrackpad: {type: int, value: 0}
     com.apple.BluetoothAudioAgent:
       "Apple Bitpool Min (editable)": {type: int, value: 60, desc: 'Bluetooth: improve bluetooth audio quality'}
-  
+    com.apple.driver.AppleBluetoothMultitouch.mouse:
+      MouseButtonDivision: {type: int, value: 55}
+      MouseButtonMode: {type: string, value: 'TwoButton'}
+      MouseHorizontalScroll: {type: bool, value: true}
+      MouseMomentumScroll: {type: bool, value: 1}
+      MouseOneFingerDoubleTapGesture: {type: int, value: 0}
+      MouseTwoFingerDoubleTapGesture: {type: int, value: 0}
+      MouseTwoFingerHorizSwipeGesture: {type: int, value: 1}
+      MouseVerticalScroll: {type: bool, value: false}
+      UserPreferences: {type: bool, value: false}
+    
   finder:
     com.apple.desktopservices:
       DSDontWriteNetworkStores: {type: bool, value: true, desc: 'Avoid creating .DS_Store files on network volumes'}
