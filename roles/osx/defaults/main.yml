@@ -47,7 +47,7 @@ defaults:
       MouseTwoFingerDoubleTapGesture: {type: int, value: 0}
       MouseTwoFingerHorizSwipeGesture: {type: int, value: 1}
       MouseVerticalScroll: {type: bool, value: true}
-      UserPreferences: {type: bool, value: false}
+      UserPreferences: {type: bool, value: true}
     com.apple.AppleMultitouchTrackpad:
       ActuateDetents: {type: int, value: 1, desc: 'Trackpad: force click'}
       Clicking: {type: int, value: 1, desc: 'Trackpad: enable tap to click'}
@@ -86,7 +86,7 @@ defaults:
       MouseTwoFingerDoubleTapGesture: {type: int, value: 0}
       MouseTwoFingerHorizSwipeGesture: {type: int, value: 1}
       MouseVerticalScroll: {type: bool, value: true}
-      UserPreferences: {type: bool, value: false}
+      UserPreferences: {type: bool, value: true}
     
   finder:
     com.apple.desktopservices:
