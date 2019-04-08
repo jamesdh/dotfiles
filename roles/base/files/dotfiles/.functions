@@ -94,7 +94,7 @@ killz() {
 }
 
 diff.defaults() {
-  domains=$(defaults domains)
+  domains="$(defaults domains),NSGlobalDomain"
   PRE=$(mktemp)
   for i in $(echo $domains | sed "s/,/ /g")
   do
