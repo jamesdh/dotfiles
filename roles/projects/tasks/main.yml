@@ -10,6 +10,11 @@
     - git
     - repos
     
+- name: Configure SDK's
+  import_tasks: sdk.yml
+  tags:
+    - sdk
+
 - name: Configure IDE's
   import_tasks: ide.yml
   tags:

@@ -1,0 +1,31 @@
+
+- name: Check if SDKMAN is installed
+  stat: 
+    path: "{{home_dir}}/.sdkman"
+  register: sdk_home
+
+- block: 
+    - name: Download SDKMAN install script
+      get_url:
+        url: https://get.sdkman.io
+        dest: "{{home_dir}}/.sdkman_installer"
+
+    - name: Make script executable
+      file: 
+        path: "{{home_dir}}/.sdkman_installer"
+        mode: u+rwx
+        state: file
+
+    - name: Run SDKMAN script
+      shell: "{{home_dir}}/.sdkman_installer"
+
+    - name: Remove installer script
+      file: 
+        path: "{{home_dir}}/.sdkman_installer"
+        state: absent
+
+  when: not sdk_home.stat.exists
+
+- name: Install SDKMAN sdk's
+  shell: "source {{home_dir}}/.sdkman/bin/sdkman-init.sh && sdk install {{item.name}} {{item.version}}"
+  loop: "{{sdks}}"
