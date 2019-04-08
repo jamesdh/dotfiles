@@ -19,10 +19,17 @@ defaults:
   ui: 
     com.apple.LaunchServices:
       LSQuarantine: {type: bool, value: false, desc: 'Disable the “Are you sure you want to open this application?” dialog'}
+    com.apple.menuextra.clock:
+      IsAnalog: {type: bool, value: true, desc: 'Set menubar clock to analog'}
     com.apple.screensaver:
       idleTime: {type: int, value: 0, desc: 'Disable the screensaver'}
     com.apple.systempreferences:
       NSQuitAlwaysKeepsWindows: {type: bool, value: false, desc: 'Disable Resume system-wide'}
+    com.apple.systemuiserver:
+      "NSStatusItem Visible com.apple.menuextra.bluetooth": {type: bool, value: true, desc: 'Enable bluetooth menubar icon'}
+      menuExtras: {type: array, value: ["/System/Library/CoreServices/Menu Extras/Clock.menu",
+        "/System/Library/CoreServices/Menu Extras/AirPort.menu",
+        "/System/Library/CoreServices/Menu Extras/Bluetooth.menu"], desc: 'Enable bluetooth menubar icon'}
     com.apple.universalaccess:
       reduceTransparency: {type: bool, value: true, desc: 'Disable transparency in the menu bar and elsewhere'}
     NSGlobalDomain:
