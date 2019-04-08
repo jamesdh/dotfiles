@@ -3,6 +3,8 @@
     path: "{{ projects_dir }}"
     state: directory
     mode: 0700
+  tags: 
+    - dirs
 
 - name: Link dotfiles to home dir
   file: 
@@ -20,4 +22,5 @@
     - .functions
     - .path
     - .vimrc
-
+  tags: 
+    - dotfiles
