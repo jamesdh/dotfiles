@@ -102,6 +102,7 @@ diff.defaults() {
     defaults read $i >> $PRE 2>/dev/null
   done
   read -p "Make any necessary changes, and press Enter to finish diff"
+  domains="$(defaults domains),NSGlobalDomain"
   POST=$(mktemp)
   for i in $(echo $domains | sed "s/,/ /g")
   do
