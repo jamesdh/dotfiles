@@ -106,7 +106,7 @@ defaults:
       FXPreferredViewStyle: {type: string, value: "clmv", desc: 'Finder: use column view in all Finder windows by default (`Nlsv`, `icnv`, `clmv`, `Flwv`)'}
       FXShowPosixPathInTitle: {type: bool, value: true, desc: 'Finder: display full POSIX path as Finder window title'}
       NewWindowTarget: {type: string, value: 'PfHm'}
-      NewWindowTargetPath: {type: string, value: 'file://${HOME}'}
+      NewWindowTargetPath: {type: string, value: 'file://{{home_dir}}'}
       ShowExternalHardDrivesOnDesktop: {type: bool, value: true, desc: 'Finder: show desktop icons for external drives'}
       ShowHardDrivesOnDesktop: {type: bool, value: true, desc: 'Finder: show desktop icons for local hard drive'}
       ShowMountedServersOnDesktop: {type: bool, value: true, desc: 'Finder: show desktop icons for mounted servers'}
@@ -214,6 +214,13 @@ defaults:
     com.surteesstudios.Bartender:
       license2: {type: string, value: "{{ lookup('lastpass', 'License:Bartender3', field='License Key') }}"}
       license2HoldersName: {type: string, value: "{{ lookup('lastpass', 'License:Bartender3', field='Licensee') }}"}
+    com.viscosityvpn.Viscosity:
+      DisableTimeMachine: {type: bool, value: true, desc: 'Disable Time Machine backups while on VPN'}
+      MenuBarIcons: {type: string, value: 'Leopard Gray'}
+      ReconnectOnWake: {type: bool, value: false}
+      SUEnableAutomaticChecks: {type: bool, value: true}
+    com.vmware.fusion:
+      showStartMenu3: {type: integer, value: 0, desc: 'Remove VMWare icon from system menu'}
 
   manual:
     com.mizage.Divvy:
