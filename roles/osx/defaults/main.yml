@@ -107,7 +107,7 @@ defaults:
       ShowRecentTags: {type: bool, value: false, desc: 'Finder: hide tags from sidebar'}
       ShowRemovableMediaOnDesktop: {type: bool, value: true, desc: 'Finder: show desktop icons for removable media'}
       ShowStatusBar: {type: bool, value: true, desc: 'Finder: show status bar'}
-      SidebarWidth: {type: int, value: 160, desc: 'Finder: set width of left sidebar'}
+      SidebarWidth: {type: float, value: 160, desc: 'Finder: set width of left sidebar'}
       WarnOnEmptyTrash: {type: bool, value: false, desc: 'Finder: disable the warning before emptying the Trash'}
       _FXSortFoldersFirst: {type: bool, value: true, desc: 'Finder: keep folders on top when sorting by name'}
     NSGlobalDomain:
