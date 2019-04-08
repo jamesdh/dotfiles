@@ -1,0 +1,8 @@
+---
+
+- name: Setup git repositories 
+  git:
+    repo: "{{item.repo}}"
+    dest: "{{item.dest}}"
+    accept_hostkey: true
+  loop: "{{repos}}"

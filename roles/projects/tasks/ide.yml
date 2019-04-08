@@ -1,0 +1,15 @@
+---
+
+- name: Install Visual Studio Code extensions
+  shell: "code --install-extension {{ item }}"
+  loop: "{{ vscode.extensions }}"
+
+- name: Link Visual Studio Code settings files
+  file: 
+    src: "roles/projects/files/{{ item }}"
+    path: "{{ vscode.userpath }}/{{ item }}"
+    state: link
+    force: true
+  loop: 
+    - settings.json
+    - keybindings.json

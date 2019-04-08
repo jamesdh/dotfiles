@@ -1,0 +1,53 @@
+- name: Git config username
+  git_config: 
+    name: user.name
+    scope: global
+    value: James Hardwick
+
+- name: Git config email
+  git_config: 
+    scope: global
+    name: user.email
+    value: jamesdh@gmail.com
+
+- name: Git config merge tool
+  git_config: 
+    scope: global
+    name: mergetool.p4merge.cmd
+    value: "{{apps_dir}}/p4merge.app/Contents/MacOS/p4merge $BASE $LOCAL $REMOTE $MERGED"
+  
+- name: Git config merge tool
+  git_config: 
+    scope: global
+    name: mergetool.p4merge.keeptemporaries
+    value: "false"
+  
+- name: Git config merge tool
+  git_config: 
+    scope: global
+    name: mergetool.p4merge.trustexitcode
+    value: "false"
+  
+- name: Git config merge tool
+  git_config: 
+    scope: global
+    name: mergetool.p4merge.keepbackup
+    value: "false"
+
+- name: Git config merge tool
+  git_config: 
+    scope: global
+    name: merge.tool
+    value: p4merge
+  
+- name: Git config difftool
+  git_config: 
+    scope: global
+    name: difftool.p4merge.cmd
+    value: "{{apps_dir}}/p4merge.app/Contents/MacOS/p4merge $BASE $LOCAL"
+  
+- name: Git config diff tool
+  git_config: 
+    scope: global
+    name: diff.tool
+    value: p4merge

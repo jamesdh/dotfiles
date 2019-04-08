@@ -1,14 +1,17 @@
 ---
-- name: Install Visual Studio Code extensions
-  shell: "code --install-extension {{ item }}"
-  loop: "{{ vscode.extensions }}"
+- name: Configure git 
+  import_tasks: git.yml
+  tags: 
+    - git
 
-- name: Link Visual Studio Code settings files
-  file: 
-    src: "roles/projects/files/{{ item }}"
-    path: "{{ vscode.userpath }}/{{ item }}"
-    state: link
-    force: true
-  loop: 
-    - settings.json
-    - keybindings.json
+- name: Configure repos
+  import_tasks: repos.yml
+  tags:
+    - git
+    - repos
+    
+- name: Configure IDE's
+  import_tasks: ide.yml
+  tags:
+    - ide
+    
