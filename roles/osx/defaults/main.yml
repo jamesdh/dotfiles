@@ -200,7 +200,7 @@ defaults:
       CTPreferenceWorkspaceConstrainWindowFrames: {type: bool, value: false}
       CTPreferenceWorkspacePressDockIconWhenActivatingApplication: {type: bool, value: true}
     com.fournova.Tower3:
-      GTUserDefaultsDefaultCloningDirectory: {type: string, value: 'GTUserDefaultsDefaultCloningDirectory'}
+      GTUserDefaultsDefaultCloningDirectory: {type: string, value: "{{projects_dir}}"}
       GTUserDefaultsDefaultTerminalApplication: {type: string, value: 'com.googlecode.iterm2'}
       GTUserDefaultsDiffToolIdentifier: {type: string, value: 'p4merge'}
       GTUserDefaultsMergeToolIdentifier: {type: string, value: 'p4merge'}
