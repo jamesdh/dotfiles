@@ -33,4 +33,4 @@ unset domains;
 complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes SystemUIServer Terminal Twitter" killall;
 
 # Initialize SDKMAN
-[[ -s "/Users/James/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/James/.sdkman/bin/sdkman-init.sh"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

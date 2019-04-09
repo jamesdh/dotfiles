@@ -4,7 +4,8 @@
     path: "{{home_dir}}/.sdkman"
   register: sdk_home
 
-- block: 
+- name: Install SDKMAN
+  block: 
     - name: Download SDKMAN install script
       get_url:
         url: https://get.sdkman.io
@@ -27,5 +28,5 @@
   when: not sdk_home.stat.exists
 
 - name: Install SDKMAN sdk's
-  shell: "source {{home_dir}}/.sdkman/bin/sdkman-init.sh && sdk install {{item.name}} {{item.version}}"
+  shell: "source {{home_dir}}/.sdkman/bin/sdkman-init.sh && sdk install {{item.name}} {{item.version}} && sdk default {{item.name}} {{item.version}}"
   loop: "{{sdks}}"

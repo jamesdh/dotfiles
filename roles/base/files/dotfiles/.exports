@@ -26,6 +26,6 @@ export GPG_TTY=$(tty);
 # Set some simple and more generous java defaults
 export JAVA_OPTS="-Xms256m -Xmx2048m -Dfile.encoding=UTF-8"
 
-export SDKMAN_DIR="/Users/James/.sdkman"
+export SDKMAN_DIR="$HOME/.sdkman"
 
 export NVM_DIR="$HOME/.nvm"
