@@ -26,7 +26,10 @@ login:
 	@if ! lpass status -q ; then \
 		LP_USER=$$(bash -c 'read -p "LastPass Username: " pwd; echo $$pwd') ;\
 		lpass login $$LP_USER ;\
-	fi
+	fi ;\
+	while ! mas account > /dev/null 2>&1 ; do \
+		read -p "Please signin to the Mac App Store before continuing..." ;\
+	done
 
 install: login
 	ansible-playbook --ask-become-pass --diff ansible.yml

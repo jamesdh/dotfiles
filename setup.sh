@@ -3,6 +3,9 @@
 echo "Checking for homebrew..."
 [[ ! `brew config 2> /dev/null` ]] && echo "Installing Homebrew..." && yes '' | ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
+echo "Checking for mas..."
+[[ ! `brew list mas 2> /dev/null` ]] && echo "Installing mas" && brew install mas
+
 echo "Checking for ansible..."
 [[ ! `brew list ansible 2> /dev/null` ]] && echo "Installing ansible" && brew install ansible
 
