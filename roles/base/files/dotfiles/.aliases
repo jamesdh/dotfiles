@@ -23,6 +23,7 @@ alias extract='dtrx'
 
 # Shortcuts
 alias dl="cd ~/Downloads"
+alias dm="cd ~/Documents"
 alias dt="cd ~/Desktop"
 alias p="cd ~/Projects"
 
