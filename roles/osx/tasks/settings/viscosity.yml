@@ -1,43 +1,49 @@
-# Inspiration from https://github.com/andreax79/viscosity.sh/blob/master/viscosity.sh#L68-L75
-- name: "Check if {{item}} config is installed"
-  shell: |
-    osascript -l JavaScript -e 'var app = Application("Viscosity");
-    var result = [];
-    for(i in app.connections) {
-      result.push(app.connections[i].name());
-    }
-    result' 
-  register: viscosity
-  tags: 
-    - vpn
-
-- name: "Install {{item}} config"
+---
+# We have to do this parent block so the "vpn" tag gets applied to all imported tasks
+- name: Viscosity VPN configs
   block: 
 
-  - name: Find Viscosity VPN attachment ID
-    shell: "lpass show 'VPN:{{item}}' | grep visz | cut -d':' -f1"
-    register: vpn_info
-    tags: 
-      - vpn
+  - name: "Check if {{item}} config is installed"
+    shell: |
+      osascript -l JavaScript -e 'var app = Application("Viscosity");
+      var result = [];
+      for(i in app.connections) {
+        result.push(app.connections[i].name());
+      }
+      result' 
+    register: viscosity
 
-  - name: Create tempory file to hold VPN config
-    tempfile:
-      state:  file
-      suffix: .visz
-    register: tempfile
-    tags: 
-      - vpn
+  - name: "Install {{item}} config"
+    block: 
 
-  - name: Retrieve VPN config 
-    shell: "lpass show -q --attach={{vpn_info.stdout}} 'VPN:{{item}}' > {{tempfile.path}}"
-    tags: 
-      - vpn
+    - name: Find Viscosity VPN attachment ID
+      shell: "lpass show 'VPN:{{item}}' | grep visz | cut -d':' -f1"
+      register: vpn_info
 
-  - name: Open VPN config to install into Viscosity
-    shell: "open {{tempfile.path}}"
-    tags: 
-      - vpn
+    - name: Create tempory file to hold VPN config
+      tempfile:
+        state:  file
+        suffix: .visz
+      register: tempfile
 
-  when: not viscosity.stdout is search(item)
+    - name: Retrieve VPN config 
+      shell: "lpass show -q --attach={{vpn_info.stdout}} 'VPN:{{item}}' > {{tempfile.path}}"
+
+    - name: Open VPN config to install into Viscosity
+      shell: "open {{tempfile.path}}"
+
+    when: not viscosity.stdout is search(item)
+
+  - name: Pause a moment to let all Viscosity windows open
+    pause: 
+      seconds: 5
+
+  - name: "Check if {{item}} config is installed"
+    shell: |
+      osascript -l JavaScript -e 'var app = Application("System Events").processes["Viscosity"];
+      for(i in app.windows) {
+        app.windows[i].buttons[0].click();
+      };' 
+
   tags: 
     - vpn
