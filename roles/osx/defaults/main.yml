@@ -185,6 +185,8 @@ defaults:
     com.apple.screencapture:
       disable-shadow: {type: bool, value: true, desc: 'Disable shadow in screenshots'}
       location: {type: string, value: '~/Desktop', desc: 'Save screenshots to Desktop'}
+    com.apple.Terminal: 
+      Startup Window Settings: {type: string, value: 'Pro'}
 
   userapps: 
     com.mizage.Divvy:
@@ -231,6 +233,10 @@ defaults:
       SUEnableAutomaticChecks: {type: bool, value: true}
     com.vmware.fusion:
       showStartMenu3: {type: integer, value: 0, desc: 'Remove VMWare icon from system menu'}
+    com.googlecode.iterm2:
+      DisableWindowSizeSnap: {type: bool, value: true, desc: 'Allow window to resize correctly'}
+      PromptOnQuit: {type: bool, value: false}
+      SUEnableAutomaticChecks: {type: bool, value: false, desc: 'Disable auto check for updates'}
 
   manual:
     com.mizage.Divvy:
