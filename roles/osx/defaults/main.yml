@@ -40,9 +40,11 @@ defaults:
   
   devices:
     NSGlobalDomain:
-      com.apple.mouse.scaling: {type: float, value: 1.5, desc: 'Mouse: increase tracking speed'}
+      com.apple.mouse.scaling: {type: float, value: 1.5, desc: 'Mouse: set tracking speed'}
       com.apple.mouse.tapBehavior: {type: int, value: 1, desc: 'Mouse: enable tap to click'}
       com.apple.swipescrolldirection: {type: bool, value: false, desc: 'Scroll: Disable "natural" scrolling'}
+      com.apple.trackpad.forceClick: {type: bool, value: true, desc: 'Trackpad: enable force click'}
+      com.apple.trackpad.scaling: {type: float, value: 0.875, desc: 'Trackpad: set tracking speed'}
       InitialKeyRepeat: {type: int, value: 15, desc: 'Keyboard: Set initial keypress wait interval'}
       KeyRepeat: {type: int, value: 1, desc: 'Keyboard: Set keypress repeat interval (1 - 15ms, 2 - 30ms, etc)'}
     com.apple.AppleMultitouchMouse:
