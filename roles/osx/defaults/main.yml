@@ -216,6 +216,8 @@ defaults:
       GTUserDefaultsDefaultTerminalApplication: {type: string, value: 'com.googlecode.iterm2'}
       GTUserDefaultsDiffToolIdentifier: {type: string, value: 'p4merge'}
       GTUserDefaultsMergeToolIdentifier: {type: string, value: 'p4merge'}
+    com.lastpass.LastPass:
+      "global_StartOnLogin": {type: string, value: 1}
     com.surteesstudios.Bartender:
       license2: {type: string, value: "{{ lookup('lastpass', 'License:Bartender3', field='License Key') }}"}
       license2HoldersName: {type: string, value: "{{ lookup('lastpass', 'License:Bartender3', field='Licensee') }}"}
