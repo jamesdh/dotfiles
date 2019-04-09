@@ -137,6 +137,7 @@ defaults:
       persistent-apps: {type: array, value: [], desc: 'Dock: wipe all (default) app icons'}
       showhidden: {type: bool, value: true, desc: 'Dock: make Dock icons of hidden apps translucent'}
       showLaunchpadGestureEnabled: {type: int, value: 0, desc: 'Dock: disable the Launchpad gesture (pinch with thumb and three fingers)'}
+      show-recents: {type: bool, value: false, desc: 'Dock: hide recent items'}
       static-only: {type: bool, value: true, desc: 'Dock: show only open apps'}
       tilesize: {type: int, value: 32, desc: 'Set Dock icons to 32 pixels'}
   
