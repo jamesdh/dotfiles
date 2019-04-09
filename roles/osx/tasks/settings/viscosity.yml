@@ -1,0 +1,44 @@
+# Inspiration from https://github.com/andreax79/viscosity.sh/blob/master/viscosity.sh#L68-L75
+- name: "Check if {{item}} config is installed"
+  shell: |
+    osascript -e 'tell application "Viscosity"
+      set result to {}
+      repeat with con in connections
+          set result to result & (get name of con)
+      end repeat
+      return result
+    end tell' 
+  register: viscosity
+  tags: 
+    - vpn
+
+- name: "Install {{item}} config"
+  block: 
+
+  - name: Find Viscosity VPN attachment ID
+    shell: "lpass show 'VPN:{{item}}' | grep visz | cut -d':' -f1"
+    register: vpn_info
+    tags: 
+      - vpn
+
+  - name: Create tempory file to hold VPN config
+    tempfile:
+      state:  file
+      suffix: .visz
+    register: tempfile
+    tags: 
+      - vpn
+
+  - name: Retrieve VPN config 
+    shell: "lpass show -q --attach={{vpn_info.stdout}} 'VPN:{{item}}' > {{tempfile.path}}"
+    tags: 
+      - vpn
+
+  - name: Open VPN config to install into Viscosity
+    shell: "open {{tempfile.path}}"
+    tags: 
+      - vpn
+
+  when: not viscosity.stdout is search(item)
+  tags: 
+    - vpn

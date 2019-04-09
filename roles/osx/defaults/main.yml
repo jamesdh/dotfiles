@@ -238,3 +238,10 @@ divvy:
 
 contexts: 
   license_url: "{{ lookup('lastpass', 'License:Contexts', field='Website') }}"
+
+viscosity: 
+  - Cohoot
+  - SellerCrowd
+  - ExpressVPN - Denver
+  - ExpressVPN - New Jersey 1
+  - ExpressVPN - New Jersey 3

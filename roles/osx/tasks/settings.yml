@@ -49,3 +49,7 @@
 
 - import_tasks: settings/divvy.yml
 - import_tasks: settings/contexts.yml
+- include_tasks: settings/viscosity.yml
+  loop: "{{viscosity}}"
+  tags: 
+    - vpn
