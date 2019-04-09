@@ -199,6 +199,7 @@ defaults:
       lastRowCount: {type: int, value: 10}
       # shortcuts: See https://github.com/ansible/ansible/pull/24808
       showMenuIcon: {type: bool, value: false}
+      SuppressImportDialog: {type: bool, value: true}
       useDefaultGrid: {type: bool, value: true}
       useGlobalHotkey: {type: bool, value: true}
       useMonitorCycling: {type: bool, value: true}
