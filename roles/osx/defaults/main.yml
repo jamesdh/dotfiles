@@ -151,11 +151,15 @@ defaults:
       IncludeInternalDebugMenu: {type: bool, value: true, desc: 'Safari: enable debug menu'}
       ProxiesInBookmarksBar: {type: array, value: [], desc: 'Safari: remove useless icons from bookmarks bar'}
       ShowFullURLInSmartSearchField: {type: bool, value: true, desc: 'Safari: show the full URL in the address bar (note: this still hides the scheme)'}
+      ShowOverlayStatusBar: {type: bool, value: true, desc: 'Safari: show bottom status bar' }
       ShowSidebarInTopSites: {type: bool, value: false, desc: 'Safari: hide sidebar in Top Sites'}
       SuppressSearchSuggestions: {type: bool, value: true, desc: 'Safari: dont show search suggestions'}
       UniversalSearchEnabled: {type: bool, value: false, desc: 'Safari: dont send search queries to Apple'}
       WebKitDeveloperExtrasEnabledPreferenceKey: {type: bool, value: true, desc: 'Safari: enable the Web Inspector'}
       "ShowFavoritesBar-v2": {type: bool, value: true, desc: 'Safari: show bookmarks bar by default'}
+      "WebKitPreferences.developerExtrasEnabled": {type: bool, value: true, desc: 'Safari: enable the Develop menu'}
+    com.apple.Safari.SandboxBroker:
+      ShowDevelopMenu: {type: bool, value: true, desc: 'Safari: enable the Develop menu'}
     NSGlobalDomain:
       WebKitDeveloperExtras: {type: bool, value: true, desc: 'Safari: add a context menu item for showing the Web Inspector in web views'}
   
