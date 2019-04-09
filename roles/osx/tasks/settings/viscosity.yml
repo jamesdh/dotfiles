@@ -1,13 +1,12 @@
 # Inspiration from https://github.com/andreax79/viscosity.sh/blob/master/viscosity.sh#L68-L75
 - name: "Check if {{item}} config is installed"
   shell: |
-    osascript -e 'tell application "Viscosity"
-      set result to {}
-      repeat with con in connections
-          set result to result & (get name of con)
-      end repeat
-      return result
-    end tell' 
+    osascript -l JavaScript -e 'var app = Application("Viscosity");
+    var result = [];
+    for(i in app.connections) {
+      result.push(app.connections[i].name());
+    }
+    result' 
   register: viscosity
   tags: 
     - vpn
