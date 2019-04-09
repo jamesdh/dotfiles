@@ -25,6 +25,7 @@ vscode:
     - ms-python.python
     - vscode-icons-team.vscode-icons
     - redhat.vscode-yaml
+    - idleberg.applescript
 
 repos: 
   - {repo: git@github.com:sellercrowd/cohoot.git, dest: "{{projects_dir}}/cohoot"}
