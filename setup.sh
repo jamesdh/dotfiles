@@ -11,3 +11,5 @@ echo "Checking for ansible..."
 
 echo "Checking for lastpass..."
 [[ ! `brew list lastpass-cli 2> /dev/null` ]] && echo "Installing lastpass-cli" && brew install lastpass-cli
+
+echo "Finished bootstrapping!"
