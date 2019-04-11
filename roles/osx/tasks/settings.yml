@@ -52,4 +52,5 @@
 - include_tasks: settings/viscosity.yml
   loop: "{{viscosity}}"
   tags: 
+    - settings
     - vpn

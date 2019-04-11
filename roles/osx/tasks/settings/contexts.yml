@@ -1,34 +1,28 @@
 ---
+- name: Configure Contexts
+  block: 
+    
+    - name: Create tempory file to hold Contexts license
+      tempfile:
+        state:  file
+        suffix: .contexts-license
+      register: tempfile
 
-- name: Create tempory file to hold Contexts license
-  tempfile:
-    state:  file
-    suffix: .contexts-license
-  register: tempfile
-  tags: 
-    - contexts
-    - settings
+    - name: Download license
+      get_url:
+        url: '{{ contexts.license_url }}'
+        dest: "{{ tempfile.path }}"
+        mode: 0600
+        force: true
 
-- name: Download license
-  get_url:
-    url: '{{ contexts.license_url }}'
-    dest: "{{ tempfile.path }}"
-    mode: 0600
-    force: true
-  tags: 
-    - contexts
-    - settings
+    - name: Open license file to register licence with Contexts
+      shell: "open {{ tempfile.path }}"
 
-- name: Open license file to register licence with Contexts
-  shell: "open {{ tempfile.path }}"
-  tags: 
-    - contexts
-    - settings
-
-- name: Remove license file
-  file:
-    path: "{{ tempfile.path }}"
-    state: absent
+    - name: Remove license file
+      file:
+        path: "{{ tempfile.path }}"
+        state: absent
+  
   tags: 
     - contexts
     - settings
