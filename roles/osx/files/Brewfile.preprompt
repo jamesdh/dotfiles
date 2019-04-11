@@ -1,0 +1,6 @@
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/core"
+cask "contexts"
+cask "viscosity"
+mas "Divvy", id: 413857545
