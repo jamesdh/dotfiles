@@ -229,12 +229,15 @@ defaults:
       license2HoldersName: {type: string, value: "{{ lookup('lastpass', 'License:Bartender3', field='Licensee') }}"}
     com.viscosityvpn.Viscosity:
       DisableTimeMachine: {type: bool, value: true, desc: 'Disable Time Machine backups while on VPN'}
+      DisplayWelcome: {type: bool, value: true, desc: 'Disable startup dialogs'}
       MenuBarIcons: {type: string, value: 'Leopard Gray'}
+      OfferedToImportApps: {type: bool, value: true, desc: 'Disable startup dialogs'}
       ReconnectOnWake: {type: bool, value: false}
       SUEnableAutomaticChecks: {type: bool, value: true}
     com.vmware.fusion:
       showStartMenu3: {type: integer, value: 0, desc: 'Remove VMWare icon from system menu'}
     com.googlecode.iterm2:
+      AlternateMouseScroll: {type: bool, value: true, desc: 'Allow mouse scrolling'}
       DisableWindowSizeSnap: {type: bool, value: true, desc: 'Allow window to resize correctly'}
       PromptOnQuit: {type: bool, value: false}
       SUEnableAutomaticChecks: {type: bool, value: false, desc: 'Disable auto check for updates'}
