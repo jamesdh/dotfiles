@@ -23,6 +23,9 @@
         path: "{{ tempfile.path }}"
         state: absent
   
+    - name: Open Accessibility panel
+      shell: osascript -l JavaScript jsx/open_accessibility.scpt 
+
   tags: 
     - contexts
     - settings

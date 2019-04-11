@@ -24,6 +24,9 @@
     #   tags:
     #     - defaults
 
+    - name: Open Accessibility panel
+      shell: osascript -l JavaScript jsx/open_accessibility.scpt 
+
   tags:
     - settings
     - divvy
