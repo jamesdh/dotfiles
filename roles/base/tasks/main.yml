@@ -24,3 +24,15 @@
     - .vimrc
   tags: 
     - dotfiles
+    - preprompt
+
+- name: Link fonts to ~/Library/Fonts
+  file: 
+    src: "{{role_path}}/files/fonts/{{item}}"
+    path: "{{home_dir}}/Library/Fonts/{{item}}"
+    state: link
+    force: true
+  loop: 
+    - inconsolate
+  tags: 
+    - fonts
