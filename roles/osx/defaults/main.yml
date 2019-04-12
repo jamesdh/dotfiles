@@ -1,9 +1,8 @@
 apps_dir: /Applications
 
 finder_dels:
-  Recents.cannedsearch: file:///System/Library/CoreServices/Finder.app/Contents/Resources/MyLibraries/myDocuments.cannedSearch/
-  myDocuments.cannedSearch: file:///System/Library/CoreServices/Finder.app/Contents/Resources/MyLibraries/myDocuments.cannedSearch/
-  'Creative Cloud Files': file:///{{home_dir}}/Creative%20Cloud%20Files/
+  - 'Recents.cannedsearch'
+  - 'Creative Cloud Files'
 
 finder_adds:
   - {name: james, path: "file://{{home_dir}}/"}
