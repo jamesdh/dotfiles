@@ -1,4 +1,9 @@
-- name: Install applications
+- name: Install applications necessary for immediate permissions approvals
+  import_tasks: apps.pre.yml
+  tags: 
+    - preinstall
+
+- name: Install core applications
   import_tasks: apps.yml
   tags:
     - apps

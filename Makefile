@@ -20,7 +20,8 @@ diff:
 	ansible-playbook --ask-become-pass --diff ansible.yml
 
 bootstrap:
-	@./setup.sh
+	@./setup.sh ;\
+	source $$HOME/.bash_profile
 
 login: 
 	@if ! lpass status -q ; then \
