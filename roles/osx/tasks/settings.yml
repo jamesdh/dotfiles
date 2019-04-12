@@ -19,27 +19,8 @@
   tags: 
     - defaults
 
-- name: Remove undesired Finder sidebar items
-  shell: "mysides remove '{{ item.key }}'"
-  loop: "{{ finder_dels | dict2items }}"
-  ignore_errors: true
+- import_tasks: per_app/finder.yml
   tags: 
-    - finder
-
-- name: Add desired Finder sidebar items
-  shell: "mysides add '{{ item.name }}' {{ item.path }}"
-  loop: "{{ finder_adds }}"
-  ignore_errors: true
-  tags: 
-    - finder
-
-- name: Show hidden folders
-  command: "chflags nohidden {{ item }}"
-  become: true
-  loop: 
-    - "{{ home_dir }}/Library"
-    - /Volumes
-  tags:
     - finder
 
 - name: "Restart Dock"
@@ -47,10 +28,6 @@
   tags: 
     - dock
 
-- import_tasks: settings/divvy.yml
-- import_tasks: settings/contexts.yml
-- include_tasks: settings/viscosity.yml
-  loop: "{{viscosity}}"
-  tags: 
-    - settings
-    - vpn
+- import_tasks: per_app/divvy.yml
+- import_tasks: per_app/contexts.yml
+- import_tasks: per_app/viscosity.yml

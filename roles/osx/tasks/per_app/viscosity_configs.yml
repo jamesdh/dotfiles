@@ -1,4 +1,5 @@
 ---
+
 # We have to do this parent block so the "vpn" tag gets applied to all imported tasks
 - name: Viscosity VPN configs
   block: 
@@ -29,21 +30,21 @@
     - name: Retrieve VPN config 
       shell: "lpass show -q --attach={{vpn_info.stdout}} 'VPN:{{item}}' > {{tempfile.path}}"
 
-    - name: Open VPN config to install into Viscosity
+    - name: Install VPN config
       shell: "open {{tempfile.path}}"
 
+    - name: Pause a moment to let Viscosity dialog open
+      pause: 
+        seconds: 2
+
+    - name: "Close installed dialog for {{item}}"
+      shell: |
+        osascript -l JavaScript -e 'var app = Application("System Events").processes["Viscosity"];
+        for(i in app.windows) {
+          app.windows[i].buttons[0].click();
+        };' 
+
     when: not viscosity.stdout is search(item)
-
-  - name: Pause a moment to let all Viscosity windows open
-    pause: 
-      seconds: 5
-
-  - name: "Check if {{item}} config is installed"
-    shell: |
-      osascript -l JavaScript -e 'var app = Application("System Events").processes["Viscosity"];
-      for(i in app.windows) {
-        app.windows[i].buttons[0].click();
-      };' 
 
   tags: 
     - vpn

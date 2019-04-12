@@ -1,0 +1,17 @@
+---
+
+- name: Trigger permissions prompt and Helper installer if not already approved/installed
+  shell: |
+    osascript -l JavaScript -e 'var app = Application("Viscosity").connections();' &&
+    osascript -l JavaScript -e 'var app = Application("System Events").processes["Viscosity"].windows()'
+  tags: 
+    - vpn
+    - preprompt
+
+- include_tasks: per_app/viscosity_configs.yml
+  loop: "{{viscosity}}"
+  tags: 
+    - settings
+    - vpn
+
+ 

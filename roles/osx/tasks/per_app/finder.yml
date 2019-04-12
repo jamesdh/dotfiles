@@ -1,0 +1,23 @@
+---
+
+- name: Get list of current Finder sidebar items
+  shell: mysides list
+  register: mysides_items
+  
+- name: Remove undesired Finder sidebar items
+  shell: "mysides remove '{{ item }}'"
+  loop: "{{ finder_dels }}"
+  when: "item in mysides_items.stdout"
+  
+- name: Add desired Finder sidebar items
+  shell: "mysides add '{{ item.name }}' {{ item.path }}"
+  loop: "{{ finder_adds }}"
+  ignore_errors: true
+  
+- name: Show hidden folders
+  command: "chflags nohidden {{ item }}"
+  become: true
+  loop: 
+    - "{{ home_dir }}/Library"
+    - /Volumes
+  
