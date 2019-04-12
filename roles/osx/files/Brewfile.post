@@ -1,0 +1,72 @@
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/cask-drivers"
+tap "homebrew/cask-versions"
+tap "homebrew/core"
+tap "wagoodman/dive"
+brew "aws-shell"
+brew "awscli"
+brew "bat"
+brew "brew-cask-completion"
+brew "elixir"
+brew "exiftool"
+brew "fio"
+brew "hub"
+brew "ioping"
+brew "pyenv"
+brew "pyenv-virtualenv"
+brew "ruby", link: true
+brew "s3cmd"
+brew "tree"
+brew "yarn"
+brew "youtube-dl"
+brew "wagoodman/dive/dive"
+cask "adobe-dng-converter"
+cask "astah-professional"
+cask "atom"
+cask "caffeine"
+cask "dash"
+cask "dbeaver-community"
+cask "expressvpn"
+cask "firefox"
+cask "flume"
+cask "google-chrome"
+cask "icloud-control"
+cask "kitematic"
+cask "luna-display"
+cask "messenger"
+cask "namebench"
+cask "postman"
+cask "pycharm"
+cask "quik"
+cask "rawtherapee"
+cask "selfcontrol"
+cask "sketch"
+cask "skype"
+cask "spotify"
+cask "timing"
+cask "transmission"
+cask "vagrant"
+cask "virtualbox"
+cask "vlc"
+cask "vmware-fusion"
+cask "whatsapp"
+cask "zeplin"
+mas "Be Focused Pro", id: 961632517
+mas "CopyClip", id: 595191960
+mas "Countdowns", id: 926707738
+mas "DaisyDisk", id: 411643860
+mas "DayOne", id: 1055511498
+mas "Display Maid", id: 450063525
+mas "GIPHY", id: 668208984
+mas "Helium", id: 1054607607
+mas "LittleIpsum", id: 405772121
+mas "Monity", id: 915542151
+mas "Pixelmator", id: 407963104
+mas "Pocket", id: 568494494
+mas "Shush", id: 496437906
+mas "The Unarchiver", id: 425424353
+mas "Tomato One", id: 907364780
+mas "Tweetbot 3", id: 1384080005
+mas "World Clock Pro", id: 858446756
+mas "Xcode 10.2", id: 497799835
