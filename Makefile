@@ -21,7 +21,7 @@ diff:
 
 bootstrap:
 	@./setup.sh ;\
-	source $$HOME/.bash_profile
+	source ~/.bash_profile
 
 login: 
 	@if ! lpass status -q ; then \
