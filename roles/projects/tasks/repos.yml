@@ -1,5 +1,22 @@
 ---
 
+- name: Get list of projects that already exist
+  shell: ls -d -1 "$PWD"**/*
+  args:
+    chdir: "{{projects_dir}}"
+  register: projects_ls
+
+# I mostly just do this because "dotfiles" is initially checked out using https
+# This takes care of fixing it so I can easily modify and push changes 
+- name: Verify repo origin url for projects already in place
+  git_config:
+    scope: local
+    repo: "{{item.dest}}"
+    name: remote.origin.url
+    value: "{{item.repo}}"
+  loop: "{{repos}}"
+  when: 'item.dest in projects_ls.stdout'
+
 - name: Setup git repositories 
   git:
     repo: "{{item.repo}}"

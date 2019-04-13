@@ -31,4 +31,4 @@ repos:
   - {repo: git@github.com:sellercrowd/cohoot.git, dest: "{{projects_dir}}/cohoot"}
   - {repo: git@github.com:sellercrowd/sellercrowd.git, dest: "{{projects_dir}}/sellercrowd"}
   # - {repo: git@github.com:moltenbits/teamtempo.git, dest: "{{projects_dir}}/teamtempo"}
-  # - {repo: git@github.com:jamesdh/dotfiles.git, dest: "{{projects_dir}}/dotfiles"}
+  - {repo: git@github.com:jamesdh/dotfiles.git, dest: "{{projects_dir}}/dotfiles"}
