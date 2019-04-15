@@ -24,10 +24,11 @@
   tags: 
     - finder
 
-- name: "Restart Dock"
-  shell: "killall Dock"
+- name: "Restart affected services"
+  shell: "killall cfprefsd Dock Finder Safari SystemUIServer TouchBarServer"
+  become: true
   tags: 
-    - dock
+    - restart
 
 - import_tasks: per_app/divvy.yml
 - import_tasks: per_app/contexts.yml
