@@ -20,14 +20,10 @@
     
     - name: Make Divvy start on login
       shell: "osascript -e 'tell application \"System Events\" to make login item at end with properties {path: \"/Applications/Divvy.app\", hidden: false}'"
-      tags: 
-        - defaults
-  
+      
     - name: Start Divvy so it responds to the global shortcut
       shell: "osascript -e 'tell application \"Divvy\" to activate'"
-      tags:
-        - defaults
-
+      
     - name: Open Accessibility panel
       shell: osascript -l JavaScript jxa/open_accessibility.scpt 
       tags: 
