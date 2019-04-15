@@ -27,12 +27,10 @@
     - preprompt
 
 - name: Link fonts to ~/Library/Fonts
-  file: 
-    src: "{{role_path}}/files/fonts/{{item}}"
-    path: "{{home_dir}}/Library/Fonts/{{item}}"
-    state: link
-    force: true
+  copy: 
+    src: "{{role_path}}/files/fonts/{{item.name}}/{{item.name}}-{{item.type}}.ttf"
+    dest: "{{home_dir}}/Library/Fonts/{{item.name}}-{{item.type}}.ttf"
   loop: 
-    - inconsolate
+    - {name: Inconsolata, type: Regular}
   tags: 
     - fonts
