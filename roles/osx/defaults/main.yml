@@ -96,6 +96,23 @@ defaults:
       MouseVerticalScroll: {type: bool, value: true}
       UserPreferences: {type: bool, value: true}
     
+  touchbar: 
+    com.apple.controlstrip: 
+      FullCustomized: {type: array, value: [NSTouchBarItemIdentifierFlexibleSpace,
+            "com.apple.system.mission-control",
+            "com.apple.system.night-shift",
+            "com.apple.system.brightness",
+            NSTouchBarItemIdentifierFlexibleSpace,
+            "com.apple.system.group.media",
+            NSTouchBarItemIdentifierFlexibleSpace,
+            "com.apple.system.mute",
+            "com.apple.system.volume",
+            NSTouchBarItemIdentifierFlexibleSpace,
+            "com.apple.system.do-not-disturb",
+            "com.apple.system.screen-lock"]}
+    com.apple.touchbar.agent:
+      PresentationModeGlobal: {type: string, value: 'fullControlStrip'}
+      
   finder:
     com.apple.desktopservices:
       DSDontWriteNetworkStores: {type: bool, value: true, desc: 'Avoid creating .DS_Store files on network volumes'}
