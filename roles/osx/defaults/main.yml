@@ -25,10 +25,23 @@ defaults:
     com.apple.systempreferences:
       NSQuitAlwaysKeepsWindows: {type: bool, value: false, desc: 'Disable Resume system-wide'}
     com.apple.systemuiserver:
+      "NSStatusItem Visible Siri": {type: bool, value: false, desc: 'Disable Siri menubar icon'}
+      "NSStatusItem Visible com.apple.menuextra.TimeMachine": {type: bool, value: true, desc: 'Enable Time Machine menubar icon'}
+      "NSStatusItem Visible com.apple.menuextra.airplay": {type: bool, value: true, desc: 'Enable AirPlay menubar icon'}
+      "NSStatusItem Visible com.apple.menuextra.airport": {type: bool, value: true, desc: 'Enable wifi menubar icon'}
+      "NSStatusItem Visible com.apple.menuextra.battery": {type: bool, value: true, desc: 'Enable power menubar icon'}
       "NSStatusItem Visible com.apple.menuextra.bluetooth": {type: bool, value: true, desc: 'Enable bluetooth menubar icon'}
-      menuExtras: {type: array, value: ["/System/Library/CoreServices/Menu Extras/Clock.menu",
+      "NSStatusItem Visible com.apple.menuextra.clock": {type: bool, value: true, desc: 'Enable clock menubar icon'}
+      "NSStatusItem Visible com.apple.menuextra.volume": {type: bool, value: true, desc: 'Enable volume menubar icon'}
+      menuExtras: {type: array, value: [
+        "/System/Library/CoreServices/Menu Extras/Clock.menu",
         "/System/Library/CoreServices/Menu Extras/AirPort.menu",
-        "/System/Library/CoreServices/Menu Extras/Bluetooth.menu"], desc: 'Enable bluetooth menubar icon'}
+        "/System/Library/CoreServices/Menu Extras/Bluetooth.menu",
+        "/System/Library/CoreServices/Menu Extras/Displays.menu",
+        "/System/Library/CoreServices/Menu Extras/Battery.menu",
+        "/System/Library/CoreServices/Menu Extras/Volume.menu",
+        "/System/Library/CoreServices/Menu Extras/Clock.menu"
+        ], desc: 'Enable system menubar icon'}
     com.apple.universalaccess:
       reduceTransparency: {type: bool, value: true, desc: 'Disable transparency in the menu bar and elsewhere'}
     NSGlobalDomain:
