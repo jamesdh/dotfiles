@@ -32,5 +32,11 @@ unset domains;
 # Add `killall` tab completion for common apps
 complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes SystemUIServer Terminal Twitter" killall;
 
+# Bash Completion 
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+
+# direnv bash support
+eval "$(direnv hook bash)"
+
 # Initialize SDKMAN
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

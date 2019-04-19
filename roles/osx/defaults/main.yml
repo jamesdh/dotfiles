@@ -18,6 +18,8 @@ defaults:
   ui: 
     com.apple.LaunchServices:
       LSQuarantine: {type: bool, value: false, desc: 'Disable the “Are you sure you want to open this application?” dialog'}
+    com.apple.menuextra.battery: 
+      ShowPercent: {type: string, value: 'NO', desc: Dont show battery percentage remaining}
     com.apple.menuextra.clock:
       IsAnalog: {type: bool, value: true, desc: 'Set menubar clock to analog'}
     com.apple.screensaver:
