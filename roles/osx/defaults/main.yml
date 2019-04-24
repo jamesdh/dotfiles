@@ -272,6 +272,7 @@ defaults:
     com.googlecode.iterm2:
       AlternateMouseScroll: {type: bool, value: true, desc: 'Allow mouse scrolling'}
       DisableWindowSizeSnap: {type: bool, value: true, desc: 'Allow window to resize correctly'}
+      NoSyncPermissionToShowTip: {type: bool, value: false, desc: 'Disable tips on startup'}
       PromptOnQuit: {type: bool, value: false}
       SUEnableAutomaticChecks: {type: bool, value: false, desc: 'Disable auto check for updates'}
 
