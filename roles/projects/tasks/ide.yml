@@ -6,7 +6,7 @@
 
 - name: Link Visual Studio Code settings files
   file: 
-    src: "roles/projects/files/{{ item }}"
+    src: "{{role_path}}/files/{{ item }}"
     path: "{{ vscode.userpath }}/{{ item }}"
     state: link
     force: true
