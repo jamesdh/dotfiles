@@ -216,6 +216,8 @@ defaults:
     com.apple.screencapture:
       disable-shadow: {type: bool, value: true, desc: 'Disable shadow in screenshots'}
       location: {type: string, value: '~/Desktop', desc: 'Save screenshots to Desktop'}
+    com.apple.scriptmenu:
+      ScriptMenuEnabled: {type: bool, value: false}
     com.apple.Terminal: 
       Startup Window Settings: {type: string, value: 'Pro'}
 
