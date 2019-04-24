@@ -4,5 +4,6 @@
     "workbench.startupEditor": "newUntitledFile",
     "window.restoreWindows": "all",
     "explorer.confirmDragAndDrop": false,
-    "explorer.confirmDelete": false
+    "explorer.confirmDelete": false,
+    "workbench.tree.indent": 14
 }
