@@ -262,7 +262,7 @@ defaults:
       license2HoldersName: {type: string, value: "{{ lookup('lastpass', 'License:Bartender3', field='Licensee') }}"}
     com.viscosityvpn.Viscosity:
       DisableTimeMachine: {type: bool, value: true, desc: 'Disable Time Machine backups while on VPN'}
-      DisplayWelcome: {type: bool, value: true, desc: 'Disable startup dialogs'}
+      DisplayWelcome: {type: bool, value: false, desc: 'Disable startup dialogs'}
       MenuBarIcons: {type: string, value: 'Leopard Gray'}
       OfferedToImportApps: {type: bool, value: true, desc: 'Disable startup dialogs'}
       ReconnectOnWake: {type: bool, value: false}
