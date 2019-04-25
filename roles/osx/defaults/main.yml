@@ -215,7 +215,7 @@ defaults:
       disableHotPlug: {type: bool, value: true, host: currentHost, desc: 'Stop Photos from opening automatically'}
     com.apple.screencapture:
       disable-shadow: {type: bool, value: true, desc: 'Disable shadow in screenshots'}
-      location: {type: string, value: '~/Desktop', desc: 'Save screenshots to Desktop'}
+      location: {type: string, value: '{{ home_dir }}/Desktop', desc: 'Save screenshots to Desktop'}
     com.apple.scriptmenu:
       ScriptMenuEnabled: {type: bool, value: false}
     com.apple.Terminal: 
