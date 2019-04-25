@@ -1,0 +1,6 @@
+- name: Link Learned Spellings Dictionary
+  file: 
+    src: "{{role_path}}/files/LocalDictionary"
+    path: "{{ home_dir }}/Library/Spelling/LocalDictionary"
+    state: link
+    force: true

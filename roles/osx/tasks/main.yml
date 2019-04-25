@@ -12,3 +12,8 @@
   import_tasks: settings.yml
   tags: 
     - settings
+
+- name: Configure Learned Spellings Dictionary
+  import_tasks: spelling.yml
+  tags:
+    - dictionary
