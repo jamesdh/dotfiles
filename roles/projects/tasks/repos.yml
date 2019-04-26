@@ -1,7 +1,7 @@
 ---
 
 - name: Get list of projects that already exist
-  shell: ls -d -1 "$PWD"**/*
+  shell: ls -d -1 "$PWD"*/*/
   args:
     chdir: "{{projects_dir}}"
   register: projects_ls
@@ -23,3 +23,4 @@
     dest: "{{item.dest}}"
     accept_hostkey: true
   loop: "{{repos}}"
+  when: 'not item.dest in projects_ls.stdout'
