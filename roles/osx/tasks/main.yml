@@ -8,6 +8,13 @@
   tags:
     - apps
 
+- name: Install Nativefier applicaitons
+  include_tasks: nativefier.yml
+  tags:
+    - apps
+    - nativefier
+  loop: "{{nativefier}}"
+  
 - name: Configure OS settings
   import_tasks: settings.yml
   tags: 

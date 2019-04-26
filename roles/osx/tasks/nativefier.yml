@@ -1,0 +1,27 @@
+
+- block: 
+
+  - name: Check if already installed
+    stat: 
+      path: "{{apps_dir}}/{{item.name}}.app"
+    register: st
+
+  - name: Install App if doesn't already exist
+    block:   
+
+      - name: Build {{item.name}}
+        shell: "nativefier -n '{{item.name}}' --internal-urls '.*' '{{item.url}}'"
+
+      - name: Move built {{item.name}} app to {{apps_dir}}
+        shell: "mv {{item.name | regex_replace('\\s', '\\ ')}}-darwin-x64/{{item.name | regex_replace('\\s', '\\ ')}}.app {{apps_dir}}/"
+      
+      - name: Cleanup remaining artifacts
+        file: 
+          path: "{{item.name}}-darwin-x64"
+          state: absent
+
+    when: not st.stat.exists
+  
+  tags: 
+    - apps
+    - nativefier

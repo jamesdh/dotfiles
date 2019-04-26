@@ -13,6 +13,12 @@ finder_adds:
   - {name: Downloads, path: "file://{{home_dir}}/Downloads/"}
   - {name: Projects, path: "file://{{projects_dir}}"}
 
+nativefier: 
+  - {name: FreshBooks, url: 'my.freshbooks.com/#/dashboard'}
+  - {name: Google Maps, url: 'maps.google.com?hl=en'} 
+  - {name: Octobox, url: 'octobox.io'}
+  - {name: SoundCloud, url: 'soundcloud.com'}
+
 defaults:
   
   ui: 
