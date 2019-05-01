@@ -18,6 +18,7 @@ nativefier:
   - {name: Google Maps, url: 'maps.google.com?hl=en'} 
   - {name: Octobox, url: 'octobox.io'}
   - {name: SoundCloud, url: 'soundcloud.com'}
+  - {name: DuoLingo, url: 'duolingo.com'}
 
 defaults:
   
