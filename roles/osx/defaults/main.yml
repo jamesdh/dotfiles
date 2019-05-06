@@ -246,6 +246,8 @@ defaults:
       useDefaultGrid: {type: bool, value: true}
       useGlobalHotkey: {type: bool, value: true}
       useMonitorCycling: {type: bool, value: true}
+    com.mizage.shush:
+      doubleTapLock: {type: bool, value: true}
     com.contextsformac.Contexts:
       CTAppearanceTheme: {type: string, value: 'CTAppearanceNamedVibrantDark'}
       CTKeyboardEventCommandModeActive: {type: bool, value: false}
