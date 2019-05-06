@@ -193,6 +193,7 @@ defaults:
       IncludeInternalDebugMenu: {type: bool, value: true, desc: 'Safari: enable debug menu'}
       ProxiesInBookmarksBar: {type: array, value: [], desc: 'Safari: remove useless icons from bookmarks bar'}
       ShowFullURLInSmartSearchField: {type: bool, value: true, desc: 'Safari: show the full URL in the address bar (note: this still hides the scheme)'}
+      ShowIconsInTabs: {type: bool, value: true, desc: 'Safari: show favicons in tabs'}
       ShowOverlayStatusBar: {type: bool, value: true, desc: 'Safari: show bottom status bar' }
       ShowSidebarInTopSites: {type: bool, value: false, desc: 'Safari: hide sidebar in Top Sites'}
       SuppressSearchSuggestions: {type: bool, value: true, desc: 'Safari: dont show search suggestions'}
