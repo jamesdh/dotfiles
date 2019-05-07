@@ -1,9 +1,14 @@
 {
+    "workbench.colorCustomizations": {
+        "statusBar.background": "#3C3C3C",
+        "statusBar.noFolderBackground": "#3C3C3C",
+        "statusBar.debuggingBackground": "#3C3C3C"
+    },
     "workbench.iconTheme": "vscode-icons",
-    "workbench.statusBar.feedback.visible": false,
     "workbench.startupEditor": "newUntitledFile",
     "window.restoreWindows": "all",
     "explorer.confirmDragAndDrop": false,
     "explorer.confirmDelete": false,
-    "workbench.tree.indent": 14
+    "workbench.tree.indent": 14,
+    "workbench.statusBar.feedback.visible": false
 }
