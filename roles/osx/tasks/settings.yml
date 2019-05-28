@@ -24,6 +24,10 @@
   tags: 
     - finder
 
+- import_tasks: per_app/bash.yml
+  tags: 
+    - bash
+
 - name: "Restart affected services"
   shell: "killall cfprefsd Dock Finder Safari SystemUIServer TouchBarServer"
   become: true
