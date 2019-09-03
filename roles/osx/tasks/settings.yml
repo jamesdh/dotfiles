@@ -1,4 +1,7 @@
 
+- name: "Set preferred resolution" 
+  shell: "/Applications/RDM.app/Contents/MacOS/SetResX -w 1680 -h 1050 -s 2.0"
+  
 - include_tasks: defaults.yml
   vars: 
     domain: "{{ domain_item.key }}"
