@@ -11,14 +11,14 @@
     dest: '{{ ssh_dir }}/config'
     mode: 0600
 
-- name: Retrieve Private Keys
-  copy: 
-    content: "{{ lookup('lastpass', 'Key:' + item, field='Private Key') }}"
-    dest: '{{ ssh_dir }}/{{ item }}' 
-    mode: 0600
-  loop: '{{ ssh_keys }}'
-  loop_control:
-    label: '{{ item }}'
+# - name: Retrieve Private Keys
+#   copy: 
+#     content: "{{ lookup('lastpass', 'Key:' + item, field='Private Key') }}"
+#     dest: '{{ ssh_dir }}/{{ item }}' 
+#     mode: 0600
+#   loop: '{{ ssh_keys }}'
+#   loop_control:
+#     label: '{{ item }}'
   
 - name: Retrieve Public Keys
   copy: 
