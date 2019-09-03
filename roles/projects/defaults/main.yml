@@ -12,7 +12,7 @@ vscode:
   extensions: 
     - marlon407.code-groovy
     - vscjava.vscode-java-debug
-    - peterjausovec.vscode-docker
+    - ms-azuretools.vscode-docker
     - mikestead.dotenv
     - dbaeumer.vscode-eslint
     - codezombiech.gitignore
