@@ -2,6 +2,14 @@
 - name: "Set preferred resolution" 
   shell: "/Applications/RDM.app/Contents/MacOS/SetResX -w 1680 -h 1050 -s 2.0"
   
+- name: "Set preferred power settings when on battery"
+  shell: "pmset -b displaysleep 5 sleep 5"
+  become: true
+
+- name: "Set preferred power settings when connected"
+  shell: "pmset -c displaysleep 10 sleep 0"
+  become: true
+
 - include_tasks: defaults.yml
   vars: 
     domain: "{{ domain_item.key }}"
