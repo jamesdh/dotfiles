@@ -221,6 +221,8 @@ defaults:
       WebKitDeveloperExtras: {type: bool, value: true, desc: 'Enable the WebKit Developer Tools in the Mac App Store'}
     com.apple.ImageCapture:
       disableHotPlug: {type: bool, value: true, host: currentHost, desc: 'Stop Photos from opening automatically'}
+    com.apple.assistant.support:
+      "Assistant Enabled": {type: bool, value: false}
     com.apple.iTunes:
       dontAutomaticallySyncIPods: {type: bool, value: true}
     com.apple.screencapture:
@@ -228,6 +230,8 @@ defaults:
       location: {type: string, value: '{{ home_dir }}/Desktop', desc: 'Save screenshots to Desktop'}
     com.apple.scriptmenu:
       ScriptMenuEnabled: {type: bool, value: false}
+    com.apple.Siri:
+      StatusMenuVisible: {type: bool, value: false}
     com.apple.Terminal: 
       Startup Window Settings: {type: string, value: 'Pro'}
 
