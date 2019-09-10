@@ -12,5 +12,6 @@
     "workbench.tree.indent": 14,
     "workbench.statusBar.feedback.visible": false,
     "explorer.autoReveal": false,
-    "typescript.updateImportsOnFileMove.enabled": "always"
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "vsicons.dontShowNewVersionMessage": true
 }
