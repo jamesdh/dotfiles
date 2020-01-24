@@ -4,7 +4,6 @@
         "statusBar.noFolderBackground": "#3C3C3C",
         "statusBar.debuggingBackground": "#3C3C3C"
     },
-    "workbench.iconTheme": "vscode-icons",
     "workbench.startupEditor": "newUntitledFile",
     "window.restoreWindows": "all",
     "explorer.confirmDragAndDrop": false,
@@ -13,5 +12,22 @@
     "workbench.statusBar.feedback.visible": false,
     "explorer.autoReveal": false,
     "typescript.updateImportsOnFileMove.enabled": "always",
-    "vsicons.dontShowNewVersionMessage": true
+    "editor.tabSize": 2,
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "vsicons.dontShowNewVersionMessage": true,
+    "colorize.languages": [
+        "css",
+        "sass",
+        "scss",
+        "less",
+        "postcss",
+        "sss",
+        "stylus",
+        "xml",
+        "svg",
+        "javascript",
+        "typescript"
+    ]
 }
