@@ -29,5 +29,6 @@
         "svg",
         "javascript",
         "typescript"
-    ]
+    ],
+    "javascript.updateImportsOnFileMove.enabled": "always"
 }
