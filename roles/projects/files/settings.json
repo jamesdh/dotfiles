@@ -13,5 +13,7 @@
     "workbench.statusBar.feedback.visible": false,
     "explorer.autoReveal": false,
     "typescript.updateImportsOnFileMove.enabled": "always",
-    "vsicons.dontShowNewVersionMessage": true
+    "vsicons.dontShowNewVersionMessage": true,
+    "java.configuration.checkProjectSettingsExclusions": false,
+    "javascript.updateImportsOnFileMove.enabled": "always"
 }
