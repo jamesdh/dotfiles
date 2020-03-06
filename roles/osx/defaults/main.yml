@@ -228,6 +228,7 @@ defaults:
     com.apple.screencapture:
       disable-shadow: {type: bool, value: true, desc: 'Disable shadow in screenshots'}
       location: {type: string, value: '{{ home_dir }}/Desktop', desc: 'Save screenshots to Desktop'}
+      show-thumbnail: {type: bool, value: false}
     com.apple.scriptmenu:
       ScriptMenuEnabled: {type: bool, value: false}
     com.apple.Siri:
