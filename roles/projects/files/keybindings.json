@@ -29,5 +29,14 @@
         "key": "shift+alt+up",
         "command": "-editor.action.moveLinesUpAction",
         "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "shift+cmd+p",
+        "command": "-workbench.action.showCommands"
+    },
+    {
+        "key": "shift+cmd+p",
+        "command": "-workbench.action.quickOpenNavigatePreviousInFilePicker",
+        "when": "inFilesPicker && inQuickOpen"
     }
 ]

@@ -13,7 +13,24 @@
     "workbench.statusBar.feedback.visible": false,
     "explorer.autoReveal": false,
     "typescript.updateImportsOnFileMove.enabled": "always",
+    "editor.tabSize": 2,
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
     "vsicons.dontShowNewVersionMessage": true,
     "java.configuration.checkProjectSettingsExclusions": false,
+    "colorize.languages": [
+        "css",
+        "sass",
+        "scss",
+        "less",
+        "postcss",
+        "sss",
+        "stylus",
+        "xml",
+        "svg",
+        "javascript",
+        "typescript"
+    ],
     "javascript.updateImportsOnFileMove.enabled": "always"
 }
