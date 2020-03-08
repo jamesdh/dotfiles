@@ -32,5 +32,6 @@
         "javascript",
         "typescript"
     ],
-    "javascript.updateImportsOnFileMove.enabled": "always"
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "[jinja]": {}
 }
