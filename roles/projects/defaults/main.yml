@@ -26,6 +26,7 @@ vscode:
     - redhat.vscode-yaml
     - idleberg.applescript
     - samuelcolvin.jinjahtml
+    - msjsdiag.debugger-for-chrome
 
 repos: 
   - {repo: git@github.com:sellercrowd/cohoot.git, dest: "{{projects_dir}}/cohoot"}
