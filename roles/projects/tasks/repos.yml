@@ -1,7 +1,8 @@
 ---
 
 - name: Get list of projects that already exist
-  shell: ls -d -1 "$PWD"*/*/
+  # shell: ls -d -1 "$PWD"*/*/
+  shell: find "$PWD" -type d -maxdepth 2 -mindepth 2 -print
   args:
     chdir: "{{projects_dir}}"
   register: projects_ls
@@ -11,16 +12,20 @@
 - name: Verify repo origin url for projects already in place
   git_config:
     scope: local
-    repo: "{{item.dest}}"
+    repo: "{{projects_dir}}/{{item.0.org}}/{{item.1}}"
     name: remote.origin.url
-    value: "{{item.repo}}"
-  loop: "{{repos}}"
-  when: 'item.dest in projects_ls.stdout'
+    value: "git@github.com:{{item.0.org}}/{{item.1}}.git"
+  with_subelements:
+    - "{{github}}"
+    - repos
+  when: "[item.0.org,item.1] | join('/') in projects_ls.stdout"
 
 - name: Setup git repositories 
   git:
-    repo: "{{item.repo}}"
-    dest: "{{item.dest}}"
+    repo: "git@github.com:{{item.0.org}}/{{item.1}}.git"
+    dest: "{{projects_dir}}/{{item.0.org}}/{{item.1}}"
     accept_hostkey: true
-  loop: "{{repos}}"
-  when: 'not item.dest in projects_ls.stdout'
+  with_subelements:
+    - "{{github}}"
+    - repos
+  when: "not [item.0.org,item.1] | join('/') in projects_ls.stdout"

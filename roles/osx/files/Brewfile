@@ -14,7 +14,6 @@ brew "enca"
 brew "git"
 brew "gnu-sed"
 brew "jq"
-brew "lastpass-cli"
 brew "mas"
 brew "nativefier"
 brew "ngrep"
@@ -24,6 +23,7 @@ brew "p7zip"
 brew "unrar"
 brew "wget"
 cask "1password"
+cask "1password-cli"
 cask "authy"
 cask "avibrazil-rdm"
 cask "bartender"
@@ -41,7 +41,6 @@ cask "visual-studio-code"
 mas "Airmail", id: 918858936
 mas "Divvy", id: 413857545
 mas "Fantastical 2", id: 975937182
-mas "LastPass", id: 926036361
 mas "Notability", id: 736189492
 mas "Slack", id: 803453959
 mas "Trello", id: 1278508951

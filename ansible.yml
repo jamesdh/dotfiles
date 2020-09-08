@@ -1,5 +1,18 @@
 - hosts: localhost
   connection: local
+  vars_prompt: 
+    - name: "op_pass"
+      prompt: "Please enter your 1Password password"
+      private: yes
+      unsafe: yes
+  pre_tasks: 
+    - name: 1Password login check
+      debug:
+        msg: 
+          - "{{ lookup('onepassword', 'HAL 9000', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
+      tags: always
+      # no_log: true
+      
   roles:
       - { role: base, tags: ['base']}
       - { role: ssh, tags: ['ssh']}

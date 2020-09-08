@@ -23,14 +23,29 @@ bootstrap:
 	@./setup.sh ;\
 	source ~/.bash_profile
 
-login: 
-	@if ! lpass status -q ; then \
-		LP_USER=$$(bash -c 'read -p "LastPass Username: " pwd; echo $$pwd') ;\
-		lpass login $$LP_USER ;\
-	fi ;\
-	while ! mas account > /dev/null 2>&1 ; do \
+vault.check: 
+	@if [ -z "$$ANSIBLE_VAULT_PASSWORD_FILE" ]; then \
+		echo env var ANSIBLE_VAULT_PASSWORD_FILE is undefined ;\
+	fi 
+
+login.appstore: 
+	@while ! mas account > /dev/null 2>&1 ; do \
 		read -p "Please signin to the Mac App Store before continuing..." ;\
 	done
+
+login: vault.check login.appstore
+	@FILE=~/.op/config ;\
+	ACCOUNTS=0 ;\
+	if [ -f "$$FILE" ]; then \
+		ACCOUNT=$$(cat $$FILE | jq '.accounts | length') ;\
+	fi ;\
+	if [ "$$ACCOUNT" -eq "0" ]; then \
+		OUTPUT=$$(ansible localhost -m debug -a 'var="op.secret"' -e "@group_vars/all.yml") ;\
+		SECRET=$$(echo $$OUTPUT | cut -d ">" -f 2 | jq -r'. | ."op.secret"') ;\
+		OUTPUT=$$(ansible localhost -m debug -a 'var="op.email"' -e "@group_vars/all.yml") ;\
+		EMAIL=$$(echo $$OUTPUT | cut -d ">" -f 2 | jq -r '. | ."op.email"') ;\
+		op signin my $$EMAIL $$SECRET ;\
+	fi
 
 install: login
 	ansible-playbook --ask-become-pass --diff ansible.yml

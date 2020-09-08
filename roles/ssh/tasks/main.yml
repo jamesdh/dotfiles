@@ -7,22 +7,22 @@
 
 - name: Setup SSH Config
   copy: 
-    content: '{{ ssh_config }}'
+    content: "{{ ssh_config }}"
     dest: '{{ ssh_dir }}/config'
     mode: 0600
 
-# - name: Retrieve Private Keys
-#   copy: 
-#     content: "{{ lookup('lastpass', 'Key:' + item, field='Private Key') }}"
-#     dest: '{{ ssh_dir }}/{{ item }}' 
-#     mode: 0600
-#   loop: '{{ ssh_keys }}'
-#   loop_control:
-#     label: '{{ item }}'
+- name: Retrieve Private Keys
+  copy: 
+    content: "{{ lookup('onepassword', item, type='document', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
+    dest: '{{ ssh_dir }}/{{ item }}' 
+    mode: 0600
+  loop: '{{ ssh_keys }}'
+  loop_control:
+    label: '{{ item }}'
   
 - name: Retrieve Public Keys
   copy: 
-    content: "{{ lookup('lastpass', 'Key:' + item, field='Public Key') }}"
+    content: "{{ lookup('onepassword', item + '.pub', type='document', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
     dest: '{{ ssh_dir }}/{{ item }}.pub' 
     mode: 0644
   loop: '{{ ssh_keys }}'

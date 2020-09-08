@@ -1,11 +1,3 @@
 ssh_dir: '{{ ansible_env.HOME }}/.ssh'
-ssh_config: "{{ lookup('lastpass', 'SSH:config', field='notes') }}"
-ssh_keys: 
-  - keybase
-  - locopia_rsa
-  - personal_rsa
-  - jenkins_rsa
-  - sellercrowd_rsa
-  - cohoot_rsa
-  - am_key
-  
+ssh_config: "{{ lookup('onepassword', 'SSH:config', field='notesPlain', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
+ssh_keys: "{{vaulted_ssh_keys}}"
