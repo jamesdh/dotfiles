@@ -69,3 +69,9 @@ list.tags:
 
 list.tasks:
 	ansible-playbook --list-tasks ansible.yml
+
+secret: ## Encrypts a NAME secret of VALUE, e.g. 'make secret NAME=pusher_secret VALUE=abc123'
+	ansible-vault encrypt_string --name '$(NAME)' '$(VALUE)'
+
+secret.view:
+	ansible localhost -m debug -a 'var="$(NAME)"' -e "@group_vars/all.yml"
