@@ -28,5 +28,13 @@
   when: not sdk_home.stat.exists
 
 - name: Install SDKMAN sdk's
-  shell: "source {{home_dir}}/.sdkman/bin/sdkman-init.sh && sdk install {{item.name}}"
+  shell: "source {{home_dir}}/.sdkman/bin/sdkman-init.sh && sdk install {{item.name}} {{item.version}}"
   loop: "{{sdks}}"
+  register: result
+  failed_when: 
+    - result.rc > 0
+    - '"is already installed" not in result.stdout'
+  changed_when: 
+    - result.rc == 0
+    - '"Done installing!" in result.stdout'
+    - '"is already installed" not in result.stdout'
