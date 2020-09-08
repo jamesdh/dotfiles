@@ -1,3 +1,4 @@
 *.retry
 .idea
 __pycache__
+Brewfile*.lock.json
