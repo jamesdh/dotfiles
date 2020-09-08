@@ -41,7 +41,7 @@ login: vault.check login.appstore
 	fi ;\
 	if [ "$$ACCOUNT" -eq "0" ]; then \
 		OUTPUT=$$(ansible localhost -m debug -a 'var="op.secret"' -e "@group_vars/all.yml") ;\
-		SECRET=$$(echo $$OUTPUT | cut -d ">" -f 2 | jq -r'. | ."op.secret"') ;\
+		SECRET=$$(echo $$OUTPUT | cut -d ">" -f 2 | jq -r '. | ."op.secret"') ;\
 		OUTPUT=$$(ansible localhost -m debug -a 'var="op.email"' -e "@group_vars/all.yml") ;\
 		EMAIL=$$(echo $$OUTPUT | cut -d ">" -f 2 | jq -r '. | ."op.email"') ;\
 		op signin my $$EMAIL $$SECRET ;\
