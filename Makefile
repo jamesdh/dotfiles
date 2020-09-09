@@ -23,17 +23,12 @@ bootstrap:
 	@./setup.sh ;\
 	source ~/.bash_profile
 
-vault.check: 
-	@if [ -z "$$ANSIBLE_VAULT_PASSWORD_FILE" ]; then \
-		echo env var ANSIBLE_VAULT_PASSWORD_FILE is undefined ;\
-	fi 
-
 login.appstore: 
 	@while ! mas account > /dev/null 2>&1 ; do \
 		read -p "Please signin to the Mac App Store before continuing..." ;\
 	done
 
-login: vault.check login.appstore
+login: login.appstore
 	@FILE=~/.op/config ;\
 	ACCOUNTS=0 ;\
 	if [ -f "$$FILE" ]; then \
