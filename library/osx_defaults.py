@@ -340,7 +340,7 @@ class CFPreferences(object):
     This class uses CoreFoundation python binding to access .plist.
     """
 
-    def __init__(self, domain, any_user=False, host=None):
+    def __init__(self, domain, any_user=False, host=None, strict=False):
         """
         Domain should be the identifier of the application whose preferences to
         read or modify. Takes the form of a Java package name, com.foosoft.app
@@ -366,6 +366,7 @@ class CFPreferences(object):
             self.host = host
 
         self.domain = domain
+        self.strict = strict
 
     @property
     def domain(self):
@@ -506,7 +507,7 @@ class CFPreferences(object):
 
         else:  # it's a dict.
             if (last_key_or_idx in node and not
-                    equivalent_types(node[last_key_or_idx], value)):
+                    equivalent_types(node[last_key_or_idx], value) and self.strict):
                 raise TypeError(
                     'New value type does not match current value type for key '
                     '{0} ({1!r} {2} -> {3!r} {4}).'
@@ -727,6 +728,7 @@ class OSXDefaults(object):
         """ Prepare and validate the parameters. """
 
         self.current_value = None
+        self.strict = False
 
         # Set all given parameters.
         for key, value in kwargs.items():
@@ -892,7 +894,7 @@ class OSXDefaults(object):
 
         # Check if there's a type mismatch.
         if (self.current_value is not None and
-                not equivalent_types(self.current_value, self.value)):
+                not equivalent_types(self.current_value, self.value) and self.strict):
             raise OSXDefaultsException(
                 'New value type does not match current value type for key '
                 '{0} ({1!r} {2} -> {3!r} {4}).'
