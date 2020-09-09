@@ -43,7 +43,7 @@
     - bash
 
 - name: "Restart affected services"
-  shell: "killall cfprefsd Dock Finder Safari SystemUIServer TouchBarServer"
+  shell: "killall cfprefsd Dock Finder Safari SystemUIServer TouchBarServer Divvy"
   become: true
   tags: 
     - restart
