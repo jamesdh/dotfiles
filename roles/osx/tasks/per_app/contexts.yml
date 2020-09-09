@@ -1,33 +1,31 @@
 ---
-- name: Open Contexts to trigger permissions prompt
-  shell: open /Applications/Contexts.app
+
+- name: Checking for Contexts license file
+  stat:
+    path: "{{ contexts.license_path }}"
+  register: license_file
   tags: 
-    - preprompt
+    - contexts
+    - settings
 
 - name: Configure Contexts
   block: 
     
-    - name: Create tempory file to hold Contexts license
-      tempfile:
-        state:  file
-        suffix: .contexts-license
-      register: tempfile
+    - name: Create Contexts license file
+      file: 
+        path: "{{ contexts.license_path }}"
+        state: file
 
     - name: Download license
       get_url:
         url: '{{ contexts.license_url }}'
-        dest: "{{ tempfile.path }}"
-        mode: 0600
-        force: true
+        dest: "{{ contexts.license_path }}"
+        mode: 0644
 
     - name: Open license file to register licence with Contexts
-      shell: "open {{ tempfile.path }}"
+      shell: "open {{ contexts.license_path }}"
 
-    - name: Remove license file
-      file:
-        path: "{{ tempfile.path }}"
-        state: absent
-  
+  when: not license_file.stat.exists
   tags: 
     - contexts
     - settings
