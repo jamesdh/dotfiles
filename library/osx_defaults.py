@@ -918,7 +918,6 @@ class OSXDefaults(object):
                     return False
 
         elif self.current_value == self.value:
-            self.module.exit_json(changed=True, debug="writing wtf")
             return False
 
         if self.module.check_mode:
