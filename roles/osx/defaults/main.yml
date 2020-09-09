@@ -211,6 +211,9 @@ defaults:
       DoNotOfferNewDisksForBackup: {type: bool, value: true, desc: 'Prevent Time Machine from prompting to use new hard drives as backup volume'}
   
   sysapps: 
+    com.apple.sidecar.display:
+      showTouchBar: {type: bool, value: false} 
+      sidebarShown: {type: bool, value: false}
     com.apple.ActivityMonitor:
       IconType: {type: int, value: 5, desc: 'Visualize CPU usage in the Dock icon'}
       OpenMainWindow: {type: bool, value: true, desc: 'Show the main window when launching'}
