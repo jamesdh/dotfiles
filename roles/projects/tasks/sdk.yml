@@ -27,6 +27,16 @@
 
   when: not sdk_home.stat.exists
 
+- name: "Configure SDKMAN"
+  ini_file:
+    path: "{{home_dir}}/.sdkman/etc/config"
+    section: null
+    option: sdkman_auto_env
+    value: "true"
+    mode: '0644'
+    no_extra_spaces: yes
+    backup: yes
+    
 - name: Install SDKMAN sdk's
   shell: "source {{home_dir}}/.sdkman/bin/sdkman-init.sh && sdk install {{item.name}} {{item.version}}"
   loop: "{{sdks}}"
