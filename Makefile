@@ -28,7 +28,7 @@ login.appstore:
 		read -p "Please signin to the Mac App Store before continuing..." ;\
 	done
 
-login: login.appstore
+login.op:
 	@FILE=~/.op/config ;\
 	ACCOUNTS=0 ;\
 	if [ -f "$$FILE" ]; then \
@@ -42,18 +42,20 @@ login: login.appstore
 		op signin my $$EMAIL $$SECRET ;\
 	fi
 
-install: login
+login.all: login.appstore login.op
+
+install: login.all
 	ansible-playbook --ask-become-pass --diff ansible.yml
 
-install.filtered: login list.tags 
+install.filtered: login.all list.tags 
 	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
 	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
 	ansible-playbook --ask-become-pass --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
 
-compare: login
+compare: login.all
 	ansible-playbook --ask-become-pass --check --diff ansible.yml
 
-compare.filtered: login list.tags 
+compare.filtered: login.all list.tags 
 	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
 	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
 	ansible-playbook --ask-become-pass --check --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
