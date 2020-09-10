@@ -174,7 +174,7 @@ class OnePass(object):
             if type_opts != 'bytes':
                 return output.decode(type_opts)
             else:
-                f = tempfile.NamedTemporaryFile(delete=False, suffix=item_id)
+                f = tempfile.NamedTemporaryFile(delete=False, prefix="ansible-onepassword-", suffix=item_id)
                 f.write(output)
                 return f.name
         return self._parse_field(output, item_type, type_opts, field, section) if output != '' else ''

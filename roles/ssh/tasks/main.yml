@@ -37,9 +37,16 @@
 
 - name: Retrieve other certificates
   copy: 
-    content: "{{ lookup('onepassword', item, type='document', encoding='bytes', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
+    src: "{{ lookup('onepassword', item, type='document', encoding='bytes', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
     dest: '{{ cert_dir }}/{{ item }}' 
     mode: 0644
   loop: '{{ certs }}'
   loop_control:
     label: '{{ item }}'
+
+- name: remove tmpfiles
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_fileglob: 
+    - "{{lookup('env','TMPDIR')}}ansible-onepassword-*"
