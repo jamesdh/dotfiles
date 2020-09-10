@@ -20,7 +20,7 @@ diff:
 	ansible-playbook --ask-become-pass --diff ansible.yml
 
 bootstrap:
-	@./setup.sh ;\
+	@./bootstrap.sh ;\
 	source ~/.bash_profile
 
 login.appstore: 

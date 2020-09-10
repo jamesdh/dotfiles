@@ -1,5 +1,5 @@
 # dotfiles
-Sensible and consistent OS defaults
+Sensible and consistent OS defaults, but to an extreme ¯\_(ツ)_/¯ 
 
 ### Getting started
-`mkdir ~/Projects && cd ~/Projects && git clone https://github.com/jamesdh/dotfiles.git && cd ~/Projects/dotfiles && make bootstrap`
+`bash <(curl -s  https://raw.githubusercontent.com/jamesdh/dotfiles/master/install.sh)`
