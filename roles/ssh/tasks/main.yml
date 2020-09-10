@@ -28,3 +28,18 @@
   loop: '{{ ssh_keys }}'
   loop_control:
     label: '{{ item }}'
+
+- name: Setup certs dir
+  file: 
+    path: '{{ cert_dir }}'
+    mode: 0700
+    state: directory
+
+- name: Retrieve other certificates
+  copy: 
+    content: "{{ lookup('onepassword', item, type='document', encoding='bytes', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
+    dest: '{{ cert_dir }}/{{ item }}' 
+    mode: 0644
+  loop: '{{ certs }}'
+  loop_control:
+    label: '{{ item }}'

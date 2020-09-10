@@ -1,3 +1,5 @@
 ssh_dir: '{{ ansible_env.HOME }}/.ssh'
+cert_dir: '{{ home_dir }}/.certs'
 ssh_config: "{{ lookup('onepassword', 'SSH:config', field='notesPlain', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
 ssh_keys: "{{vaulted_ssh_keys}}"
+certs: "{{vaulted_certs}}"
