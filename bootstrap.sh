@@ -42,4 +42,4 @@ fi
 # ansible-playbook --ask-become-pass --diff --skip-tags "postinstall" ansible.yml
 # ansible-playbook --ask-become-pass --diff --tags "postinstall" ansible.yml
 
-echo "Finished bootstrapping! Run `make install` to proceed."
+echo "Finished bootstrapping! Run \`make install\` to proceed."
