@@ -1,0 +1,8 @@
+- name: Add ngrok auth token config
+  lineinfile:
+    path: "{{ home_dir }}/.ngrok2/ngrok.yml"
+    line: "authtoken: {{ ngrok.authtoken }}"
+    regexp: '^authtoken:'
+    create: yes
+  tags: 
+    - ngrok
