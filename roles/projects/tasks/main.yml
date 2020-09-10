@@ -1,4 +1,9 @@
 ---
+- name: Configure dev environment
+  import_tasks: env.yml
+  tags: 
+    - devenv
+    
 - name: Configure git 
   import_tasks: git.yml
   tags: 
