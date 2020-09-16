@@ -101,3 +101,21 @@ defaulted() {
   defaults read > $POST
   (p4merge $PRE $POST &)
 }
+
+optimizesvg() {
+  if [ $# -ne 1 ]; then
+      cat <<- EOF
+Usage: optimizesvg 440x440
+- Converts all SVG files to PNG's of the same name
+- Trims excess space
+- Resizes to the given ImageMagick geometry parameter
+  - See https://imagemagick.org/script/command-line-processing.php#geometry for more info
+- Lossy compresses the image for maximum efficiency
+EOF
+  else
+    find ./ -name "*.svg" -exec inkscape {} --export-type=png \;
+    mogrify -trim -adaptive-resize $1 *.png
+    find ./ -name "*.png" -exec pngquant -f -o {} {} \;
+  fi
+}
+
