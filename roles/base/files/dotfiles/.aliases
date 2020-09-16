@@ -99,3 +99,8 @@ alias sniff="sudo ngrep -t '^(GET|POST|PUT)' 'tcp and port 80'"
 
 alias dud="du -d 1 -h | sort -h"
 alias dus="sudo du -hs * | sort -h"
+
+# Repo aliases
+alias cdtt="cd ~/Projects/moltenbits/teamtempo/"
+alias cddf="cd ~/Projects/jamesdh/dotfiles/"
+
