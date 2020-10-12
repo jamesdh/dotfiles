@@ -104,3 +104,5 @@ alias dus="sudo du -hs * | sort -h"
 alias cdtt="cd ~/Projects/moltenbits/teamtempo/"
 alias cddf="cd ~/Projects/jamesdh/dotfiles/"
 
+# Help find whatever PID is holding onto secure input
+alias secureinput="ioreg -l -w 0 | grep kCGSSessionSecureInputPID"
