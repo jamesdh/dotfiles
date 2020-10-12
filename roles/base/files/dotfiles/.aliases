@@ -102,6 +102,8 @@ alias dus="sudo du -hs * | sort -h"
 
 # Repo aliases
 alias cdtt="cd ~/Projects/moltenbits/teamtempo/"
+alias cdttf="cd ~/Projects/moltenbits/teamtempo/front/"
+alias cdttb="cd ~/Projects/moltenbits/teamtempo/back/"
 alias cddf="cd ~/Projects/jamesdh/dotfiles/"
 
 # Help find whatever PID is holding onto secure input
