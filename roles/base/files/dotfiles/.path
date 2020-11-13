@@ -1,4 +1,10 @@
 #!/bin/bash
 
+# Includes the majority of Cellar (Brew) items
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+
+# Includes updated 'make'
+export PATH=/usr/local/opt/make/libexec/gnubin:$PATH
+
+# Python path shenanigans
 export PATH=/usr/local/opt/python/libexec/bin:$PATH
