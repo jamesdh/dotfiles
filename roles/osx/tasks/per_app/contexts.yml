@@ -11,10 +11,15 @@
 - name: Configure Contexts
   block: 
     
+    - name: Create Contexts application folder
+      file: 
+        path: "{{ contexts.appsupport_path }}"
+        state: directory
+
     - name: Create Contexts license file
       file: 
         path: "{{ contexts.license_path }}"
-        state: file
+        state: touch
 
     - name: Download license
       get_url:
