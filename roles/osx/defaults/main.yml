@@ -12,7 +12,7 @@ finder_adds:
   - {name: Desktop, path: "file://{{home_dir}}/Desktop/"}
   - {name: Documents, path: "file://{{home_dir}}/Documents"}
   - {name: Downloads, path: "file://{{home_dir}}/Downloads/"}
-  - {name: Dropbox, path: "file:///{{home_dir}}/Dropbox/"}
+  - {name: Dropbox, path: "file://{{home_dir}}/Dropbox/"}
   - {name: Projects, path: "file://{{projects_dir}}"}
 
 nativefier: 
