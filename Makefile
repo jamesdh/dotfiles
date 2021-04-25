@@ -21,7 +21,6 @@ diff:
 
 bootstrap:
 	@./bootstrap.sh ;\
-	source ~/.bash_profile
 
 login.appstore: 
 	@while ! mas account > /dev/null 2>&1 ; do \
@@ -30,16 +29,22 @@ login.appstore:
 
 login.op:
 	@FILE=~/.op/config ;\
-	ACCOUNTS=0 ;\
-	if [ -f "$$FILE" ]; then \
+	if [[ -f $$FILE ]]; then \
 		ACCOUNT=$$(cat $$FILE | jq '.accounts | length') ;\
 	fi ;\
-	if [ "$$ACCOUNT" -eq "0" ]; then \
-		OUTPUT=$$(ansible localhost -m debug -a 'var="op.secret"' -e "@group_vars/all.yml") ;\
-		SECRET=$$(echo $$OUTPUT | cut -d ">" -f 2 | jq -r '. | ."op.secret"') ;\
-		OUTPUT=$$(ansible localhost -m debug -a 'var="op.email"' -e "@group_vars/all.yml") ;\
-		EMAIL=$$(echo $$OUTPUT | cut -d ">" -f 2 | jq -r '. | ."op.email"') ;\
+	if [[ $$ACCOUNT -eq 0 ]]; then \
+		if [[ ! -f ~/.ansible/dotfiles_vaultpass ]]; then \
+			EMAIL=$$(bash -c 'read -p "1Password Account Email: " EMAIL; echo $$EMAIL') ;\
+			SECRET=$$(bash -c 'read -p "1Password Account Secret: " SECRET; echo $$SECRET') ;\
+		else \
+			OUTPUT=$$(ansible localhost -m debug -a 'var="op.secret"' -e "@group_vars/all.yml") ;\
+			SECRET=$$(echo $$OUTPUT | cut -d ">" -f 2 | jq -r '. | ."op.secret"') ;\
+			OUTPUT=$$(ansible localhost -m debug -a 'var="op.email"' -e "@group_vars/all.yml") ;\
+			EMAIL=$$(echo $$OUTPUT | cut -d ">" -f 2 | jq -r '. | ."op.email"') ;\
+		fi ;\
 		op signin my $$EMAIL $$SECRET ;\
+	elif [[ ! `op list users 2> /dev/null` ]]; then \
+    	eval $(op signin my) ;\
 	fi
 
 login.all: login.appstore login.op
