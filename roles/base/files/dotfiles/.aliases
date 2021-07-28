@@ -19,7 +19,7 @@ alias llt='ls -lthAF'
 alias psg='ps -ef | grep'
 
 # Automatically extract any archive format
-alias extract='dtrx'
+alias extract='unp'
 
 # Shortcuts
 alias dl="cd ~/Downloads"

@@ -4,7 +4,7 @@
 mkcd() { mkdir -p "$@" && cd "$@"; }
 
 # Extract most known archives
-# Exclude for now while I evaluate an alias for dtrx
+# Exclude for now while I evaluate an alias for unp
 # extract() {
 #     for arg in $@ ; do
 #         if [ -f $arg ] ; then
