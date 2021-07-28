@@ -16,7 +16,7 @@ echo "Checking for ansible..."
 [[ ! `brew list ansible 2> /dev/null` ]] && echo "Installing ansible" && brew install ansible
 
 echo "Checking for 1password..."
-[[ ! `brew cask list 1password-cli 2> /dev/null` ]] && echo "Installing 1password-cli" && brew cask install 1password-cli
+[[ ! `brew list 1password-cli 2> /dev/null` ]] && echo "Installing 1password-cli" && brew install 1password-cli
 
 echo "Checking 1password initial login status..."
 make login.op
