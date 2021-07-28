@@ -1,4 +1,7 @@
 {
+    "workbench.editor.swipeToNavigate": true,
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
     "workbench.colorCustomizations": {
         "statusBar.background": "#3C3C3C",
         "statusBar.noFolderBackground": "#3C3C3C",
@@ -14,6 +17,7 @@
     "explorer.autoReveal": false,
     "typescript.updateImportsOnFileMove.enabled": "always",
     "editor.tabSize": 2,
+    "emmet.showExpandedAbbreviation": "never",
     "[typescriptreact]": {
         "editor.defaultFormatter": "vscode.typescript-language-features"
     },
@@ -33,5 +37,26 @@
         "typescript"
     ],
     "javascript.updateImportsOnFileMove.enabled": "always",
-    "[jinja]": {}
+    "[jinja]": {},
+    "typescript.suggest.completeFunctionCalls": true,
+    "javascript.suggest.completeFunctionCalls": true,
+    "emmet.excludeLanguages": [
+
+        "markdown"
+    ],
+    "java.import.gradle.java.home": "/Users/jamesdh/.sdkman/candidates/java/8.0.265.hs-adpt",
+    "java.configuration.runtimes": [
+        {
+          "name": "JavaSE-1.8",
+          "path": "/Users/jamesdh/.sdkman/candidates/java/8.0.265.hs-adpt",
+        },
+        {
+          "name": "JavaSE-11",
+          "path": "/Users/jamesdh/.sdkman/candidates/java/11.0.8.hs-adpt",
+        },
+      ],
+    "editor.fontFamily": "'Victor Mono', Menlo, Monaco, 'Courier New', monospace",
+    "javascript.preferences.useAliasesForRenames": false,
+    "typescript.preferences.useAliasesForRenames": false,
+    "workbench.editor.untitled.hint": "hidden"
 }
