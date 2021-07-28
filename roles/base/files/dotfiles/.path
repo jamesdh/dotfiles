@@ -8,3 +8,6 @@ export PATH=/usr/local/opt/make/libexec/gnubin:$PATH
 
 # Python path shenanigans
 export PATH=/usr/local/opt/python/libexec/bin:$PATH
+
+# Needed for Krew (kubernetes)
+export PATH=$PATH:$KREW_BIN

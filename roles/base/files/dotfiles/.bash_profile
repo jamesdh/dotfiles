@@ -40,3 +40,11 @@ eval "$(direnv hook bash)"
 
 # Initialize SDKMAN
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+# Autocomplete for kubectl and the 'k' alias I've created for it. 
+source <(kubectl completion bash)
+complete -F __start_kubectl k
+
+# Google Cloud SDK
+source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"
+source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc"

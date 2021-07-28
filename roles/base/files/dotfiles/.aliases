@@ -105,6 +105,13 @@ alias cdtt="cd ~/Projects/moltenbits/teamtempo/"
 alias cdttf="cd ~/Projects/moltenbits/teamtempo/front/"
 alias cdttb="cd ~/Projects/moltenbits/teamtempo/back/"
 alias cddf="cd ~/Projects/jamesdh/dotfiles/"
+alias cdj="cd ~/Projects/jamesdh"
+alias cdp="cd ~/Projects"
 
 # Help find whatever PID is holding onto secure input
 alias secureinput="ioreg -l -w 0 | grep kCGSSessionSecureInputPID"
+
+# Life is too short to type out the full command every time ¯\_(ツ)_/¯ 
+alias k="kubectl"
+alias kk="kubectl krew"
+
