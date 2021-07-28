@@ -25,14 +25,3 @@
   tags: 
     - dotfiles
     - preprompt
-
-- name: Link fonts to ~/Library/Fonts
-  copy: 
-    src: "{{role_path}}/files/fonts/{{item.name}}/{{item.name}}-{{item.type}}.ttf"
-    dest: "{{home_dir}}/Library/Fonts/{{item.name}}-{{item.type}}.ttf"
-  loop: 
-    - {name: Inconsolata, type: Regular}
-    - {name: JetBrainsMono, type: Regular}
-    - {name: SourceCodePro, type: Regular}
-  tags: 
-    - fonts

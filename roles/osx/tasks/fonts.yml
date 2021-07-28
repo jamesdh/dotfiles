@@ -1,0 +1,12 @@
+- name: Install Homebrew Fonts
+  shell: export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.fonts
+  register: brew_diff
+  changed_when: '"Installing" in brew_diff.stdout'
+
+- name: Install Homebrew Fonts - Changed output
+  debug:
+    var: brew_diff.stdout
+  when: 
+    - brew_diff.changed
+    - not ansible_check_mode
+  changed_when: brew_diff.changed

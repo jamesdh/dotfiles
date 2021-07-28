@@ -8,6 +8,11 @@
   tags:
     - apps
 
+- name: Install fonts
+  import_tasks: fonts.yml
+  tags: 
+    - fonts
+
 - name: Install Nativefier applicaitons
   include_tasks: nativefier.yml
   tags:

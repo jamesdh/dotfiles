@@ -1,0 +1,6 @@
+tap "homebrew/cask-fonts"
+cask "font-victor-mono"
+cask "font-inconsolata"
+cask "font-jetbrains-mono"
+cask "font-roboto"
+cask "font-source-code-pro"

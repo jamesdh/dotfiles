@@ -1,3 +1,4 @@
 instance_eval(File.read("roles/osx/files/Brewfile.preprompt"))
 instance_eval(File.read("roles/osx/files/Brewfile"))
 instance_eval(File.read("roles/osx/files/Brewfile.post"))
+instance_eval(File.read("roles/osx/files/Brewfile.fonts"))
