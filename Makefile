@@ -84,3 +84,13 @@ secret.decrypt.repos:
 
 secret.encrypt.repos:
 	ansible-vault encrypt roles/projects/vars/main.yml
+
+secret.decrypt.certs:
+	ansible-vault decrypt roles/ssh/vars/main.yml
+
+secret.encrypt.certs:
+	ansible-vault encrypt roles/ssh/vars/main.yml
+
+secret.decrypt.all: secret.decrypt.repos secret.decrypt.certs
+
+secret.encrypt.all: secret.encrypt.repos secret.encrypt.certs
