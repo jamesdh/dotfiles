@@ -43,6 +43,7 @@ login.op:
 			EMAIL=$$(echo $$OUTPUT | cut -d ">" -f 2 | jq -r '. | ."op.email"') ;\
 		fi ;\
 		op signin my $$EMAIL $$SECRET ;\
+		eval $(op signin my) ;\
 	elif [[ ! `op list users 2> /dev/null` ]]; then \
     	eval $(op signin my) ;\
 	fi
