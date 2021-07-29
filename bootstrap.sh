@@ -27,8 +27,8 @@ make login.op
 echo "Installing apps requiring additional permissions prompts"
 export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.preprompt
 
-echo "Checking Accessibility status..."
-[[ ! `osascript -l JavaScript jxa/access_check.scpt` ]] && echo "Re-run script after making necessary permissions changes!" && exit 1
+# echo "Checking Accessibility status..."
+# [[ ! `osascript -l JavaScript jxa/access_check.scpt` ]] && echo "Re-run script after making necessary permissions changes!" && exit 1
 
 echo "Checking for vault password file..."
 if [[ ! -f ~/.ansible/dotfiles_vaultpass ]]; then 
