@@ -78,3 +78,9 @@ secret: ## Encrypts a NAME secret of VALUE, e.g. 'make secret NAME=pusher_secret
 
 secret.view:
 	ansible localhost -m debug -a 'var="$(NAME)"' -e "@group_vars/all.yml"
+
+secret.decrypt.repos:
+	ansible-vault decrypt roles/projects/vars/main.yml
+
+secret.encrypt.repos:
+	ansible-vault encrypt roles/projects/vars/main.yml
