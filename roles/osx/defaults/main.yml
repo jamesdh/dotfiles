@@ -33,8 +33,6 @@ defaults:
       IsAnalog: {type: bool, value: true, desc: 'Set menubar clock to analog'}
     com.apple.screensaver:
       idleTime: {type: int, value: 0, desc: 'Disable the screensaver'}
-    com.apple.systempreferences:
-      NSQuitAlwaysKeepsWindows: {type: bool, value: false, desc: 'Disable Resume system-wide'}
     com.apple.systemuiserver:
       "NSStatusItem Visible Siri": {type: bool, value: false, desc: 'Disable Siri menubar icon'}
       "NSStatusItem Visible com.apple.menuextra.TimeMachine": {type: bool, value: true, desc: 'Enable Time Machine menubar icon'}
