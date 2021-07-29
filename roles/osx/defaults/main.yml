@@ -309,7 +309,7 @@ defaults:
 
 contexts: 
   appsupport_path: "{{ home_dir }}/Library/Application Support/com.contextsformac.Contexts"
-  license_path: "{{ contexts.appsupport_path }}/license.contexts-license"
+  license_path: "{{ home_dir }}/Library/Application\ Support/com.contextsformac.Contexts/license.contexts-license"
   license_url: "{{ lookup('onepassword', 'License: Contexts', field='License Link', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
 
 ngrok:
