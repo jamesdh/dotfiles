@@ -12,20 +12,30 @@
 - name: Verify repo origin url for projects already in place
   git_config:
     scope: local
-    repo: "{{projects_dir}}/{{item.0.org}}/{{item.1}}"
+    repo: "{{projects_dir}}/{{item.0.org}}/{{item.1.name}}"
     name: remote.origin.url
-    value: "git@github.com:{{item.0.org}}/{{item.1}}.git"
+    value: "git@github.com:{{item.0.org}}/{{item.1.name}}.git"
   with_subelements:
     - "{{github}}"
     - repos
-  when: "[item.0.org,item.1] | join('/') in projects_ls.stdout"
+  when: "[item.0.org,item.1.name] | join('/') in projects_ls.stdout"
 
 - name: Setup git repositories 
   git:
-    repo: "git@github.com:{{item.0.org}}/{{item.1}}.git"
-    dest: "{{projects_dir}}/{{item.0.org}}/{{item.1}}"
+    repo: "git@github.com:{{item.0.org}}/{{item.1.name}}.git"
+    dest: "{{projects_dir}}/{{item.0.org}}/{{item.1.name}}"
     accept_hostkey: true
   with_subelements:
     - "{{github}}"
     - repos
-  when: "not [item.0.org,item.1] | join('/') in projects_ls.stdout"
+  when: "not [item.0.org,item.1.name] | join('/') in projects_ls.stdout"
+
+- name: Setup repo env files
+  copy:
+    content: "{{item.1.envfile}}"
+    dest: "{{projects_dir}}/{{item.0.org}}/{{item.1.name}}/.env"
+    backup: true
+  with_subelements:
+    - "{{github}}"
+    - repos
+  when: (item.1.envfile is defined) and (item.1.envfile|length > 0)
