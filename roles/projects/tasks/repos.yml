@@ -32,10 +32,8 @@
 
 - name: Setup repo env files
   copy:
-    content: "{{item.1.envfile}}"
-    dest: "{{projects_dir}}/{{item.0.org}}/{{item.1.name}}/.env"
+    content: "{{item.src}}"
+    dest: "{{item.dest}}"
     backup: true
-  with_subelements:
-    - "{{github}}"
-    - repos
-  when: (item.1.envfile is defined) and (item.1.envfile|length > 0)
+  loop: "{{envfiles}}"
+

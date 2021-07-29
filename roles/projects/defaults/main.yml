@@ -28,3 +28,4 @@ vscode:
     - msjsdiag.debugger-for-chrome
 
 github: "{{vaulted_github}}"
+envfiles: "{{vaulted_envfiles}}"
