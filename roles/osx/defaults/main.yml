@@ -6,7 +6,7 @@ finder_dels:
   - 'myDocuments.cannedSearch'
 
 finder_adds:
-  - {name: james, path: "file://{{home_dir}}/"}
+  - {name: Home, path: "file://{{home_dir}}/"}
   - {name: AirDrop, path: nwnode://domain-AirDrop}
   - {name: Applications, path: "file://{{apps_dir}}/"}
   - {name: Desktop, path: "file://{{home_dir}}/Desktop/"}
