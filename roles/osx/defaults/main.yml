@@ -316,8 +316,6 @@ ngrok:
   authtoken: "{{ lookup('onepassword', 'License: ngrok', field='license key', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
 
 viscosity: 
-  - Cohoot
-  - SellerCrowd
   - ExpressVPN - Denver
   - ExpressVPN - New Jersey 1
   - ExpressVPN - New Jersey 3
