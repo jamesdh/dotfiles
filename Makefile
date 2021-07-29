@@ -28,7 +28,7 @@ login.appstore:
 	done
 
 login.op:
-	@FILE=~/.op/config ;\
+	@FILE=~/.config/op/config ;\
 	if [[ -f $$FILE ]]; then \
 		ACCOUNT=$$(cat $$FILE | jq '.accounts | length') ;\
 	fi ;\
