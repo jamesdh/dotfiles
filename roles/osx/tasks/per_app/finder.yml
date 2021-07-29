@@ -9,6 +9,7 @@
   shell: "mysides remove '{{ item }}'"
   loop: "{{ finder_dels }}"
   when: "item in mysides_items.stdout"
+  ignore_errors: true
   
 - name: Add desired Finder sidebar items
   shell: "mysides add '{{ item.name }}' {{ item.path }}"

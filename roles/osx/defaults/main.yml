@@ -1,7 +1,7 @@
 apps_dir: /Applications
 
 finder_dels:
-  - 'Recents.cannedsearch'
+  - 'Recents'
   - 'Creative Cloud Files'
   - 'myDocuments.cannedSearch'
 
