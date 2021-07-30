@@ -42,16 +42,28 @@ login.op:
 			OUTPUT=$$(ansible localhost -m debug -a 'var="op.email"' -e "@group_vars/all.yml") ;\
 			EMAIL=$$(echo $$OUTPUT | cut -d ">" -f 2 | jq -r '. | ."op.email"') ;\
 		fi ;\
-		eval $$(op signin my $$EMAIL $$SECRET) ;\
+		SESSION=$$(op signin my $$EMAIL $$SECRET --raw) ;\
 	elif [[ ! `op list users 2> /dev/null` ]]; then \
-    	eval $$(op signin my) ;\
-	fi
-
+    SESSION=$$(op signin my --raw) ;\
+	fi ;\
+	if [[ -n "$$SESSION" ]]; then\
+		printf 'eval $$(op signin my --session %s)\n' $$SESSION ;\
+	else \
+		printf 'eval $$(op signin my)\n' ;\
+	fi ;\
+	
 login.all: login.appstore login.op
 
-install: login.all
-	ansible-playbook --ask-become-pass --diff ansible.yml
-
+install: login.appstore
+	@ echo ;\
+	if op list users > /dev/null 2>&1 ; then \
+		ansible-playbook --ask-become-pass --diff ansible.yml ;\
+	else \
+		echo 'Execute `eval $$(make login.op)` to login to 1Password before continuing' ;\
+		echo ;\
+		exit 1 ;\
+	fi ;\
+	
 install.filtered: login.all list.tags 
 	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
 	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
