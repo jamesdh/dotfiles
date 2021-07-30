@@ -1,5 +1,5 @@
 - name: Install Homebrew Apps
-  shell: brew --no-quarantine bundle --file=roles/osx/files/Brewfile.post
+  shell: export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.post
   register: brew_diff
   changed_when: '"Installing" in brew_diff.stdout'
 
