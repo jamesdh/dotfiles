@@ -13,7 +13,7 @@
     
     - name: Create Contexts application folder
       file: 
-        path: "{{ contexts.appsupport_path }}"
+        path: "{{ contexts.license_path | dirname }}"
         state: directory
 
     - name: Create Contexts license file
