@@ -25,32 +25,21 @@ nativefier:
 defaults:
   
   ui: 
+    com.apple.controlcenter:
+      "NSStatusItem Visible Display": {type: bool, value: true, desc: "Show display prefs in menu"}
+      "NSStatusItem Visible Bluetooth": {type: bool, value: true}
     com.apple.LaunchServices:
       LSQuarantine: {type: bool, value: false, desc: 'Disable the “Are you sure you want to open this application?” dialog'}
     com.apple.menuextra.battery: 
       ShowPercent: {type: string, value: 'NO', desc: Dont show battery percentage remaining}
     com.apple.menuextra.clock:
-      IsAnalog: {type: bool, value: true, desc: 'Set menubar clock to analog'}
+      DateFormat: {type: string, value: 'h:mm a'}
+      FlashDateSeperators: {type: bool, value: false}
+      IsAnalog: {type: false, value: true, desc: 'Set menubar clock to analog'}
+      ShowDayOfMonth: {type: bool, value: false}
+      ShowDayOfWeek: {type: bool, value: false}
     com.apple.screensaver:
       idleTime: {type: int, value: 0, desc: 'Disable the screensaver'}
-    com.apple.systemuiserver:
-      "NSStatusItem Visible Siri": {type: bool, value: false, desc: 'Disable Siri menubar icon'}
-      "NSStatusItem Visible com.apple.menuextra.TimeMachine": {type: bool, value: true, desc: 'Enable Time Machine menubar icon'}
-      "NSStatusItem Visible com.apple.menuextra.airplay": {type: bool, value: true, desc: 'Enable AirPlay menubar icon'}
-      "NSStatusItem Visible com.apple.menuextra.airport": {type: bool, value: true, desc: 'Enable wifi menubar icon'}
-      "NSStatusItem Visible com.apple.menuextra.battery": {type: bool, value: true, desc: 'Enable power menubar icon'}
-      "NSStatusItem Visible com.apple.menuextra.bluetooth": {type: bool, value: true, desc: 'Enable bluetooth menubar icon'}
-      "NSStatusItem Visible com.apple.menuextra.clock": {type: bool, value: true, desc: 'Enable clock menubar icon'}
-      "NSStatusItem Visible com.apple.menuextra.volume": {type: bool, value: true, desc: 'Enable volume menubar icon'}
-      menuExtras: {type: array, value: [
-        "/System/Library/CoreServices/Menu Extras/Clock.menu",
-        "/System/Library/CoreServices/Menu Extras/AirPort.menu",
-        "/System/Library/CoreServices/Menu Extras/Bluetooth.menu",
-        "/System/Library/CoreServices/Menu Extras/Displays.menu",
-        "/System/Library/CoreServices/Menu Extras/Battery.menu",
-        "/System/Library/CoreServices/Menu Extras/Volume.menu",
-        "/System/Library/CoreServices/Menu Extras/Clock.menu"
-        ], desc: 'Enable system menubar icon'}
     com.apple.universalaccess:
       reduceTransparency: {type: bool, value: true, desc: 'Disable transparency in the menu bar and elsewhere'}
     NSGlobalDomain:
