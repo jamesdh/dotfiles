@@ -29,12 +29,9 @@ cask "dbeaver-community"
 cask "firefox"
 cask "google-chrome"
 cask "intellij-idea"
-cask "lens"
 cask "mate-translate"
 cask "monitorcontrol"
-cask "namebench"
 cask "postman"
-cask "quik"
 cask "selfcontrol"
 cask "sketch"
 cask "skype"
@@ -44,7 +41,6 @@ cask "timing"
 cask "transmission"
 cask "vlc"
 cask "whatsapp"
-cask "zeplin"
 mas "Be Focused Pro", id: 961632517
 mas "CopyClip", id: 595191960
 mas "Countdowns", id: 926707738
@@ -62,6 +58,4 @@ mas "Save to Pocket", id: 1477385213
 mas "Shush", id: 496437906
 mas "The Unarchiver", id: 425424353
 mas "Tomato One", id: 907364780
-mas "Tweetbot 3", id: 1384080005
 mas "World Clock Pro", id: 858446756
-mas "Xcode", id: 497799835
