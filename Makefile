@@ -42,10 +42,9 @@ login.op:
 			OUTPUT=$$(ansible localhost -m debug -a 'var="op.email"' -e "@group_vars/all.yml") ;\
 			EMAIL=$$(echo $$OUTPUT | cut -d ">" -f 2 | jq -r '. | ."op.email"') ;\
 		fi ;\
-		op signin my $$EMAIL $$SECRET ;\
-		eval $(op signin my) ;\
+		eval $$(op signin my $$EMAIL $$SECRET) ;\
 	elif [[ ! `op list users 2> /dev/null` ]]; then \
-    	eval $(op signin my) ;\
+    	eval $$(op signin my) ;\
 	fi
 
 login.all: login.appstore login.op

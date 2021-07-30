@@ -1,11 +1,5 @@
 #!/bin/bash
 
-authenticate() {
-  if [[ ! `op list users 2> /dev/null` ]]; then
-    eval $(op signin my)
-  fi
-}
-
 echo "Checking for homebrew..."
 [[ ! `brew config 2> /dev/null` ]] && echo "Installing Homebrew..." && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
@@ -13,7 +7,7 @@ echo "Checking for mas..."
 [[ ! `brew list mas 2> /dev/null` ]] && echo "Installing mas" && brew install mas
 
 echo "Preinstalling apps required for setup or requiring additional permissions prompts"
-brew bundle --file=roles/osx/files/Brewfile.preprompt --no-quarantine
+export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.preprompt
 
 echo "Checking 1password initial login status..."
 make login.op
@@ -29,7 +23,6 @@ if [[ ! -f ~/.ansible/dotfiles_vaultpass ]]; then
   echo "Retrieving vault password"
   mkdir -p -m 0755 ~/.ansible
   touch ~/.ansible/dotfiles_vaultpass
-  authenticate
   op get item "Ansible Vault - Dotfiles" --fields password > ~/.ansible/dotfiles_vaultpass
 fi
 
