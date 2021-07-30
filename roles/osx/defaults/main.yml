@@ -35,7 +35,7 @@ defaults:
     com.apple.menuextra.clock:
       DateFormat: {type: string, value: 'h:mm a'}
       FlashDateSeperators: {type: bool, value: false}
-      IsAnalog: {type: false, value: true, desc: 'Set menubar clock to analog'}
+      IsAnalog: {type: bool, value: true, desc: 'Set menubar clock to analog'}
       ShowDayOfMonth: {type: bool, value: false}
       ShowDayOfWeek: {type: bool, value: false}
     com.apple.screensaver:
