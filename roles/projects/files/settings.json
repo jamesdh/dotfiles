@@ -46,17 +46,18 @@
     ],
     "java.import.gradle.java.home": "/Users/jamesdh/.sdkman/candidates/java/8.0.265.hs-adpt",
     "java.configuration.runtimes": [
-        {
-          "name": "JavaSE-1.8",
-          "path": "/Users/jamesdh/.sdkman/candidates/java/8.0.265.hs-adpt",
-        },
-        {
-          "name": "JavaSE-11",
-          "path": "/Users/jamesdh/.sdkman/candidates/java/11.0.8.hs-adpt",
-        },
-      ],
+      {
+        "name": "JavaSE-1.8",
+        "path": "/Users/jamesdh/.sdkman/candidates/java/8.0.265.hs-adpt"
+      },
+      {
+        "name": "JavaSE-11",
+        "path": "/Users/jamesdh/.sdkman/candidates/java/11.0.8.hs-adpt"
+      }
+    ],
     "editor.fontFamily": "'Victor Mono', Menlo, Monaco, 'Courier New', monospace",
     "javascript.preferences.useAliasesForRenames": false,
     "typescript.preferences.useAliasesForRenames": false,
-    "workbench.editor.untitled.hint": "hidden"
+    "workbench.editor.untitled.hint": "hidden",
+    "javascript.format.semicolons": "remove"
 }
