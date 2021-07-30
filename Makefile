@@ -64,10 +64,17 @@ install: login.appstore
 		exit 1 ;\
 	fi ;\
 	
-install.filtered: login.all list.tags 
-	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
-	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
-	ansible-playbook --ask-become-pass --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
+install.filtered: login.appstore list.tags 
+	@ echo ;\
+	if op list users > /dev/null 2>&1 ; then \
+		INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
+		EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
+		ansible-playbook --ask-become-pass --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml ;\
+	else \
+		echo 'Execute `eval $$(make login.op)` to login to 1Password before continuing' ;\
+		echo ;\
+		exit 1 ;\
+	fi ;\
 
 compare: login.all
 	ansible-playbook --ask-become-pass --check --diff ansible.yml
