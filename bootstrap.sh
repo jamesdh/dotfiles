@@ -10,7 +10,7 @@ echo "Preinstalling apps required for setup or requiring additional permissions 
 export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.preprompt
 
 echo "Checking 1password initial login status..."
-make login.op
+eval $(make login.op)
 
 # echo "Checking App Store login status..."
 # # [[ ! `mas account 1> /dev/null` ]] && osascript -l JavaScript jxa/app_store.scpt 1> /dev/null && read -p "Please sign into the App Store to continue..."
