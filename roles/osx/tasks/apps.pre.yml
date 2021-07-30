@@ -1,6 +1,6 @@
 
 - name: Install Essential Homebrew Apps
-  shell: export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.preprompt
+  shell: brew --no-quarantine bundle --file=roles/osx/files/Brewfile.preprompt
   register: brew_diff
   changed_when: '"Installing" in brew_diff.stdout'
 
