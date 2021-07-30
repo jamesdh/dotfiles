@@ -27,5 +27,12 @@ vscode:
     - samuelcolvin.jinjahtml
     - msjsdiag.debugger-for-chrome
 
+etchosts: 
+  - db
+  - postgres
+  - redis
+  - teamtempo.local
+  - api.teamtempo.local
+
 github: "{{vaulted_github}}"
 envfiles: "{{vaulted_envfiles}}"
