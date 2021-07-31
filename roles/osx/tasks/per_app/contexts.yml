@@ -27,8 +27,8 @@
         dest: "{{ contexts.license_path }}"
         mode: 0644
 
-    - name: Open license file to register licence with Contexts
-      shell: "open {{ contexts.license_path }}"
+    - name: Open license file to register license with Contexts
+      shell: "open '{{ contexts.license_path }}'"
 
   when: not license_file.stat.exists
   tags: 
