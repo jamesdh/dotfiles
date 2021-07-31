@@ -6,11 +6,11 @@ echo "Checking for homebrew..."
 echo "Checking for mas..."
 [[ ! `brew list mas 2> /dev/null` ]] && echo "Installing mas" && brew install mas
 
-echo "Preinstalling apps required for setup or requiring additional permissions prompts"
-export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.preprompt
-
 echo "Checking App Store login status..."
 make login.appstore
+
+echo "Preinstalling apps required for setup or requiring additional permissions prompts"
+export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.preprompt
 
 echo "Checking for vault password file..."
 if [[ ! -f ~/.ansible/dotfiles_vaultpass ]]; then 
