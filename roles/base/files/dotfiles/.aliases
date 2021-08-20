@@ -107,6 +107,10 @@ alias cdttb="cd ~/Projects/moltenbits/teamtempo/back/"
 alias cddf="cd ~/Projects/jamesdh/dotfiles/"
 alias cdj="cd ~/Projects/jamesdh"
 alias cdp="cd ~/Projects"
+alias cdph= "cd ~/Projects/proximal-health"
+alias cdphd= "cd ~/Projects/proximal-health/devops"
+alias cdphp= "cd ~/Projects/proximal-health/platform"
+alias cdphr= "cd ~/Projects/proximal-health/reyes"
 
 # Help find whatever PID is holding onto secure input
 alias secureinput="ioreg -l -w 0 | grep kCGSSessionSecureInputPID"
