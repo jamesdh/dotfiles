@@ -1,0 +1,396 @@
+{
+  "Default Arrangement Name": "Projects",
+  "Default Bookmark Guid": "\/Users\/jamesdh\/Projects",
+  "PromptOnQuit": false,
+  "OpenArrangementAtStartup": true,
+  "AlternateMouseScroll": true,
+  "DisableWindowSizeSnap": true,
+  "Window Arrangements": {
+    "Proximal": [
+      {
+        "Tabs": [
+          {
+            "Root": {
+              "View Type": "Splitter",
+              "frame": {
+                "y": 0,
+                "width": 1112,
+                "x": 0,
+                "height": 810
+              },
+              "isVertical": false,
+              "Subviews": [
+                {
+                  "View Type": "SessionView",
+                  "frame": {
+                    "y": 0,
+                    "width": 1112,
+                    "x": 0,
+                    "height": 810
+                  },
+                  "Is Active": 1,
+                  "Session": {
+                    "Working Directory": "\/Users\/jamesdh\/Projects\/proximal-health"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Root": {
+              "View Type": "Splitter",
+              "frame": {
+                "y": 0,
+                "width": 1112,
+                "x": 0,
+                "height": 810
+              },
+              "isVertical": false,
+              "Subviews": [
+                {
+                  "View Type": "SessionView",
+                  "frame": {
+                    "y": 0,
+                    "width": 1112,
+                    "x": 0,
+                    "height": 810
+                  },
+                  "Is Active": 1,
+                  "Session": {
+                    "Working Directory": "\/Users\/jamesdh\/Projects\/proximal-health\/devops\/base-image\/keycloak"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Root": {
+              "View Type": "Splitter",
+              "frame": {
+                "y": 0,
+                "width": 1112,
+                "x": 0,
+                "height": 810
+              },
+              "isVertical": false,
+              "Subviews": [
+                {
+                  "View Type": "SessionView",
+                  "frame": {
+                    "y": 0,
+                    "width": 1112,
+                    "x": 0,
+                    "height": 810
+                  },
+                  "Is Active": 1,
+                  "Session": {
+                    "Working Directory": "\/Users\/jamesdh\/Projects\/proximal-health\/platform\/www-api"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Root": {
+              "View Type": "Splitter",
+              "frame": {
+                "y": 0,
+                "width": 1112,
+                "x": 0,
+                "height": 810
+              },
+              "isVertical": false,
+              "Subviews": [
+                {
+                  "View Type": "SessionView",
+                  "frame": {
+                    "y": 0,
+                    "width": 1112,
+                    "x": 0,
+                    "height": 810
+                  },
+                  "Is Active": 1,
+                  "Session": {
+                    "Working Directory": "\/Users\/jamesdh\/Projects\/proximal-health\/platform\/www-ui"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "Y Origin": -834,
+        "Use Transparency": true,
+        "Height": 810,
+        "Is Hotkey Window": false,
+        "Old Height": 0,
+        "Hide After Opening": false,
+        "Old Width": 0,
+        "Window Type": 4,
+        "X Origin": 1085,
+        "Width": 1112,
+        "Screen": 2,
+        "Initial Profile": {},
+        "Selected Tab Index": 0,
+        "Old X Origin": 0,
+        "Old Y Origin": 0,
+        "Saved Window Type": 0
+      }
+    ],
+    "TeamTempo": [
+      {
+        "Tabs": [
+          {
+            "Root": {
+              "View Type": "Splitter",
+              "frame": {
+                "y": 0,
+                "width": 1112,
+                "x": 0,
+                "height": 810
+              },
+              "Subviews": [
+                {
+                  "View Type": "SessionView",
+                  "frame": {
+                    "y": 0,
+                    "width": 1112,
+                    "x": 0,
+                    "height": 810
+                  },
+                  "Is Active": 1,
+                  "Session": {
+                    "Working Directory": "\/Users\/jamesdh\/Projects\/moltenbits\/teamtempo"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Root": {
+              "View Type": "Splitter",
+              "frame": {
+                "y": 0,
+                "width": 1112,
+                "x": 0,
+                "height": 810
+              },
+              "isVertical": false,
+              "Subviews": [
+                {
+                  "View Type": "SessionView",
+                  "frame": {
+                    "y": 0,
+                    "width": 1112,
+                    "x": 0,
+                    "height": 810
+                  },
+                  "Is Active": 1,
+                  "Session": {
+                    "Working Directory": "\/Users\/jamesdh\/Projects\/moltenbits\/teamtempo\/back"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Root": {
+              "View Type": "Splitter",
+              "frame": {
+                "y": 0,
+                "width": 1112,
+                "x": 0,
+                "height": 810
+              },
+              "isVertical": false,
+              "Subviews": [
+                {
+                  "View Type": "SessionView",
+                  "frame": {
+                    "y": 0,
+                    "width": 1112,
+                    "x": 0,
+                    "height": 810
+                  },
+                  "Is Active": 1,
+                  "Session": {
+                    "Working Directory": "\/Users\/jamesdh\/Projects\/moltenbits\/teamtempo\/front"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "Y Origin": -834,
+        "Use Transparency": true,
+        "Height": 810,
+        "Is Hotkey Window": false,
+        "Old Height": 0,
+        "Hide After Opening": false,
+        "Old Width": 0,
+        "Window Type": 4,
+        "X Origin": 1085,
+        "Width": 1112,
+        "Screen": 2,
+        "Initial Profile": {},
+        "Selected Tab Index": 0,
+        "Old X Origin": 0,
+        "Old Y Origin": 0,
+        "Saved Window Type": 0
+      }
+    ],
+    "Projects": [
+      {
+        "Tabs": [
+          {
+            "Root": {
+              "View Type": "Splitter",
+              "frame": {
+                "y": 0,
+                "width": 1112,
+                "x": 0,
+                "height": 834
+              },
+              "Subviews": [
+                {
+                  "View Type": "SessionView",
+                  "frame": {
+                    "y": 0,
+                    "width": 1112,
+                    "x": 0,
+                    "height": 834
+                  },
+                  "Is Active": 1,
+                  "Session": {
+                    "Working Directory": "\/Users\/jamesdh\/Projects"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "Y Origin": -834,
+        "Use Transparency": true,
+        "Height": 834,
+        "Is Hotkey Window": false,
+        "Old Height": 0,
+        "Hide After Opening": false,
+        "Old Width": 0,
+        "Window Type": 4,
+        "X Origin": 1085,
+        "Width": 1112,
+        "Initial Profile": {},
+        "Screen": 2,
+        "Selected Tab Index": 0,
+        "Old X Origin": 0,
+        "Old Y Origin": 0,
+        "Saved Window Type": 0
+      }
+    ],
+    "Dotfiles": [
+      {
+        "Tabs": [
+          {
+            "Root": {
+              "View Type": "Splitter",
+              "frame": {
+                "y": 0,
+                "width": 1112,
+                "x": 0,
+                "height": 834
+              },
+              "Subviews": [
+                {
+                  "View Type": "SessionView",
+                  "frame": {
+                    "y": 0,
+                    "width": 1112,
+                    "x": 0,
+                    "height": 834
+                  },
+                  "Is Active": 1,
+                  "Session": {
+                    "Working Directory": "\/Users\/jamesdh\/Projects\/jamesdh\/dotfiles"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "Y Origin": -834,
+        "Use Transparency": true,
+        "Height": 834,
+        "Is Hotkey Window": false,
+        "Old Height": 0,
+        "Hide After Opening": false,
+        "Old Width": 0,
+        "Window Type": 4,
+        "X Origin": 1085,
+        "Width": 1112,
+        "Screen": 2,
+        "Initial Profile": {},
+        "Selected Tab Index": 0,
+        "Old X Origin": 0,
+        "Old Y Origin": 0,
+        "Saved Window Type": 0
+      }
+    ]
+  },
+  "Profiles": [
+    {
+      "Name": "Projects",
+      "Guid" : "\/Users\/jamesdh\/Projects",
+      "Working Directory": "\/Users\/jamesdh\/Projects",
+      "Custom Directory": "Yes",
+      "Title Components" : 4,
+      "Unlimited Scrollback": false,
+      "Scrollback Lines": 10000,
+      "Transparency": 0.2,
+      "Use Non-ASCII Font": false,
+      "Non Ascii Font": "Monaco 12",
+      "Normal Font": "Monaco 12"
+    },
+    {
+      "Name": "TeamTempo",
+      "Guid" : "\/Users\/jamesdh\/Projects\/moltenbits\/teamtempo",
+      "Working Directory": "\/Users\/jamesdh\/Projects\/moltenbits\/teamtempo",
+      "Custom Directory": "Yes",
+      "Title Components": 36,
+      "Unlimited Scrollback": false,
+      "Scrollback Lines": 10000,
+      "Transparency": 0.2,
+      "Use Non-ASCII Font": false,
+      "Non Ascii Font": "Monaco 12",
+      "Normal Font": "Monaco 12"
+    },
+    {
+      "Name": "Dotfiles",
+      "Guid" : "\/Users\/jamesdh\/Projects\/jamesdh\/dotfiles",
+      "Working Directory": "\/Users\/jamesdh\/Projects\/jamesdh\/dotfiles",
+      "Custom Directory": "Yes",
+      "Title Components": 36,
+      "Unlimited Scrollback": false,
+      "Window Type": 0,
+      "Scrollback Lines": 10000,
+      "Close Sessions On End": true,
+      "Transparency": 0.2,
+      "Use Non-ASCII Font": false,
+      "Non Ascii Font": "Monaco 12",
+      "Normal Font": "Monaco 12"
+    },
+    {
+      "Name": "Proximal",
+      "Guid" : "\/Users\/jamesdh\/Projects\/proximal-health",
+      "Working Directory": "\/Users\/jamesdh\/Projects\/proximal-health",
+      "Custom Directory": "Yes",
+      "Title Components": 36,
+      "Unlimited Scrollback": false,
+      "Window Type": 0,
+      "Scrollback Lines": 10000,
+      "Close Sessions On End": true,
+      "Transparency": 0.2,
+      "Use Non-ASCII Font": false,
+      "Non Ascii Font": "Monaco 12",
+      "Normal Font": "Monaco 12"
+    }
+  ]
+}

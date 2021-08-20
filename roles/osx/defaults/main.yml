@@ -298,6 +298,11 @@ contexts:
   license_path: "{{ home_dir }}/Library/Application\ Support/com.contextsformac.Contexts/license.contexts-license"
   license_url: "{{ lookup('onepassword', 'License: Contexts', field='License Link', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
 
+iterm: 
+  app_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2"
+  dynamic_profile_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2/DynamicProfiles"
+  autorun_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2/Scripts/AutoLaunch"
+
 ngrok:
   authtoken: "{{ lookup('onepassword', 'License: ngrok', field='license key', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
 

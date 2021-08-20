@@ -57,3 +57,6 @@
 - import_tasks: per_app/contexts.yml
 - import_tasks: per_app/viscosity.yml
 - import_tasks: per_app/ngrok.yml
+- import_tasks: per_app/iterm.yml
+  tags: 
+    - iterm

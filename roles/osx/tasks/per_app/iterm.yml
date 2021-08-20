@@ -1,0 +1,28 @@
+- name: Create iTerm dirs
+  file: 
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  loop: 
+    - "{{ iterm.dynamic_profile_dir }}"
+    - "{{ iterm.autorun_dir }}"
+  tags: 
+    - iterm
+
+- name: Link iTerm Dynamic Profile 
+  file: 
+    src: "{{role_path}}/files/iTerm/iTerm.json"
+    path: "{{iterm.dynamic_profile_dir}}/iTerm.json"
+    state: link
+    force: true
+  tags: 
+    - iterm
+
+- name: Link iTerm AutoLaunch Scripts 
+  file: 
+    src: "{{role_path}}/files/iTerm/change_default_profile.py"
+    path: "{{iterm.autorun_dir}}/change_default_profile.py"
+    state: link
+    force: true
+  tags: 
+    - iterm
