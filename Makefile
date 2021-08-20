@@ -45,7 +45,7 @@ login.op:
 		open -a "Authy Desktop" ;\
 		SESSION=$$(op signin my $$EMAIL $$SECRET --raw) ;\
 	elif [[ ! `op list users 2> /dev/null` ]]; then \
-    SESSION=$$(op signin my --raw) ;\
+		SESSION=$$(op signin my --raw) ;\
 	fi ;\
 	if [[ -n "$$SESSION" ]]; then\
 		printf 'eval $$(op signin my --session %s)\n' $$SESSION ;\
