@@ -1,63 +1,68 @@
 {
-    "workbench.editor.swipeToNavigate": true,
-    "workbench.editor.enablePreview": false,
-    "workbench.editor.enablePreviewFromQuickOpen": false,
-    "workbench.colorCustomizations": {
-        "statusBar.background": "#3C3C3C",
-        "statusBar.noFolderBackground": "#3C3C3C",
-        "statusBar.debuggingBackground": "#3C3C3C"
+  "colorize.languages": [
+      "css",
+      "sass",
+      "scss",
+      "less",
+      "postcss",
+      "sss",
+      "stylus",
+      "xml",
+      "svg",
+      "javascript",
+      "typescript"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
+  "editor.fontFamily": "'Victor Mono', Menlo, Monaco, 'Courier New', monospace",
+  "editor.tabSize": 2,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmDelete": false,
+  "explorer.autoReveal": false,
+  "emmet.excludeLanguages": [
+      "markdown"
+  ],
+  "emmet.showExpandedAbbreviation": "never",
+  "java.configuration.checkProjectSettingsExclusions": false,
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-1.8",
+      "path": "/Users/jamesdh/.sdkman/candidates/java/8.0.265.hs-adpt"
     },
-    "workbench.iconTheme": "vscode-icons",
-    "workbench.startupEditor": "newUntitledFile",
-    "window.restoreWindows": "all",
-    "explorer.confirmDragAndDrop": false,
-    "explorer.confirmDelete": false,
-    "workbench.tree.indent": 14,
-    "workbench.statusBar.feedback.visible": false,
-    "explorer.autoReveal": false,
-    "typescript.updateImportsOnFileMove.enabled": "always",
-    "editor.tabSize": 2,
-    "emmet.showExpandedAbbreviation": "never",
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features"
-    },
-    "vsicons.dontShowNewVersionMessage": true,
-    "java.configuration.checkProjectSettingsExclusions": false,
-    "colorize.languages": [
-        "css",
-        "sass",
-        "scss",
-        "less",
-        "postcss",
-        "sss",
-        "stylus",
-        "xml",
-        "svg",
-        "javascript",
-        "typescript"
-    ],
-    "javascript.updateImportsOnFileMove.enabled": "always",
-    "[jinja]": {},
-    "typescript.suggest.completeFunctionCalls": true,
-    "javascript.suggest.completeFunctionCalls": true,
-    "emmet.excludeLanguages": [
-
-        "markdown"
-    ],
-    "java.import.gradle.java.home": "/Users/jamesdh/.sdkman/candidates/java/8.0.265.hs-adpt",
-    "java.configuration.runtimes": [
-      {
-        "name": "JavaSE-1.8",
-        "path": "/Users/jamesdh/.sdkman/candidates/java/8.0.265.hs-adpt"
-      },
-      {
-        "name": "JavaSE-11",
-        "path": "/Users/jamesdh/.sdkman/candidates/java/11.0.8.hs-adpt"
-      }
-    ],
-    "editor.fontFamily": "'Victor Mono', Menlo, Monaco, 'Courier New', monospace",
-    "javascript.preferences.useAliasesForRenames": false,
-    "typescript.preferences.useAliasesForRenames": false,
-    "workbench.editor.untitled.hint": "hidden",
-    "javascript.format.semicolons": "remove"
+    {
+      "name": "JavaSE-11",
+      "path": "/Users/jamesdh/.sdkman/candidates/java/11.0.8.hs-adpt"
+    }
+  ],
+  "java.import.gradle.java.home": "/Users/jamesdh/.sdkman/candidates/java/8.0.265.hs-adpt",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "javascript.suggest.completeFunctionCalls": true,
+  "javascript.preferences.useAliasesForRenames": false,
+  "javascript.format.semicolons": "remove",
+  "security.workspace.trust.untrustedFiles": "open",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.useAliasesForRenames": false,
+  "typescript.suggest.completeFunctionCalls": true,
+  "vsicons.dontShowNewVersionMessage": true,
+  "window.restoreWindows": "all",
+  "workbench.colorCustomizations": {
+      "statusBar.background": "#3C3C3C",
+      "statusBar.noFolderBackground": "#3C3C3C",
+      "statusBar.debuggingBackground": "#3C3C3C"
+  },
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.enablePreviewFromQuickOpen": false,
+  "workbench.editor.swipeToNavigate": true,
+  "workbench.editor.untitled.hint": "hidden",
+  "workbench.editor.wrapTabs": true, 
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.startupEditor": "newUntitledFile",
+  "workbench.statusBar.feedback.visible": false,
+  "workbench.tree.indent": 14,
+  
+  "[jinja]": {},
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
 }
