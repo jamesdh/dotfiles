@@ -1,0 +1,13 @@
+#!/usr/bin/env osascript -l JavaScript
+
+run = argv => {
+  system = Application('System Events')
+  vscode = system.processes['Code']
+  vscode.windows().forEach( window => {
+    argv.forEach( projectName => {
+      if(window.name().includes(projectName)) {
+        window.buttons.at(0).click()  
+      }
+    })
+  })
+}
