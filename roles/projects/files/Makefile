@@ -41,8 +41,10 @@ stop.teamtempo: iterm.stop.TeamTempo ## Closes all TeamTempo project tools
 	./jamesdh/dotfiles/jxa/closeCode.jxa teamtempo front ;\
 	./jamesdh/dotfiles/jxa/closeTower.jxa teamtempo ;\
 	pkill TablePlus || true ;\
-	pkill -f 'Slack.app/Contents/MacOS/Slack' || true ;\
 	$(MAKE) -C moltenbits/teamtempo -f Makefile dev.stop || true ;\
+
+stop.teamtempo.all: stop.teamtempo
+	@pkill -f 'Slack.app/Contents/MacOS/Slack' || true ;\
 
 start.proximal: iterm.start.Proximal ## Opens all Proximal project tools
 	@sleep 1 ;\
