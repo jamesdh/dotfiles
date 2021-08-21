@@ -1,0 +1,25 @@
+#!/usr/bin/env osascript -l JavaScript
+
+run = argv => {
+  app = Application("IntelliJ IDEA")
+  if(app.running()) {
+    system = Application('System Events')
+    system.includeStandardAdditions = true
+    idea = system.processes['IntelliJ IDEA']
+
+    for(window of idea.windows()) {  
+      for(projectName of argv) {
+        if(window.name().includes(projectName)) {
+          app.activate()
+          window.actions['AXRaise'].perform()
+          idea.menuBars.at(0).menuBarItems.byName("File").menus.byName("File").menuItems.byName("Close Project").click()
+        }
+      }
+    }
+
+    delay(1)
+    if(idea.windows().length === 0 || (idea.windows().length === 1 && idea.windows[0].name().includes('Welcome'))) {
+      idea.menuBars.at(0).menuBarItems.byName("IntelliJ IDEA").menus.byName("IntelliJ IDEA").menuItems.byName("Quit IntelliJ IDEA").click()
+    }
+  }
+}

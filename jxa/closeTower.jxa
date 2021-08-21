@@ -1,17 +1,21 @@
 #!/usr/bin/env osascript -l JavaScript
 
 run = argv => {
-  system = Application('System Events')
-  tower = system.processes['Tower']
-  // use `tower.entireContents()` to see all possible attributes/operations
-  for(window of tower.windows()) {
-    for(projectName of argv) {
-      if(window.name().includes(projectName)) {
-        window.buttons.at(0).click()
+  app = Application("Tower")
+  if(app.running()) {
+    system = Application('System Events')
+    tower = system.processes['Tower']
+    // use `tower.entireContents()` to see all possible attributes/operations
+    for(window of tower.windows()) {
+      for(projectName of argv) {
+        if(window.name().includes(projectName)) {
+          window.buttons.at(0).click()
+        }
       }
     }
-  }
-  if(tower.windows().length === 0) {
-    tower.menuBars[0].menuBarItems["Tower"].menus["Tower"].menuItems["Quit Tower"].click()
+    if(tower.windows().length === 0) {
+      app.activate()
+      tower.menuBars[0].menuBarItems["Tower"].menus["Tower"].menuItems["Quit Tower"].click()
+    }
   }
 }

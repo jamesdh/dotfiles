@@ -1,17 +1,21 @@
 #!/usr/bin/env osascript -l JavaScript
 
 run = argv => {
-  system = Application('System Events')
-  vscode = system.processes['Code']
-  // use `vscode.entireContents()` to see all possible attributes/operations
-  for(window of vscode.windows()) {
-    for(projectName of argv) {
-      if(window.name().includes(projectName)) {
-        window.buttons.at(0).click()  
+  app = Application("Code")
+  if(app.running()) {
+    system = Application('System Events')
+    vscode = system.processes['Code']
+    // use `vscode.entireContents()` to see all possible attributes/operations
+    for(window of vscode.windows()) {
+      for(projectName of argv) {
+        if(window.name().includes(projectName)) {
+          window.buttons.at(0).click()  
+        }
       }
     }
-  }
-  if(vscode.windows().length === 0) {
-    vscode.menuBars[0].menuBarItems["Code"].menus["Code"].menuItems["Quit Visual Studio Code"].click()
+    if(vscode.windows().length === 0) {
+      app.activate()
+      vscode.menuBars[0].menuBarItems["Code"].menus["Code"].menuItems["Quit Visual Studio Code"].click()
+    }
   }
 }

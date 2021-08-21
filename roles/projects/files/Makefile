@@ -18,57 +18,100 @@ help: ## This help screen
 	done
 
 default: 
-	@code $$(pwd)/ ;\
+	@code $$(pwd)/
 
-start.dotfiles: iterm.start.Dotfiles ## Opens all Dotfiles project tools
-	@code $$(pwd)/jamesdh/dotfiles ;\
-	gittower $$(pwd)/jamesdh/dotfiles/ ;\
+stop: \
+	stop.proximal \
+	stop.teamtempo \
+	stop.dotfiles
 
-stop.dotfiles: iterm.stop.Dotfiles ## Closes all Dotfiles project tools
-	@./jamesdh/dotfiles/jxa/closeCode.jxa dotfiles ;\
-	./jamesdh/dotfiles/jxa/closeTower.jxa dotfiles ;\
+start.dotfiles: ## Opens all Dotfiles project tools
+start.dotfiles: \
+	iterm.start.Dotfiles \
+	tower.start.jamesdh.dotfiles \
+	code.start.jamesdh.dotfiles
+
+stop.dotfiles: ## Closes all Dotfiles project tools
+stop.dotfiles: \
+	iterm.stop.Dotfiles \
+	tower.stop.dotfiles \
+	code.stop.dotfiles 
 	
-start.teamtempo: iterm.start.TeamTempo ## Opens all TeamTempo project tools
-	@code $$(pwd)/moltenbits/teamtempo/front/ ;\
-	idea $$(pwd)/moltenbits/teamtempo/back ;\
-	open -a 'Airmail' ;\
-	gittower $$(pwd)/moltenbits/teamtempo/ ;\
-	open postgresql://ttm:ttm@localhost/ttm?enviroment=local&name=TeamTempo ;\
-	open -a 'Slack' ;\
+start.teamtempo: ## Opens all TeamTempo project tools
+start.teamtempo: \
+	iterm.start.TeamTempo \
+	tower.start.moltenbits.teamtempo \
+	idea.start.moltenbits.teamtempo.back \
+	code.start.moltenbits.teamtempo.front 
+	@open -a 'Airmail' 
+	@open postgresql://ttm:ttm@localhost/ttm?enviroment=local&name=TeamTempo 
+	@open -a 'Slack' 
 
-stop.teamtempo: iterm.stop.TeamTempo ## Closes all TeamTempo project tools
-	@pkill -f "idea $$(pwd)/moltenbits/teamtempo/back" || true ;\
-	./jamesdh/dotfiles/jxa/closeCode.jxa teamtempo front ;\
-	./jamesdh/dotfiles/jxa/closeTower.jxa teamtempo ;\
-	pkill TablePlus || true ;\
-	$(MAKE) -C moltenbits/teamtempo -f Makefile dev.stop || true ;\
+stop.teamtempo: ## Closes all TeamTempo project tools
+stop.teamtempo: \
+	iterm.stop.TeamTempo \
+	tower.stop.teamtempo \
+	code.stop.teamtempo \
+	code.stop.front \
+	idea.stop.teamtempo
+	@pkill TablePlus || true 
+	@$(MAKE) -C moltenbits/teamtempo -f Makefile dev.stop || true 
 
-stop.teamtempo.all: stop.teamtempo
-	@pkill -f 'Slack.app/Contents/MacOS/Slack' || true ;\
+stop.teamtempo.all: ## Closes all TeamTempo tools including comms apps
+stop.teamtempo.all: \
+	stop.teamtempo
+	@pkill -f 'Slack.app/Contents/MacOS/Slack' || true 
+	@pkill -f '/Applications/Airmail.app/Contents/MacOS/Airmail' || true 
 
-start.proximal: iterm.start.Proximal ## Opens all Proximal project tools
-	@sleep 1 ;\
-	open -Fna 'Tower' --args $$(pwd)/proximal-health/platform; open -Fna 'Tower' --args $$(pwd)/proximal-health/reyes; open -Fna 'Tower' --args $$(pwd)/proximal-health/devops; \
-	sleep 3 ;\
-	code $$(pwd)/proximal-health ;\
-	idea $$(pwd)/proximal-health/devops/base-image/keycloak/proximal-keycloak $$(pwd)/proximal-health/platform/admin-api $$(pwd)/proximal-health/platform/www-api ;\
-	open -a 'Microsoft Teams' ;\
-	open -a 'Microsoft Outlook' ;\
+start.proximal: ## Opens all Proximal project tools
+start.proximal: \
+	iterm.start.Proximal \
+	tower.start.proximal-health.platform+proximal-health.reyes+proximal-health.devops \
+	idea.start.proximal-health.devops.base-image.keycloak.proximal-keycloak+proximal-health.platform.admin-api+proximal-health.platform.www-api
+	@open -a 'Microsoft Teams' 
+	@open -a 'Microsoft Outlook' 
 
-stop.proximal: iterm.stop.Proximal ## Closes all Proximal project tools
-	@./jamesdh/dotfiles/jxa/closeCode.jxa proximal-health ;\
-	./jamesdh/dotfiles/jxa/closeTower.jxa devops platform reyes ;\
-	pkill -f "idea $$(pwd)/proximal-health" || true ;\
-	pkill -f pgAdmin || true ;\
-	pkill -f 'Outlook.app/Contents/MacOS/Microsoft Outlook' || true ;\
-	$(MAKE) -C proximal-health/platform -f Makefile stop || true ;\
-	
-stop.proximal.all: proximal.stop
-	@pkill -f 'Teams.app/Contents/MacOS/Teams' || true ;\
+stop.proximal: ## Closes all Proximal project tools
+stop.proximal: \
+	iterm.stop.Proximal \
+	tower.stop.devops \
+	tower.stop.platform \
+	tower.stop.reyes \
+	code.stop.proximal-health \
+	idea.stop.www-api \
+	idea.stop.admin-api \
+	idea.stop.keycloak 
+	@pkill -f 'Outlook.app/Contents/MacOS/Microsoft Outlook' || true 
+	@$(MAKE) -C proximal-health/platform -f Makefile stop || true 
 
-iterm.start.%: ## Opens iTerm with the given arrangement (Dotfiles, TeamTempo, or Proximal)
-	@(nohup /Applications/iTerm.app/Contents/MacOS/iTerm2 -"Default Arrangement Name" "$*" -OpenArrangementAtStartup 1 >/dev/null 2>&1 &); 
+stop.proximal.all: ## Closes all Proximal tools including comms apps
+stop.proximal.all: \
+	stop.proximal
+	@pkill -f 'Teams.app/Contents/MacOS/Teams' || true 
 
-iterm.stop.%: ## Closes iTerm sessions using the given arrangement
+iterm.start.%:
+	@(nohup /Applications/iTerm.app/Contents/MacOS/iTerm2 -"Default Arrangement Name" "$*" -OpenArrangementAtStartup 1 >/dev/null 2>&1 &)
+
+iterm.stop.%: 
 	@$(eval ITERM_PID:=$(shell ps -A -o pid,command | grep 'iTerm2 -Default Arrangement Name $*' | grep -v grep | head -n 1 | awk '{print $$1}'))
-	@[[ -n $ITERM_PID ]] && kill -15 ${ITERM_PID} || true
+	@[[ "${ITERM_PID}" ]] && kill -15 ${ITERM_PID} || true
+
+tower.start.%: 
+	@sleep 1
+	@open -Fna 'Tower' --args $$(pwd)/$(subst .,/,$(subst +,; open -Fna  'Tower' --args $$(pwd)/,$*))
+	@sleep 3
+
+tower.stop.%: 
+	@pkill -f 'Tower\.app.*$*' || true 
+
+idea.start.%: 
+	@idea $$(pwd)/$(subst .,/,$(subst +, $$(pwd)/,$*))
+
+idea.stop.%:
+	@./jamesdh/dotfiles/jxa/closeIdea.jxa $* 
+
+code.start.%: 
+	@code $$(pwd)/$(subst .,/,$*)
+
+code.stop.%:
+	@./jamesdh/dotfiles/jxa/closeCode.jxa $* 
