@@ -31,9 +31,9 @@ stop.dotfiles: iterm.stop.Dotfiles ## Closes all Dotfiles project tools
 start.teamtempo: iterm.start.TeamTempo ## Opens all TeamTempo project tools
 	@code $$(pwd)/moltenbits/teamtempo/front/ ;\
 	idea $$(pwd)/moltenbits/teamtempo/back ;\
+	open -a 'Airmail' ;\
 	gittower $$(pwd)/moltenbits/teamtempo/ ;\
 	open postgresql://ttm:ttm@localhost/ttm?enviroment=local&name=TeamTempo ;\
-	open -a 'Airmail' ;\
 	open -a 'Slack' ;\
 
 stop.teamtempo: iterm.stop.TeamTempo ## Closes all TeamTempo project tools
