@@ -11,4 +11,7 @@ run = argv => {
       }
     }
   }
+  if(vscode.windows().length === 0) {
+    vscode.menuBars[0].menuBarItems["Code"].menus["Code"].menuItems["Quit Visual Studio Code"].click()
+  }
 }

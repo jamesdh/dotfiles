@@ -11,4 +11,7 @@ run = argv => {
       }
     }
   }
+  if(tower.windows().length === 0) {
+    tower.menuBars[0].menuBarItems["Tower"].menus["Tower"].menuItems["Quit Tower"].click()
+  }
 }
