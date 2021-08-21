@@ -2,12 +2,12 @@
 
 run = argv => {
   system = Application('System Events')
-  vscode = system.processes['Code']
-  // use `vscode.entireContents()` to see all possible attributes/operations
-  for(window of vscode.windows()) {
+  tower = system.processes['Tower']
+  // use `tower.entireContents()` to see all possible attributes/operations
+  for(window of tower.windows()) {
     for(projectName of argv) {
       if(window.name().includes(projectName)) {
-        window.buttons.at(0).click()  
+        window.buttons.at(0).click()
       }
     }
   }

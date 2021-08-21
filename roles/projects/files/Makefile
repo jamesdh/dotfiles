@@ -26,7 +26,7 @@ start.dotfiles: iterm.start.Dotfiles ## Opens all Dotfiles project tools
 
 stop.dotfiles: iterm.stop.Dotfiles ## Closes all Dotfiles project tools
 	@./jamesdh/dotfiles/jxa/closeCode.jxa dotfiles ;\
-	pkill -f 'Tower.app' || true ;\
+	./jamesdh/dotfiles/jxa/closeTower.jxa dotfiles ;\
 	
 start.teamtempo: iterm.start.TeamTempo ## Opens all TeamTempo project tools
 	@code $$(pwd)/moltenbits/teamtempo/front/ ;\
@@ -39,8 +39,8 @@ start.teamtempo: iterm.start.TeamTempo ## Opens all TeamTempo project tools
 stop.teamtempo: iterm.stop.TeamTempo ## Closes all TeamTempo project tools
 	@pkill -f "idea $$(pwd)/moltenbits/teamtempo/back" || true ;\
 	./jamesdh/dotfiles/jxa/closeCode.jxa teamtempo front ;\
+	./jamesdh/dotfiles/jxa/closeTower.jxa teamtempo ;\
 	pkill TablePlus || true ;\
-	pkill -f 'Tower.app' || true ;\
 	pkill -f 'Slack.app/Contents/MacOS/Slack' || true ;\
 	$(MAKE) -C moltenbits/teamtempo -f Makefile dev.stop || true ;\
 
@@ -54,14 +54,14 @@ start.proximal: iterm.start.Proximal ## Opens all Proximal project tools
 	open -a 'Microsoft Outlook' ;\
 
 stop.proximal: iterm.stop.Proximal ## Closes all Proximal project tools
-	@pkill -9 -f 'Tower.app' || true ;\
-	./jamesdh/dotfiles/jxa/closeCode.jxa proximal-health ;\
+	@./jamesdh/dotfiles/jxa/closeCode.jxa proximal-health ;\
+	./jamesdh/dotfiles/jxa/closeTower.jxa devops platform reyes ;\
 	pkill -f "idea $$(pwd)/proximal-health" || true ;\
 	pkill -f pgAdmin || true ;\
 	pkill -f 'Outlook.app/Contents/MacOS/Microsoft Outlook' || true ;\
 	$(MAKE) -C proximal-health/platform -f Makefile stop || true ;\
 	
-stop.proximal.all: ##proximal.stop
+stop.proximal.all: proximal.stop
 	@pkill -f 'Teams.app/Contents/MacOS/Teams' || true ;\
 
 iterm.start.%: ## Opens iTerm with the given arrangement (Dotfiles, TeamTempo, or Proximal)
