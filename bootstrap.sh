@@ -3,6 +3,12 @@
 echo "Checking for homebrew..."
 [[ ! `brew config 2> /dev/null` ]] && echo "Installing Homebrew..." && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
+if [ "$(arch)" = "arm64" ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
 echo "Checking for mas..."
 [[ ! `brew list mas 2> /dev/null` ]] && echo "Installing mas" && brew install mas
 
