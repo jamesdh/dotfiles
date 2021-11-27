@@ -1,13 +1,17 @@
 #!/bin/bash
 
-# Includes the majority of Cellar (Brew) items
-export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+# Exports HOMEBREW_PREFIX and updates the PATH to the appropriate Homebrew bin location
+if [ "$(arch)" = "arm64" ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
 
-# Includes updated 'make'
-export PATH=/usr/local/opt/make/libexec/gnubin:$PATH
+# Updated 'make'
+export PATH=$HOMEBREW_PREFIX/opt/make/libexec/gnubin:$PATH
 
 # Python path shenanigans
-export PATH=/usr/local/opt/python/libexec/bin:$PATH
+export PATH=$HOMEBREW_PREFIX/opt/python/libexec/bin:$PATH
 
 # Needed for Krew (kubernetes)
 export PATH=$PATH:$KREW_BIN
