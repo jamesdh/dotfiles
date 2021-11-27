@@ -53,9 +53,9 @@ login.op:
 		printf 'eval $$(op signin my)\n' ;\
 	fi ;\
 	
-login.all: login.appstore login.op
+login.all: login.op
 
-install: login.appstore
+install:
 	@ echo ;\
 	if op list users > /dev/null 2>&1 ; then \
 		ansible-playbook --ask-become-pass --diff ansible.yml ;\
@@ -65,7 +65,7 @@ install: login.appstore
 		exit 1 ;\
 	fi ;\
 	
-install.filtered: login.appstore list.tags 
+install.filtered: list.tags 
 	@ echo ;\
 	if op list users > /dev/null 2>&1 ; then \
 		INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\

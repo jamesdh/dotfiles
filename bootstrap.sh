@@ -13,7 +13,7 @@ echo "Checking for mas..."
 [[ ! `brew list mas 2> /dev/null` ]] && echo "Installing mas" && brew install mas
 
 echo "Checking App Store login status..."
-make login.appstore
+#make login.appstore
 
 echo "Preinstalling apps required for setup or requiring additional permissions prompts"
 export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.preprompt
