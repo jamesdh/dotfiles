@@ -1,12 +1,11 @@
 - name: Add upgraded bash to trusted shells
   lineinfile: 
     path: /etc/shells
-    regexp: '^\/usr\/local\/bin\/bash'
-    line: /usr/local/bin/bash
+    line: "{{ lookup('env', 'HOMEBREW_PREFIX') }}/bin/bash"
   become: true
 
 - name: Set correct bash shell for user
   user: 
     name: "{{ lookup('env', 'USER') }}"
-    shell: /usr/local/bin/bash
+    shell: "{{ lookup('env', 'HOMEBREW_PREFIX') }}/bin/bash"
   become: true

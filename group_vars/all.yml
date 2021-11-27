@@ -1,4 +1,4 @@
-ansible_python_interpreter: /usr/local/bin/python3
+ansible_python_interpreter: "{{ lookup('env', 'HOMEBREW_PREFIX') }}/bin/python3"
 op:
   email: !vault |
           $ANSIBLE_VAULT;1.1;AES256
