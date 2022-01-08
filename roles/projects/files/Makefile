@@ -1,3 +1,4 @@
+SHELL := /bin/bash
 .DEFAULT_GOAL := help
 .PHONY: iterm
 
@@ -17,9 +18,11 @@ help: ## This help screen
 					printf "%s\n" $$help_info; \
 	done
 
+default: ## Opens VSCode for this directory
 default: 
 	@code $$(pwd)/
 
+stop: ## Stops all projects
 stop: \
 	stop.proximal \
 	stop.teamtempo \
@@ -65,9 +68,25 @@ stop.teamtempo.all: \
 
 start.proximal: ## Opens all Proximal project tools
 start.proximal: \
-	iterm.start.Proximal \
-	tower.start.proximal-health.platform+proximal-health.reyes+proximal-health.devops \
-	idea.start.proximal-health.devops.base-image.keycloak.proximal-keycloak+proximal-health.platform.admin-api+proximal-health.platform.www-api
+	start.proximal.iterm \
+	start.proximal.tower \
+	start.proximal.idea \
+	start.proximal.comms
+
+start.proximal.iterm: \
+	iterm.start.Proximal 
+
+start.proximal.tower: \
+	tower.start.proximal-health.platform+proximal-health.reyes+proximal-health.devops 
+
+start.proximal.idea: \
+	idea.start.proximal-health.devops.base-image.keycloak.proximal-keycloak+proximal-health.platform.admin-api+proximal-health.platform.www-api 
+
+start.proximal.code: \
+	code.start.proximal-health.platform.admin-ui \
+	code.start.proximal-health.platform.www-ui
+
+start.proximal.comms: 
 	@open -a 'Microsoft Teams' 
 	@open -a 'Microsoft Outlook' 
 
@@ -78,6 +97,8 @@ stop.proximal: \
 	tower.stop.platform \
 	tower.stop.reyes \
 	code.stop.proximal-health \
+	code.stop.www-ui \
+	code.stop.admin-ui \
 	idea.stop.www-api \
 	idea.stop.admin-api \
 	idea.stop.keycloak 
