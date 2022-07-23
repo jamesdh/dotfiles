@@ -95,8 +95,7 @@ defaults:
       TrackpadTwoFingerDoubleTapGesture: {type: int, value: 1}
       TrackpadTwoFingerFromRightEdgeSwipeGesture: {type: int, value: 3}
       USBMouseStopsTrackpad: {type: int, value: 0}
-    com.apple.BluetoothAudioAgent:
-      "Apple Bitpool Min (editable)": {type: int, value: 60, desc: 'Bluetooth: improve bluetooth audio quality'}
+    
     com.apple.driver.AppleBluetoothMultitouch.mouse:
       MouseButtonDivision: {type: int, value: 55}
       MouseButtonMode: {type: string, value: 'TwoButton'}
