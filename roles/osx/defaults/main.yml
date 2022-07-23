@@ -20,6 +20,8 @@ nativefier:
   - {name: Octobox, url: 'octobox.io'}
   - {name: SoundCloud, url: 'soundcloud.com'}
   - {name: DuoLingo, url: 'duolingo.com'}
+  - {name: Teams, url: 'teams.microsoft.com/'}
+  - {name: Trello, url: 'trello.com'}
 
 defaults:
   
