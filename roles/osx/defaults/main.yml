@@ -285,6 +285,11 @@ defaults:
     com.vmware.fusion:
       showStartMenu3: {type: integer, value: 0, desc: 'Remove VMWare icon from system menu'}
     com.googlecode.iterm2:
+      AdjustWindowForFontSizeChange: {type: bool, value: false}
+      HideScrollbar: {type: bool, value: false}
+      PreventEscapeSequenceFromChangingProfile: {type: bool, value: false}
+      OnlyWhenMoreTabs: {type: bool, value: false}
+      PreserveWindowSizeWhenTabBarVisibilityChanges: {type: bool, value: true}
       AlternateMouseScroll: {type: bool, value: true, desc: 'Allow mouse scrolling'}
       DisableWindowSizeSnap: {type: bool, value: true, desc: 'Allow window to resize correctly'}
       NoSyncPermissionToShowTip: {type: bool, value: false, desc: 'Disable tips on startup'}
