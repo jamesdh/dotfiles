@@ -119,3 +119,38 @@ EOF
   fi
 }
 
+# Takes a sequence of JPG's and attempts alignment of them using the first photo in the sequence as an origin
+align_images() {
+  # Temporarily append Hugin's CLI tools to PATH
+  PATH=$PATH:/Applications/Hugin/tools_mac
+  # Read file names, modify as necessary
+  f=(./IMG_*.jpg)
+  n=${#f[@]}
+  prefix=a
+  # Iterate through array
+  for (( i=1; i<$n; i++ )); do
+    base=$(basename ${f[i]} .jpg)
+    ORIGIN=${f[0]}
+    INFILE=${f[i]}
+    OUTFILE="$prefix$base.tif"
+    if [ ! -f "$OUTFILE" ]; then
+      # Align an image pair
+      echo Aligning image $INFILE against $ORIGIN using 25 control points
+      if ! align_image_stack -a $prefix -c 25 --use-given-order $ORIGIN $INFILE -p $base.pto > /dev/null ; then
+        # Unable to align, so retrying with more control points
+        echo Retrying alignment using 100 control points
+        if ! align_image_stack -a $prefix -c 100 --use-given-order $ORIGIN $INFILE -p $base.pto > /dev/null ; then
+          #U Unable to align again, so retrying with even more control points
+          echo Retrying alignment using 400 control points
+          align_image_stack -a $prefix -c 400 --use-given-order $ORIGIN $INFILE -p $base.pto > /dev/null
+        fi
+      fi
+      # Save the image
+      mv ${prefix}0001.tif $OUTFILE
+    fi
+  done
+  # save the first image
+  o=${prefix}$(basename ${f[0]} .jpg)
+  mv ${prefix}0000.tif $o.tif
+}
+
