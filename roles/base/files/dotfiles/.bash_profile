@@ -1,6 +1,7 @@
+#!/bin/bash
+
 # Fig pre block. Keep at the top of this file.
 [[ -f "$HOME/.fig/shell/bash_profile.pre.bash" ]] && . "$HOME/.fig/shell/bash_profile.pre.bash"
-#!/bin/bash
 
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
