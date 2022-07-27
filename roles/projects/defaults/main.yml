@@ -4,7 +4,7 @@ sdks:
   - {name: kotlin, version: 1.6.0}
   - {name: micronaut, version: 2.5.11}
   - {name: visualvm, version: 2.1}
-  - {name: java, version: 17.0.1-open}
+  - {name: java, version: 17.0.3-tem}
 
 vscode:
   userpath: "{{ home_dir }}/Library/Application Support/Code/User"
@@ -36,3 +36,4 @@ etchosts:
 
 github: "{{vaulted_github}}"
 envfiles: "{{vaulted_envfiles}}"
+makefiles: "{{vaulted_makefiles}}"

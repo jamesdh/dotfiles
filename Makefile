@@ -1,24 +1,36 @@
+SHELL := $(shell which bash) -e
 .DEFAULT_GOAL := help
 
-help: ## This help screen
-	@IFS=$$'\n' ; \
-  help_lines=(`fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##/:/'`); \
-  printf "%-30s %s\n" "Target" "Function" ; \
-  printf "%-30s %s\n" "------" "----" ; \
-  for help_line in $${help_lines[@]}; do \
-      IFS=$$':' ; \
-      help_split=($$help_line) ; \
-      help_command=`echo $${help_split[0]} | sed -e 's/^ *//' -e 's/ *$$//'` ; \
-      help_info=`echo $${help_split[2]} | sed -e 's/^ *//' -e 's/ *$$//'` ; \
-      printf '\033[36m'; \
-      printf "%-30s %s" $$help_command ; \
-      printf '\033[0m'; \
-      printf "%s\n" $$help_info; \
-  done
+include ./roles/projects/files/utils.mak
 
-diff:
-	ansible-playbook --ask-become-pass --diff ansible.yml
+start: ## Opens all Dotfiles project tools
+start: \
+	start.iterm \
+	start.tower \
+	start.code
 
+start.code: ## Opens dotfiles VSCode
+start.code: code.start.jamesdh.dotfiles
+
+start.iterm: ## Opens dotfiles iTerm
+start.iterm: iterm.start.Dotfiles
+
+start.tower: ## Opens dotfiles Tower
+start.tower: tower.start.jamesdh.dotfiles
+
+stop: ## Closes all Dotfiles project tools
+stop: \
+	stop.iterm \
+	stop.tower \
+	stop.code
+
+stop.code: code.stop.dotfiles
+
+stop.iterm: iterm.stop.Dotfiles
+
+stop.tower: tower.stop.dotfiles
+
+bootstrap: ## Verifies/installs necessary tools to support syncing dotfiles
 bootstrap:
 	@./bootstrap.sh ;\
 
@@ -27,6 +39,7 @@ login.appstore:
 		read -p "Please signin to the Mac App Store before continuing..." ;\
 	done
 
+login.op: ## Login to 1Password
 login.op:
 	@FILE=~/.config/op/config ;\
 	if [[ -f $$FILE ]]; then \
@@ -65,6 +78,7 @@ install:
 		exit 1 ;\
 	fi ;\
 	
+install.filtered: ## Install optionally filtering on given tags
 install.filtered: list.tags 
 	@ echo ;\
 	if op list users > /dev/null 2>&1 ; then \
@@ -77,15 +91,17 @@ install.filtered: list.tags
 		exit 1 ;\
 	fi ;\
 
+compare: ## Diff checks the ansible playbooks against the current environment
 compare: login.all
 	ansible-playbook --ask-become-pass --check --diff ansible.yml
 
+compare.filtered: ## Diff checks the specified playbook tags against the current environment
 compare.filtered: login.all list.tags 
 	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
 	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
 	ansible-playbook --ask-become-pass --check --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
 
-list.tags: 
+list.tags: ## Lists all playbook tags that could be filtered upon
 	@TAGS=$$(bash -c 'ansible-playbook --list-tags ansible.yml | grep "TASK TAGS"') ;\
 	echo $$TAGS;\
 
@@ -99,17 +115,37 @@ secret.view:
 	ansible localhost -m debug -a 'var="$(NAME)"' -e "@group_vars/all.yml"
 
 secret.decrypt.repos:
-	ansible-vault decrypt roles/projects/vars/main.yml
+	ansible-vault decrypt roles/projects/vars/main/*.vault.yml || true
 
 secret.encrypt.repos:
-	ansible-vault encrypt roles/projects/vars/main.yml
+	ansible-vault encrypt roles/projects/vars/main/*.vault.yml || true
 
 secret.decrypt.certs:
-	ansible-vault decrypt roles/ssh/vars/main.yml
+	ansible-vault decrypt roles/ssh/vars/main/main.vault.yml || true
 
 secret.encrypt.certs:
-	ansible-vault encrypt roles/ssh/vars/main.yml
+	ansible-vault encrypt roles/ssh/vars/main/main.vault.yml || true
 
-secret.decrypt.all: secret.decrypt.repos secret.decrypt.certs
+secret.decrypt.makefiles:
+	ansible-vault decrypt roles/projects/files/*.vault.mak || true
 
-secret.encrypt.all: secret.encrypt.repos secret.encrypt.certs
+secret.encrypt.makefiles:
+	ansible-vault encrypt roles/projects/files/*.vault.mak || true
+
+secret.decrypt.envs:
+	ansible-vault decrypt roles/projects/files/*.vault.env || true
+
+secret.encrypt.envs:
+	ansible-vault encrypt roles/projects/files/*.vault.env || true
+
+secrets.decrypt: \
+	secret.decrypt.repos \
+	secret.decrypt.certs \
+	secret.decrypt.makefiles \
+	secret.decrypt.envs
+
+secrets.encrypt: \
+	secret.encrypt.repos \
+	secret.encrypt.certs \
+	secret.encrypt.makefiles \
+	secret.encrypt.envs

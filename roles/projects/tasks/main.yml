@@ -1,9 +1,4 @@
 ---
-- name: Configure dev environment
-  import_tasks: env.yml
-  tags: 
-    - devenv
-    
 - name: Configure git 
   import_tasks: git.yml
   tags: 
@@ -15,7 +10,17 @@
     - git
     - repos
     
+- name: Configure dev environment
+  import_tasks: env.yml
+  tags: 
+    - devenv
+    
 - name: Configure SDK's
   import_tasks: sdk.yml
   tags:
     - sdk
+
+- name: Configure makefiles
+  import_tasks: makefiles.yml
+  tags:
+    - makefiles
