@@ -37,3 +37,4 @@ etchosts:
 github: "{{vaulted_github}}"
 envfiles: "{{vaulted_envfiles}}"
 makefiles: "{{vaulted_makefiles}}"
+hooks: "{{vaulted_hooks}}"

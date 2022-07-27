@@ -30,12 +30,15 @@
     - repos
   when: "not [item.0.org,item.1.name] | join('/') in projects_ls.stdout"
 
-- name: Setup repo env files
-  copy:
-    content: "{{item.src}}"
-    dest: "{{item.dest}}"
-    backup: true
-  loop: "{{envfiles}}"
+- name: Setup repo pre-commit hooks
+  file: 
+    src: "{{role_path}}/files/{{item.file}}"
+    path: "{{item.path}}/.git/hooks/pre-commit"
+    state: link
+    force: true
+  loop: "{{hooks}}"
+  tags: 
+    - hooks
 
 - name: Allow direnv on env files
   shell: direnv allow
