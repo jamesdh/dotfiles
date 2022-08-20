@@ -1,6 +1,6 @@
 include ./jamesdh/dotfiles/roles/projects/files/utils.mak
 
-.PHONY: jamesdh moltenbits proximal-health
+.PHONY: jamesdh moltenbits
 
 code: ## Opens VSCode for this directory
 code: code.start..
