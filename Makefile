@@ -108,44 +108,41 @@ list.tags: ## Lists all playbook tags that could be filtered upon
 list.tasks:
 	ansible-playbook --list-tasks ansible.yml
 
-secret: ## Encrypts a NAME secret of VALUE, e.g. 'make secret NAME=pusher_secret VALUE=abc123'
-	ansible-vault encrypt_string --name '$(NAME)' '$(VALUE)'
+secrets.create.%: ## Encrypts a NAME secret of VALUE, e.g. 'make secret NAME=pusher_secret VALUE=abc123'
+	@ansible-vault encrypt_string --stdin-name '$*'
+	
+secrets.view.%:
+	ansible localhost -m debug -a 'var="$*"' -e "@group_vars/all.yml"
 
-secret.view:
-	ansible localhost -m debug -a 'var="$(NAME)"' -e "@group_vars/all.yml"
-
-secret.decrypt.repos:
-	ansible-vault decrypt roles/projects/vars/main/*.vault.yml || true
-
-secret.encrypt.repos:
-	ansible-vault encrypt roles/projects/vars/main/*.vault.yml || true
-
-secret.decrypt.certs:
-	ansible-vault decrypt roles/ssh/vars/main/main.vault.yml || true
-
-secret.encrypt.certs:
-	ansible-vault encrypt roles/ssh/vars/main/main.vault.yml || true
-
-secret.decrypt.makefiles:
-	ansible-vault decrypt roles/projects/files/*.vault.mak || true
-
-secret.encrypt.makefiles:
-	ansible-vault encrypt roles/projects/files/*.vault.mak || true
-
-secret.decrypt.envs:
-	ansible-vault decrypt roles/projects/files/*.vault.env || true
-
-secret.encrypt.envs:
-	ansible-vault encrypt roles/projects/files/*.vault.env || true
-
+secrets.decrypt: ## Decrypts all secret files
 secrets.decrypt: \
-	secret.decrypt.repos \
-	secret.decrypt.certs \
-	secret.decrypt.makefiles \
-	secret.decrypt.envs
+	vault.decrypt.roles.projects.vars.main \
+	vault.decrypt.roles.ssh.vars.main \
+	vault.decrypt.roles.projects.files
 
+secrets.encrypt: ## Encrypts all secret files
 secrets.encrypt: \
-	secret.encrypt.repos \
-	secret.encrypt.certs \
-	secret.encrypt.makefiles \
-	secret.encrypt.envs
+	vault.encrypt.roles.projects.vars.main \
+	vault.encrypt.roles.ssh.vars.main \
+	vault.encrypt.roles.projects.files
+
+vault.encrypt.%:
+	@for i in $$(find $(subst .,/,$*) -name '*.vault.*' ! -name '*.enc'); do \
+		PREFORM=$$(ansible-vault view $$i.enc) ;\
+		POSTFORM=$$(cat $$i) ;\
+		if [ "$$PREFORM" == "$$POSTFORM" ]; then \
+			echo "Restoring unchanged file $$i" ;\
+			mv -f $$i.enc $$i ;\
+		else \
+			rm $$i.enc ;\
+			echo "Encrypting $$i" ;\
+			ansible-vault encrypt $$i ;\
+		fi \
+	done
+
+vault.decrypt.%:
+	@for i in $$(find $(subst .,/,$*) -name '*.vault.*' ! -name '*.enc'); do \
+		echo "Decrypting $$i" ;\
+		cp $$i $$i.enc ;\
+		ansible-vault decrypt $$i ;\
+	done
