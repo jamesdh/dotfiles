@@ -154,3 +154,303 @@ align_images() {
   mv ${prefix}0000.tif $o.tif
 }
 
+t5Mount() {
+  diskutil quiet apfs unlockVolume disk5s1
+}
+
+t5Eject() {
+  deepEject
+  diskutil quiet unmount disk5s1
+}
+
+deepMount() {
+  t5mount
+  hdiutil attach -quiet /Volumes/Samsung\ T5\ SSD/.DeepStorage.sparsebundle
+}
+
+deepEject() {
+  hdiutil detach -quiet /Volumes/Deep\ Storage
+}
+
+commitAs() {
+  if [ $# -eq 0 ]; then
+    echo "Usage: commitAs <-v [+|-]val[y|m|w|d|H|M|S]> \"Commit message\""
+    echo "Example: commitAs -v1m -v7d \"Initial commit\""
+    echo "See `man date` for more info on date adjustments"
+    exit 1
+  fi
+  dateadjusts="${@:1:$#-1}"
+  message="${@: -1}"
+  adjusteddate=$(date -Iseconds $dateadjusts)
+  read -p "Perform the following commit?: GIT_AUTHOR_DATE=\"$adjusteddate\" GIT_COMMITTER_DATE=\"$adjusteddate\" git commit -m \"$message\" " yn
+  case $yn in
+    [Yy]* ) GIT_AUTHOR_DATE="$adjusteddate" GIT_COMMITTER_DATE="$adjusteddate" git commit -m "$message";;
+    [Nn]* ) ;;
+    * ) echo "Yes or no.";;
+  esac
+}
+
+makeTimelapse() {
+  cd ~/Desktop/Timelapse
+  for file in Processed\ New/*.jpg; do
+    filename=$(basename -- "$file")
+    timestamp="${filename:0:15}"
+    # Convert to human-readable format with hour and minute
+    humanTime=$(date -jf "%Y%m%d_%H%M%S" "$timestamp" "+%B %d, %Y %H\:%M")
+    outputFile="Timestamped/${timestamp}.jpg"
+    ffmpeg -i "$file" -vf "drawtext=fontfile=/System/Library/Fonts/Helvetica.ttc: text='${humanTime}': fontcolor=white: fontsize=24: x=w-text_w-200: y=h-text_h-100" -frames:v 1 -update 1 -y "$outputFile" > /dev/null 2>&1
+    if [[ $? -eq 0 ]]; then
+      echo "Converted: $filename"
+    else
+      echo "Failed to convert: $filename"
+    fi
+  done
+  ffmpeg -r 240 -pattern_type glob -i "Timestamped/*.jpg" -c:v hevc_videotoolbox -q:v 50 -tag:v hvc1 timelapse_new.mov
+  mv Timestamped/*.jpg Processed/
+  rm Processed\ New/*.jpg
+  #ffmpeg -f concat -safe 0 -i <(printf "file '$PWD/%s'\n" ./*.mov) -c copy output.mov
+  #rm -rf timelapse*.mov
+  #mv output.mov timelapse.mov
+}
+
+# See https://github.com/scop/bash-completion/blob/master/completions/make
+# _comp_make_recursive() {
+#   local cur prev words cword split
+#   _init_completion -s || return
+
+#   local makef makef_dir=("-C" ".") i
+
+#   case $prev in
+#       --file | --makefile | --old-file | --assume-old | --what-if | --new-file | \
+#           --assume-new | -!(-*)[foW])
+#           _filedir
+#           return
+#           ;;
+#       --include-dir | --directory | -!(-*)[ICm])
+#           _filedir -d
+#           return
+#           ;;
+#       -!(-*)E)
+#           COMPREPLY=($(compgen -v -- "$cur"))
+#           return
+#           ;;
+#       --eval | -!(-*)[DVx])
+#           return
+#           ;;
+#       --jobs | -!(-*)j)
+#           COMPREPLY=($(compgen -W "{1..$(($(_ncpus) * 2))}" -- "$cur"))
+#           return
+#           ;;
+#   esac
+
+#   $split && return
+
+#   if [[ $cur == -* ]]; then
+#       COMPREPLY=($(
+#           compgen -W '$(_parse_help "$1" || _parse_usage "$1")' -- "$cur"
+#       ))
+#       [[ ${COMPREPLY-} == *= ]] && compopt -o nospace
+#   elif [[ $cur == *=* ]]; then
+#       prev=${cur%%=*}
+#       cur=${cur#*=}
+#       local diropt
+#       [[ ${prev,,} == *dir?(ectory) ]] && diropt=-d
+#       _filedir $diropt
+#   else
+#       # before we check for makefiles, see if a path was specified
+#       # with -C/--directory
+#       for ((i = 1; i < ${#words[@]}; i++)); do
+#           if [[ ${words[i]} == -@(C|-directory) ]]; then
+#               # Expand tilde expansion
+#               local ret
+#               _comp_dequote "${words[i + 1]-}" &&
+#                   [[ -d ${ret-} ]] &&
+#                   makef_dir=(-C "$ret")
+#               break
+#           fi
+#       done
+
+#       # before we scan for targets, see if a Makefile name was
+#       # specified with -f/--file/--makefile
+#       for ((i = 1; i < ${#words[@]}; i++)); do
+#           if [[ ${words[i]} == -@(f|-?(make)file) ]]; then
+#               # Expand tilde expansion
+#               local ret
+#               _comp_dequote "${words[i + 1]-}" &&
+#                   [[ -f ${ret-} ]] &&
+#                   makef=(-f "$ret")
+#               break
+#           fi
+#       done
+
+#       # recognise that possible completions are only going to be displayed
+#       # so only the base name is shown
+#       local mode=--
+#       if ((COMP_TYPE != 9)); then
+#           mode=-d # display-only mode
+#       fi
+      
+#       local IFS=$' \t\n' script=$(_make_target_extract_script $mode "$cur")
+#       COMPREPLY=($(LC_ALL=C \
+#           $1 -npq __BASH_MAKE_COMPLETION__=1 \
+#           ${makef+"${makef[@]}"} "${makef_dir[@]}" .DEFAULT 2>/dev/null |
+#           command sed -ne "$script" | sort -u))
+      
+#       if [[ $mode != -d ]]; then
+#           # Completion will occur if there is only one suggestion
+#           # so set options for completion based on the first one
+#           [[ ${COMPREPLY-} == */ ]] && compopt -o nospace
+#       fi
+
+#       # cat Makefile | gsed -En '{N; s/%:\s+@*\$\(MAKE\) -C //p ; D}' | gsed -n -E 's/\s+.*//p' | sort -u
+#       # make -npq __BASH_MAKE_COMPLETION__=1 | sed -ne "$(_make_target_extract_script --)" | sort -u
+
+#   fi
+# } 
+
+# Robot Heart downloader for SoundCloud
+rh-dlp() {
+  # OAuth info
+  OAUTH=""
+
+  # Get song info
+  FILE=$(yt-dlp --add-header "Authorization:$OAUTH" --print filename $1)
+  FILENAME="${FILE%.*}"
+  EXTENSION="${FILE##*.}"
+  BODY=$(curl -s $1 | htmlq --text 'body > div > noscript')
+  TITLE=$(echo $BODY | htmlq --text 'article > header > h1 > a[itemprop="url"]')
+  ARTIST=$(echo $TITLE | cut -d "-" -f 1)
+  ALBUM_ARTIST=$(echo $BODY | htmlq -a content 'article > header > div[itemprop="byArtist"] > meta[itemprop="name"]')
+  ALBUM=$(echo $TITLE | sed s/"$ARTIST"// | sed s/"$ALBUM_ARTIST"// | sed s/"-"//g | xargs)
+  YEAR=$(echo $NAME | tr -dc '0-9')
+  DURATION=$(echo $BODY | htmlq -a content 'article > header > meta[itemprop="duration"]')
+  GENRE=$(echo $BODY | htmlq -a content 'article > header > meta[itemprop="genre"]')
+  DESCRIPTION=$(echo "${BODY}" | htmlq -a content 'article > p > meta[itemprop="description"]')
+  ARTWORK_URL=$(echo $BODY | htmlq -a src 'article > p > img')
+  wget -O "${FILENAME}.jpg" $ARTWORK_URL
+  echo "Title: $TITLE"
+  echo "Artist: $ARTIST"
+  echo "Album artist: $ALBUM_ARTIST"
+  echo "Album: $ALBUM_ARTIST - $ALBUM"
+  echo "Year: $YEAR"
+  echo "Duration: $DURATION"
+  echo "Genre: $GENRE"
+  echo "Artwork URL: $ARTWORK_URL"
+  viu -w 25 "${FILENAME}.jpg"
+  
+  # Download song
+  [[ ! -f "$FILE" ]] && yt-dlp --add-header "Authorization:$OAUTH" $1
+
+  # If AAC, wrap in M4A container
+  if [[ "${EXTENSION,,}" = "aac" ]] && [[ ! -f "${FILENAME}.m4a" ]] ; then 
+    echo "Wrapping AAC in M4A container"
+    # MP4Box -add "${FILE}#audio" "${FILENAME}.m4a"
+    ffmpeg -i "${FILE}" -codec: copy "${FILENAME}.m4a"
+    FILE="${FILENAME}.m4a"
+    EXTENSION=.m4a
+  elif [[ -f "${FILENAME}.m4a" ]] ; then
+    echo "File is already in M4A container"
+    FILE="${FILENAME}.m4a"
+    EXTENSION=.m4a
+  fi
+
+  AtomicParsley "${FILE}"  --overWrite \
+    --artwork "${FILENAME}.jpg" \
+    --title "$TITLE" \
+    --artist "$ARTIST" \
+    --album "$ALBUM" \
+    --year "$YEAR" \
+    --genre "$GENRE" \
+    --description "$DESCRIPTION" \
+    --longdesc "$DESCRIPTION"
+
+  # If file is over 200MB, split into appropriate segments
+  size=$(stat -f %z "${FILE}")
+  if [[ $size -gt 200000000 ]] ; then
+    i=$((($size + 199999999) / 200000000))
+    duration=$(ffprobe -i "$FILE" -show_format -v quiet | sed -n 's/duration=//p' | xargs printf "%.0f")
+    split=$((($duration+$i)/$i))
+    ffmpeg -i "$FILE" -f segment -segment_time $split -segment_start_number 1 -reset_timestamps 1 -c copy "${FILENAME} - Part %01d${EXTENSION}"
+    for x in $(seq $i); do
+      AtomicParsley "${FILENAME} - Part $x${EXTENSION}"  --overWrite \
+        --artwork "${FILENAME}.jpg" \
+        --title "${TITLE} - Part $x" \
+        --tracknum $x/$i
+        --artist "$ARTIST" \
+        --album "$ALBUM" \
+        --year "$YEAR" \
+        --genre "$GENRE" \
+        --description "$DESCRIPTION" \
+        --longdesc "$DESCRIPTION"
+    done
+  fi
+  
+    # i=2
+    # ffmpeg -y -i "${FILE}" -c:a libmp3lame -q:a $i "${FILENAME}.mp3"
+    # until [[ $(stat -f %z "${FILENAME}.mp3") -lt 200000000 ]] ; do
+    #   i=$((i+1))
+    #   ffmpeg -hide_banner -y -i "${FILE}" -c:a libmp3lame -q:a $i "${FILENAME}.mp3"
+    # done
+  # fi
+  # if [[ "echo ${EXTENSION,,}" != ".mp3" ]] ; then 
+  #   ffmpeg -i "${FILENAME}.m4a" -c:a libmp3lame -q:a 5 "${FILENAME}.mp3"
+  # fi
+
+}
+
+# Extracts audio from chapterized YouTube videos
+ytaudio-dlp() {
+  yt-dlp --dump-json $1 | jq . > info.json
+  declare -a TITLES="($(jq -r '.chapters[].title | @sh' info.json))"
+  COMMON=$(find-common-substring "${TITLES[@]}")
+  echo "Common substring: $COMMON"
+  ALBUM=${2-$(jq -r ".title" info.json)}
+  ARTIST=$(jq -r ".channel" info.json)
+  TOTAL_CHAPTERS=$(jq -r ".chapters | length" info.json)
+  UPLOAD_DATE=$(jq -r ".upload_date" info.json)
+  DESCRIPTION=$(jq -r ".description" info.json)
+  THUMBNAIL=$(jq -r ".thumbnail" info.json)
+  wget $THUMBNAIL -O thumbnail.jpg
+  #yt-dlp -f bestaudio[ext=m4a] --embed-thumbnail --add-metadata --split-chapters $1
+  yt-dlp -f bestaudio[ext=m4a] --split-chapters $1
+  i=0
+  for file in *.m4a; do
+      TITLE=$(jq -r ".chapters[$i].title" info.json)
+      echo "Parsing track $TITLE"
+      TITLE=${TITLE/"$COMMON"/}
+      # if [[ $TITLE =~ ^[0-9]+\.\s* ]]; then
+      #   TITLE="${TITLE##*[0-9]. }"
+      # fi
+      TITLE="${TITLE##*[0-9]. }"
+      i=$(( i + 1 ))
+      AtomicParsley "${file}"  --overWrite \
+        --title "${TITLE}" \
+        --tracknum $i/$TOTAL_CHAPTERS \
+        --artist "$ARTIST" \
+        --album "$ALBUM"
+  done
+}
+
+## Example Usage: result=$(find-common-substring "${strings[@]}")
+find-common-substring() {
+    local strings=("$@")
+    local longest_common=""
+    for (( i=0; i<${#strings[0]}; i++ )); do
+        for (( j=${#strings[0]}; j>i; j-- )); do
+            # Extract substring from i to j
+            local substring=${strings[0]:$i:$j-i}
+            # Check if substring is in all strings, is longer than the current longest common, and starts with a letter
+            local all_match=true
+            for str in "${strings[@]:1}"; do
+                if [[ ! $str =~ $substring ]] || [[ ! $substring =~ ^[a-zA-Z] ]]; then
+                    all_match=false
+                    break
+                fi
+            done
+            if $all_match && [ ${#substring} -gt ${#longest_common} ]; then
+                longest_common=$substring
+            fi
+        done
+    done
+    echo "$longest_common"
+}

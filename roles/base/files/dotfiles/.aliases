@@ -119,3 +119,5 @@ alias secureinput="ioreg -l -w 0 | grep kCGSSessionSecureInputPID"
 alias k="kubectl"
 alias kk="kubectl krew"
 
+alias displays_office='displayplacer "id:40C110EF-9DCF-40E1-A2A9-101154275317 res:3840x2160 hz:60 color_depth:8 scaling:off origin:(0,0) degree:0" "id:0314308D-E53D-46B2-B5EC-29E812C2918B res:2160x3840 hz:60 color_depth:8 scaling:off origin:(-2160,0) degree:90"'
+alias displays_living='displayplacer "id:37D8832A-2D66-02CA-B9F7-8F30A301B230 res:1800x1169 hz:120 color_depth:8 scaling:on origin:(0,0) degree:0" "id:6B28C956-8496-4797-BA45-45B5874DBAE3 res:5120x2160 hz:60 color_depth:7 scaling:off origin:(-1660,-2160) degree:0"'

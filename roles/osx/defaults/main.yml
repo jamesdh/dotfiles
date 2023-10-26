@@ -12,16 +12,13 @@ finder_adds:
   - {name: Desktop, path: "file://{{home_dir}}/Desktop/"}
   - {name: Documents, path: "file://{{home_dir}}/Documents"}
   - {name: Downloads, path: "file://{{home_dir}}/Downloads/"}
-  # - {name: Dropbox, path: "file://{{home_dir}}/Dropbox/"}
   - {name: Projects, path: "file://{{projects_dir}}"}
 
 nativefier: 
   - {name: Google Maps, url: 'maps.google.com?hl=en'} 
   - {name: Octobox, url: 'octobox.io'}
   - {name: SoundCloud, url: 'soundcloud.com'}
-  - {name: DuoLingo, url: 'duolingo.com'}
-  - {name: Teams, url: 'teams.microsoft.com/'}
-  - {name: Trello, url: 'trello.com'}
+  - {name: myhours, url: 'app.myhours.com'}
 
 defaults:
   

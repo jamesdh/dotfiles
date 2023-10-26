@@ -25,6 +25,10 @@ complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes Syste
 
 # Bash Completion 
 [[ -r $HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh ]] && . "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
+# complete -F _comp_make_recursive make gmake gnumake pmake colormake bmake
+
+# Patterns for bash-completion to ignore
+export EXECIGNORE=*/makeinfo:*/make_chlayout_test:$EXECIGNORE
 
 # direnv bash support
 eval "$(direnv hook bash)"
@@ -46,3 +50,5 @@ test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shel
 [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
 # This loads nvm bash_completion
 [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+
+source /Users/jamesdh/.docker/init-bash.sh || true # Added by Docker Desktop

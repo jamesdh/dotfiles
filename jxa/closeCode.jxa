@@ -1,4 +1,5 @@
 #!/usr/bin/env osascript -l JavaScript
+import "@jxa/global-type";
 
 run = argv => {
   app = Application("Code")
@@ -8,7 +9,7 @@ run = argv => {
     // use `vscode.entireContents()` to see all possible attributes/operations
     for(window of vscode.windows()) {
       for(projectName of argv) {
-        if(window.name().includes(projectName)) {
+        if(projectName && window.name().includes(projectName)) {
           window.buttons.at(0).click()  
         }
       }

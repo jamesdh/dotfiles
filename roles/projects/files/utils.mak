@@ -23,7 +23,7 @@ iterm.start.%:
 
 iterm.stop.%: 
 	@$(eval ITERM_PID:=$(shell ps -A -o pid,command | grep 'iTerm2 -Default Arrangement Name $*' | grep -v grep | head -n 1 | awk '{print $$1}'))
-	@[[ "${ITERM_PID}" ]] && kill -15 ${ITERM_PID} || true
+	@[[ "${ITERM_PID}" ]] && kill ${ITERM_PID} || true
 
 tower.start.%: 
 	@sleep 1

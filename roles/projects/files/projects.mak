@@ -1,6 +1,12 @@
 include ./jamesdh/dotfiles/roles/projects/files/utils.mak
 
-.PHONY: jamesdh moltenbits
+.PHONY: jamesdh moltenbits code
+
+verdaccio.start: ## Starts the verdaccio server
+	docker run -it --rm --name verdaccio -p 4873:4873 verdaccio/verdaccio
+
+verdaccio.stop: ## Stops the verdaccio server
+	docker stop verdaccio
 
 code: ## Opens VSCode for this directory
 code: code.start..
@@ -9,7 +15,8 @@ stop: ## Stops all projects
 stop: \
 	proximal.stop \
 	moltenbits.stop \
-	dotfiles.stop
+	dotfiles.stop \
+	code.stop
 
 moltenbits: ## Lists available targets in the moltenbits project
 	@$(MAKE) -C moltenbits --no-print-directory -f Makefile 

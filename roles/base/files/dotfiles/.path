@@ -20,4 +20,5 @@ export PATH=$HOMEBREW_PREFIX/opt/curl/bin:$PATH
 export PATH=$PATH:$KREW_BIN
 
 # JetBrains Toolbox (CLI tools)
-export PATH="~/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
+export PATH="/Users/jamesdh/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
+
