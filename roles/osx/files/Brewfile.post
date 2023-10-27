@@ -1,6 +1,5 @@
 tap "homebrew/bundle"
 tap "homebrew/cask"
-tap "homebrew/cask-drivers"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "wagoodman/dive"
@@ -8,6 +7,7 @@ tap "jakehilborn/jakehilborn"
 brew "aws-shell"
 brew "awscli"
 brew "bat"
+brew "coreutils"
 brew "displayplacer"
 brew "elixir"
 brew "exiftool"
@@ -15,7 +15,6 @@ brew "ffmpeg"
 brew "fio"
 brew "hub"
 brew "ioping"
-brew "md5sha1sum"
 brew "pyenv"
 brew "pyenv-virtualenv"
 brew "tree"
@@ -53,11 +52,11 @@ mas "Ghostery Lite", id: 1436953057
 mas "GIPHY", id: 668208984
 mas "Helium", id: 1054607607
 mas "LittleIpsum", id: 405772121
-mas "Monity", id: 915542151
 mas "Pixelmator", id: 407963104
 mas "Pocket", id: 568494494
 mas "Save to Pocket", id: 1477385213
 mas "Shush", id: 496437906
 mas "The Unarchiver", id: 425424353
 mas "Tomato One", id: 907364780
+mas "Trello", id: 1278508951
 mas "World Clock Pro", id: 858446756
