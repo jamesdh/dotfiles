@@ -1,3 +1,8 @@
+- name: Setup auth/security customizations
+  import_tasks: auth.yml
+  tags: 
+    - auth
+
 - name: Install applications necessary for immediate permissions approvals
   import_tasks: apps.pre.yml
   tags: 
