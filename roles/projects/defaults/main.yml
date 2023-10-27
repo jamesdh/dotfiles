@@ -6,27 +6,6 @@ sdks:
   - {name: visualvm, version: 2.1.7}
   - {name: java, version: 17.0.9-tem}
 
-vscode:
-  userpath: "{{ home_dir }}/Library/Application Support/Code/User"
-  extensions: 
-    - marlon407.code-groovy
-    - vscjava.vscode-java-debug
-    - ms-azuretools.vscode-docker
-    - mikestead.dotenv
-    - dbaeumer.vscode-eslint
-    - codezombiech.gitignore
-    - eamodio.gitlens
-    - naco-siren.gradle-language
-    - k--kato.intellij-idea-keybindings
-    - wholroyd.jinja
-    - redhat.java
-    - ms-python.python
-    - vscode-icons-team.vscode-icons
-    - redhat.vscode-yaml
-    - idleberg.applescript
-    - samuelcolvin.jinjahtml
-    - msjsdiag.debugger-for-chrome
-
 etchosts: 
   - db
   - postgres
