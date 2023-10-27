@@ -1,5 +1,4 @@
 - hosts: localhost
-  connection: local
   pre_tasks: 
     - name: 1Password login check
       debug:
