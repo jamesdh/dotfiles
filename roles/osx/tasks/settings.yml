@@ -1,6 +1,6 @@
-
+# TODO: This assumes we are only using a MacBook Pro 13" ProMotion screen
 - name: "Set preferred resolution" 
-  shell: "/Applications/RDM.app/Contents/MacOS/SetResX -w 1680 -h 1050 -s 2.0"
+  shell: "displayplacer "res:1800x1169 hz:120 color_depth:8 enabled:true scaling:on origin:(0,0) degree:0"
   changed_when: false
   
 - name: "Set preferred power settings when on battery"
