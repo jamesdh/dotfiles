@@ -51,9 +51,9 @@ install: login.all
 	
 install.filtered: ## Install optionally filtering on given tags
 install.filtered: login.all list.tags 
-	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags')
-	@EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags')
-	@ansible-playbook --ask-become-pass --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
+	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
+	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
+	ansible-playbook --ask-become-pass --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
 
 compare: ## Diff checks the ansible playbooks against the current environment
 compare: login.all
@@ -61,13 +61,13 @@ compare: login.all
 
 compare.filtered: ## Diff checks the specified playbook tags against the current environment
 compare.filtered: login.all list.tags 
-	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags')
-	@EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags')
-	@ansible-playbook --ask-become-pass --check --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
+	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
+	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
+	ansible-playbook --ask-become-pass --check --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
 
 list.tags: ## Lists all playbook tags that could be filtered upon
-	@TAGS=$$(bash -c 'ansible-playbook --list-tags ansible.yml | grep "TASK TAGS"')
-	@echo $$TAGS
+	@TAGS=$$(bash -c 'ansible-playbook --list-tags ansible.yml | grep "TASK TAGS"') ;\
+	echo $$TAGS
 
 list.tasks:
 	@ansible-playbook --list-tasks ansible.yml
