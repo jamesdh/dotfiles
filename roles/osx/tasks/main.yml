@@ -2,6 +2,7 @@
   import_tasks: apps.pre.yml
   tags: 
     - preinstall
+    - apps
 
 - name: Install core applications
   import_tasks: apps.yml
@@ -33,4 +34,5 @@
 - name: Install remaining applications
   import_tasks: apps.post.yml
   tags:
+    - apps
     - postinstall
