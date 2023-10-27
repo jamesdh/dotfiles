@@ -10,12 +10,15 @@
     path: '{{ cert_dir }}'
     mode: 0700
     state: directory
-
-- name: Setup SSH Config
-  copy: 
-    content: "{{ ssh_config }}"
-    dest: '{{ ssh_dir }}/config'
-    mode: 0600
+    
+# See https://github.com/ansible-collections/community.general/issues/7435
+# - name: SSH config
+#   community.general.ssh_config:
+#     user: jamesdh
+#     forward_agent: true
+#     host: "*"
+#     identity_agent: "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+#     state: present
 
 # See https://github.com/ansible-collections/community.general/issues/7246
 # - name: Retrieve Private Keys

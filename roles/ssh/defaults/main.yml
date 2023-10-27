@@ -3,6 +3,4 @@ keys:
     personal: "{{ lookup('community.general.onepassword', 'personal_rsa', field='public key') }}"
 ssh_dir: '{{ ansible_env.HOME }}/.ssh'
 cert_dir: '{{ home_dir }}/.certs'
-ssh_config: "{{ lookup('community.general.onepassword', 'SSH:config', field='notesPlain') }}"
-ssh_keys: "{{vaulted_ssh_keys}}"
-certs: "{{vaulted_certs}}"
+

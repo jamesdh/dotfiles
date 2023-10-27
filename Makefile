@@ -3,32 +3,32 @@ SHELL := $(shell which bash) -e
 
 include ./roles/projects/files/utils.mak
 
-start: ## Opens all Dotfiles project tools
-start: \
-	start.iterm \
-	start.tower \
-	start.code
+open: ## Opens all Dotfiles project tools
+open: \
+	open.iterm \
+	open.tower \
+	open.code
 
-start.code: ## Opens dotfiles VSCode
-start.code: code.start.jamesdh.dotfiles
+open.code: ## Opens dotfiles VSCode
+open.code: code.start.jamesdh.dotfiles
 
-start.iterm: ## Opens dotfiles iTerm
-start.iterm: iterm.start.Dotfiles
+open.iterm: ## Opens dotfiles iTerm
+open.iterm: iterm.start.Dotfiles
 
-start.tower: ## Opens dotfiles Tower
-start.tower: tower.start.jamesdh.dotfiles
+open.tower: ## Opens dotfiles Tower
+open.tower: tower.start.jamesdh.dotfiles
 
-stop: ## Closes all Dotfiles project tools
-stop: \
-	stop.iterm \
-	stop.tower \
-	stop.code
+close: ## Closes all Dotfiles project tools
+close: \
+	close.iterm \
+	close.tower \
+	close.code
 
-stop.code: code.stop.dotfiles
+close.code: code.stop.dotfiles
 
-stop.iterm: iterm.stop.Dotfiles
+close.iterm: iterm.stop.Dotfiles
 
-stop.tower: tower.stop.dotfiles
+close.tower: tower.stop.dotfiles
 
 bootstrap: ## Verifies/installs necessary tools to support syncing dotfiles
 bootstrap:
