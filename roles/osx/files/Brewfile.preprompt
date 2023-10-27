@@ -17,4 +17,5 @@ cask "iterm2"
 cask "monitorcontrol"
 cask "switchresx"
 cask "viscosity"
+cask "visual-studio-code"
 mas "Divvy", id: 413857545
