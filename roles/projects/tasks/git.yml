@@ -10,6 +10,30 @@
     name: user.email
     value: jamesdh@gmail.com
 
+- name: Git config signing key
+  git_config:
+    scope: global
+    name: user.signingkey
+    value: "{{keys.public.personal}}"
+
+- name: Git gpg format
+  git_config:
+    scope: global
+    name: gpg.format
+    value: ssh
+
+- name: Git config gpg program
+  git_config:
+    scope: global
+    name: gpg.ssh.program
+    value: "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+
+- name: Git config commit signing
+  git_config:
+    scope: global
+    name: commit.gpgsign
+    value: true
+
 - name: Git config merge tool
   git_config: 
     scope: global
