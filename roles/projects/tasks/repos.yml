@@ -39,10 +39,3 @@
   loop: "{{hooks}}"
   tags: 
     - hooks
-
-- name: Allow direnv on env files
-  shell: direnv allow
-  args:
-    chdir: "{{item.dest | dirname}}"
-  loop: "{{envfiles}}"
-  changed_when: false
