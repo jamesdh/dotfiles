@@ -270,8 +270,8 @@ defaults:
       GTUserDefaultsDiffToolIdentifier: {type: string, value: 'p4merge'}
       GTUserDefaultsMergeToolIdentifier: {type: string, value: 'p4merge'}
     com.surteesstudios.Bartender:
-      license2: {type: string, value: "{{ lookup('onepassword', 'License: Bartender 3', field='license key', master_password=op_pass, username=op.email, secret_key=op.secret) }}"}
-      license2HoldersName: {type: string, value: "{{ lookup('onepassword', 'License: Bartender 3', field='licensee', master_password=op_pass, username=op.email, secret_key=op.secret) }}"}
+      license2: {type: string, value: "{{ lookup('community.general.onepassword', 'License: Bartender 3', field='license key') }}"}
+      license2HoldersName: {type: string, value: "{{ lookup('community.general.onepassword', 'License: Bartender 3', field='licensee') }}"}
     com.viscosityvpn.Viscosity:
       DisableTimeMachine: {type: bool, value: true, desc: 'Disable Time Machine backups while on VPN'}
       DisplayWelcome: {type: bool, value: false, desc: 'Disable startup dialogs'}
@@ -298,7 +298,7 @@ defaults:
 
 contexts: 
   license_path: "{{ home_dir }}/Library/Application\ Support/com.contextsformac.Contexts/license.contexts-license"
-  license_url: "{{ lookup('onepassword', 'License: Contexts', field='License Link', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
+  license_url: "{{ lookup('community.general.onepassword', 'License: Contexts', field='License Link') }}"
 
 iterm: 
   app_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2"
@@ -306,7 +306,7 @@ iterm:
   autorun_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2/Scripts/AutoLaunch"
 
 ngrok:
-  authtoken: "{{ lookup('onepassword', 'License: ngrok', field='license key', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
+  authtoken: "{{ lookup('community.general.onepassword', 'License: ngrok', field='license key') }}"
 
 viscosity: 
   - ExpressVPN - Denver

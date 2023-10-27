@@ -19,7 +19,7 @@
 
     - name: Retrieve {{item}} VPN config
       set_fact: 
-        config_file: "{{ lookup('onepassword', item + '.visz', type='document', encoding='bytes', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
+        config_file: "{{ lookup('community.general.onepassword', item + '.visz', type='document', encoding='bytes') }}"
       
     - name: Install {{item}} VPN config
       shell: "open '{{config_file}}'"

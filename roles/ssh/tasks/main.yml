@@ -5,44 +5,45 @@
     mode: 0700
     state: directory
 
-- name: Setup SSH Config
-  copy: 
-    content: "{{ ssh_config }}"
-    dest: '{{ ssh_dir }}/config'
-    mode: 0600
-
-- name: Retrieve Private Keys
-  copy: 
-    content: "{{ lookup('onepassword', item, type='document', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
-    dest: '{{ ssh_dir }}/{{ item }}' 
-    mode: 0600
-  loop: '{{ ssh_keys }}'
-  loop_control:
-    label: '{{ item }}'
-  
-- name: Retrieve Public Keys
-  copy: 
-    content: "{{ lookup('onepassword', item + '.pub', type='document', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
-    dest: '{{ ssh_dir }}/{{ item }}.pub' 
-    mode: 0644
-  loop: '{{ ssh_keys }}'
-  loop_control:
-    label: '{{ item }}'
-
 - name: Setup certs dir
   file: 
     path: '{{ cert_dir }}'
     mode: 0700
     state: directory
 
-- name: Retrieve other certificates
+- name: Setup SSH Config
   copy: 
-    src: "{{ lookup('onepassword', item, type='document', encoding='bytes', master_password=op_pass, username=op.email, secret_key=op.secret) }}"
-    dest: '{{ cert_dir }}/{{ item }}' 
-    mode: 0644
-  loop: '{{ certs }}'
-  loop_control:
-    label: '{{ item }}'
+    content: "{{ ssh_config }}"
+    dest: '{{ ssh_dir }}/config'
+    mode: 0600
+
+# See https://github.com/ansible-collections/community.general/issues/7246
+# - name: Retrieve Private Keys
+#   copy: 
+#     content: "{{ lookup('community.general.onepassword', item, type='document') }}"
+#     dest: '{{ ssh_dir }}/{{ item }}' 
+#     mode: 0600
+#   loop: '{{ ssh_keys }}'
+#   loop_control:
+#     label: '{{ item }}'
+  
+# - name: Retrieve Public Keys
+#   copy: 
+#     content: "{{ lookup('community.general.onepassword', item + '.pub', type='document') }}"
+#     dest: '{{ ssh_dir }}/{{ item }}.pub' 
+#     mode: 0644
+#   loop: '{{ ssh_keys }}'
+#   loop_control:
+#     label: '{{ item }}'
+
+# - name: Retrieve other certificates
+#   copy: 
+#     src: "{{ lookup('community.general.onepassword', item, type='document' }}"
+#     dest: '{{ cert_dir }}/{{ item }}' 
+#     mode: 0644
+#   loop: '{{ certs }}'
+#   loop_control:
+#     label: '{{ item }}'
 
 - name: remove tmpfiles
   file:

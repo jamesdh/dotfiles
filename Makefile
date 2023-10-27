@@ -34,85 +34,49 @@ bootstrap: ## Verifies/installs necessary tools to support syncing dotfiles
 bootstrap:
 	@./bootstrap.sh ;\
 
-login.appstore: 
-	@while ! mas account > /dev/null 2>&1 ; do \
-		read -p "Please signin to the Mac App Store before continuing..." ;\
-	done
-
 login.op: ## Login to 1Password
 login.op:
-	@FILE=~/.config/op/config ;\
-	if [[ -f $$FILE ]]; then \
-		ACCOUNT=$$(cat $$FILE | jq '.accounts | length') ;\
-	fi ;\
-	if [[ $$ACCOUNT -eq 0 ]]; then \
-		if [[ ! -f ~/.ansible/dotfiles_vaultpass ]]; then \
-			EMAIL=$$(bash -c 'read -p "1Password Account Email: " EMAIL; echo $$EMAIL') ;\
-			SECRET=$$(bash -c 'read -p "1Password Account Secret: " SECRET; echo $$SECRET') ;\
-		else \
-			OUTPUT=$$(ansible localhost -m debug -a 'var="op.secret"' -e "@group_vars/all.yml") ;\
-			SECRET=$$(echo $$OUTPUT | cut -d ">" -f 2 | jq -r '. | ."op.secret"') ;\
-			OUTPUT=$$(ansible localhost -m debug -a 'var="op.email"' -e "@group_vars/all.yml") ;\
-			EMAIL=$$(echo $$OUTPUT | cut -d ">" -f 2 | jq -r '. | ."op.email"') ;\
-		fi ;\
-		open -a "Authy Desktop" ;\
-		SESSION=$$(op signin my $$EMAIL $$SECRET --raw) ;\
-	elif [[ ! `op list users 2> /dev/null` ]]; then \
-		SESSION=$$(op signin my --raw) ;\
-	fi ;\
-	if [[ -n "$$SESSION" ]]; then\
-		printf 'eval $$(op signin my --session %s)\n' $$SESSION ;\
+	@if op whoami > /dev/null 2>&1; then \
+		EMAIL=$$(op whoami --format json | jq ".email") ;\
+		echo "1Password logged in as $$EMAIL" ;\
 	else \
-		printf 'eval $$(op signin my)\n' ;\
+		op user list ;\
 	fi ;\
 	
 login.all: login.op
 
-install:
-	@ echo ;\
-	if op list users > /dev/null 2>&1 ; then \
-		ansible-playbook --ask-become-pass --diff ansible.yml ;\
-	else \
-		echo 'Execute `eval $$(make login.op)` to login to 1Password before continuing' ;\
-		echo ;\
-		exit 1 ;\
-	fi ;\
+install: ## Install everything
+install: login.all
+	@ansible-playbook --ask-become-pass --diff ansible.yml ;\
 	
 install.filtered: ## Install optionally filtering on given tags
-install.filtered: list.tags 
-	@ echo ;\
-	if op list users > /dev/null 2>&1 ; then \
-		INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
-		EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
-		ansible-playbook --ask-become-pass --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml ;\
-	else \
-		echo 'Execute `eval $$(make login.op)` to login to 1Password before continuing' ;\
-		echo ;\
-		exit 1 ;\
-	fi ;\
+install.filtered: login.all list.tags 
+	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags')
+	@EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags')
+	@ansible-playbook --ask-become-pass --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
 
 compare: ## Diff checks the ansible playbooks against the current environment
 compare: login.all
-	ansible-playbook --ask-become-pass --check --diff ansible.yml
+	@ansible-playbook --ask-become-pass --check --diff ansible.yml
 
 compare.filtered: ## Diff checks the specified playbook tags against the current environment
 compare.filtered: login.all list.tags 
-	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
-	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
-	ansible-playbook --ask-become-pass --check --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
+	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags')
+	@EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags')
+	@ansible-playbook --ask-become-pass --check --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
 
 list.tags: ## Lists all playbook tags that could be filtered upon
-	@TAGS=$$(bash -c 'ansible-playbook --list-tags ansible.yml | grep "TASK TAGS"') ;\
-	echo $$TAGS;\
+	@TAGS=$$(bash -c 'ansible-playbook --list-tags ansible.yml | grep "TASK TAGS"')
+	@echo $$TAGS
 
 list.tasks:
-	ansible-playbook --list-tasks ansible.yml
+	@ansible-playbook --list-tasks ansible.yml
 
 secrets.create.%: ## Encrypts a NAME secret of VALUE, e.g. 'make secret NAME=pusher_secret VALUE=abc123'
 	@ansible-vault encrypt_string --stdin-name '$*'
 	
 secrets.view.%:
-	ansible localhost -m debug -a 'var="$*"' -e "@group_vars/all.yml"
+	@ansible localhost -m debug -a 'var="$*"' -e "@group_vars/all.yml"
 
 secrets.decrypt: ## Decrypts all secret files
 secrets.decrypt: \
