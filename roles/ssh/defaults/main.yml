@@ -1,6 +1,6 @@
 keys:
   public: 
-    personal: "{{ lookup('community.general.onepassword', 'personal_rsa', field='public key') }}"
+    github: "{{ lookup('community.general.onepassword', 'git key', field='public key') }}"
 ssh_dir: '{{ ansible_env.HOME }}/.ssh'
 cert_dir: '{{ home_dir }}/.certs'
 
