@@ -1,6 +1,4 @@
 tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/core"
 tap "jakehilborn/jakehilborn"
 brew "ansible"
 brew "direnv"
