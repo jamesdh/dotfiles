@@ -2,7 +2,7 @@
 set -e
 
 echo "Checking for homebrew..."
-[[ ! `brew config 2> /dev/null` ]] && echo "Installing Homebrew..." && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+[[ ! `brew config 2> /dev/null` ]] && echo "Installing Homebrew..." && /bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 if [ "$(arch)" = "arm64" ]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
