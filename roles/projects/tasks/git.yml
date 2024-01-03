@@ -75,3 +75,14 @@
     scope: global
     name: diff.tool
     value: p4merge
+
+- name: Check if Git LFS is installed
+  git_config:
+    scope: global
+    name: filter.lfs.process
+  register: lfs_config
+
+- name: Install Git LFS if not already installed
+  shell: git lfs install
+  when: '"git-lfs" not in lfs_config.config_value'
+

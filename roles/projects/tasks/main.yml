@@ -2,6 +2,7 @@
 - name: Configure git 
   import_tasks: git.yml
   tags: 
+    - git
     - gitconfig
 
 - name: Configure repos
