@@ -32,7 +32,7 @@
   git_config:
     scope: global
     name: commit.gpgsign
-    value: true
+    value: "true"
 
 - name: Git config merge tool
   git_config: 
