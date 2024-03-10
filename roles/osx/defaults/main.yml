@@ -297,6 +297,9 @@ defaults:
     com.twopeoplesoftware.InstantTranslate-nomas:
       SUEnableAutomaticChecks: {type: bool, value: true}
       SUSendProfileInfo: {type: bool, value: false}
+    pl.maketheweb.TopNotch:
+      hideOnBuiltInOnly: {type: bool, value: true}
+      isEnabled: {type: bool, value: true}
 
 contexts: 
   license_path: "{{ home_dir }}/Library/Application\ Support/com.contextsformac.Contexts/license.contexts-license"
