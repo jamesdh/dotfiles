@@ -13,7 +13,7 @@
 
 - name: Use 1Password for all SSH keys
   copy: 
-    src: "{{role_path}}/files/ssh/config"
+    src: "{{role_path}}/files/config"
     dest: '{{ ssh_dir }}/config'
     mode: 0600
     
