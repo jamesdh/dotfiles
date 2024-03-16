@@ -10,35 +10,13 @@
     path: '{{ cert_dir }}'
     mode: 0700
     state: directory
+
+- name: Use 1Password for all SSH keys
+  copy: 
+    src: "{{role_path}}/files/ssh/config"
+    dest: '{{ ssh_dir }}/config'
+    mode: 0600
     
-# See https://github.com/ansible-collections/community.general/issues/7435
-# - name: SSH config
-#   community.general.ssh_config:
-#     user: jamesdh
-#     forward_agent: true
-#     host: "*"
-#     identity_agent: "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-#     state: present
-
-# See https://github.com/ansible-collections/community.general/issues/7246
-# - name: Retrieve Private Keys
-#   copy: 
-#     content: "{{ lookup('community.general.onepassword', item, type='document') }}"
-#     dest: '{{ ssh_dir }}/{{ item }}' 
-#     mode: 0600
-#   loop: '{{ ssh_keys }}'
-#   loop_control:
-#     label: '{{ item }}'
-  
-# - name: Retrieve Public Keys
-#   copy: 
-#     content: "{{ lookup('community.general.onepassword', item + '.pub', type='document') }}"
-#     dest: '{{ ssh_dir }}/{{ item }}.pub' 
-#     mode: 0644
-#   loop: '{{ ssh_keys }}'
-#   loop_control:
-#     label: '{{ item }}'
-
 # - name: Retrieve other certificates
 #   copy: 
 #     src: "{{ lookup('community.general.onepassword', item, type='document' }}"
