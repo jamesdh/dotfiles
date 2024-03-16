@@ -4,7 +4,8 @@ set -e
 # If missing, install Xcode Command Line Developer Tools
 xcode-select -p >& /dev/null || {
     xcode-select --install
-    echo "Select \"Install\" for the prompted Command Line Developer Tools"
+    echo "Select \"Install\" when prompted for Command Line Developer Tools"
+    sleep 3
     osascript -e 'tell application "Install Command Line Developer Tools" to activate'
 }
 
