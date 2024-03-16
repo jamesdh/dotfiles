@@ -3,8 +3,10 @@ set -e
 
 echo "Checking for homebrew..."
 if ! brew config >& /dev/null; then 
-  echo "Installing Homebrew..." 
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  if [[ ! -f "/opt/homebrew/bin/brew" || ! -d "/usr/local/bin/brew" ]]; then
+    echo "Installing Homebrew..." 
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  fi
 fi
 
 if [[ "$(arch)" == "arm64" ]]; then
