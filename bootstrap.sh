@@ -1,23 +1,30 @@
-#!/bin/bash
+#!/bin/zsh
 set -e
 
 echo "Checking for homebrew..."
-[[ ! `brew config 2> /dev/null` ]] && echo "Installing Homebrew..." && /bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+if ! brew config >& /dev/null; then 
+  echo "Installing Homebrew..." 
+  /bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
 
-if [ "$(arch)" = "arm64" ]; then
+if [[ "$(arch)" == "arm64" ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 else
   eval "$(/usr/local/bin/brew shellenv)"
 fi
 
 echo "Checking for mas..."
-[[ ! `brew list mas 2> /dev/null` ]] && echo "Installing mas" && brew install mas
+if ! brew list mas >& /dev/null; then
+  echo "Installing mas"
+  brew install mas
+fi
 
 echo "Preinstalling apps required for setup or requiring additional permissions prompts"
-export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.preprompt
+export HOMEBREW_CASK_OPTS='--no-quarantine'
+brew bundle --file=roles/osx/files/Brewfile.preprompt
 
 echo "Checking for vault password file..."
-if [[ ! -f ~/.ansible/dotfiles_vaultpass ]]; then 
+if [[ ! -f ~/.ansible/dotfiles_vaultpass ]]; then
   make --no-print-directory login.op
   echo "Retrieving vault password"
   mkdir -p -m 0755 ~/.ansible

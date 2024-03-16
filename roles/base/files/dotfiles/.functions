@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Make a dir and cd into it
 mkcd() { mkdir -p "$@" && cd "$@"; }
@@ -176,8 +176,8 @@ commitAs() {
   if [ $# -eq 0 ]; then
     echo "Usage: commitAs <-v [+|-]val[y|m|w|d|H|M|S]> \"Commit message\""
     echo "Example: commitAs -v1m -v7d \"Initial commit\""
-    echo "See `man date` for more info on date adjustments"
-    exit 1
+    echo "See \`man date\` for more info on date adjustments"
+    return 1
   fi
   dateadjusts="${@:1:$#-1}"
   message="${@: -1}"
