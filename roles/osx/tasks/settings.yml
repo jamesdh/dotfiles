@@ -60,3 +60,11 @@
 - import_tasks: per_app/iterm.yml
   tags: 
     - iterm
+
+- name: "Link iCloud Drive to home dir for easier CLI access"
+  file: 
+    src: "~/Library/Mobile\ Documents/com~apple~CloudDocs/"
+    dest: "~/iCloud"
+    state: link
+  tags: 
+    - icloud
