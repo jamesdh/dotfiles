@@ -11,6 +11,8 @@ else
     eval "$(/usr/local/bin/brew shellenv)"
 fi
 
+export HOMEBREW_CASK_OPTS='--no-quarantine'
+
 #Updated 'make'
 export PATH=$HOMEBREW_PREFIX/opt/make/libexec/gnubin:$PATH
 
