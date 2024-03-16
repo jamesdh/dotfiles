@@ -4,7 +4,7 @@ set -e
 echo "Checking for homebrew..."
 if ! brew config >& /dev/null; then 
   echo "Installing Homebrew..." 
-  /bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
 if [[ "$(arch)" == "arm64" ]]; then
