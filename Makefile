@@ -47,7 +47,7 @@ login.all: login.op
 
 install: ## Install everything
 install: login.all
-	@ansible-playbook --ask-become-pass --diff ansible.yml ;\
+	@source venv/bin/activate && ansible-playbook --ask-become-pass --diff ansible.yml ;\
 	
 install.filtered: ## Install optionally filtering on given tags
 install.filtered: login.all list.tags 
