@@ -1,4 +1,4 @@
-SHELL := $(shell which bash) -e
+SHELL := $(shell which zsh) -e
 .DEFAULT_GOAL := help
 
 include ./roles/projects/files/utils.mak
