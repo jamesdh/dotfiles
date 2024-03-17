@@ -39,9 +39,9 @@ if ! brew list mas >& /dev/null; then
   brew install mas
 fi
 
-echo "Preinstalling apps required for setup or requiring additional permissions prompts"
+echo "Checking for required apps..."
 export HOMEBREW_CASK_OPTS='--no-quarantine'
-brew bundle --file=roles/osx/files/Brewfile.preprompt
+brew bundle -q --file=roles/osx/files/Brewfile.preprompt --no-lock | grep "Installing" || true
 
 echo "Checking for vault password file..."
 if [[ ! -f ~/.ansible/dotfiles_vaultpass ]]; then
