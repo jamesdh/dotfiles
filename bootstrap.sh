@@ -44,7 +44,6 @@ brew bundle --file=roles/osx/files/Brewfile.preprompt
 
 echo "Checking for vault password file..."
 if [[ ! -f ~/.ansible/dotfiles_vaultpass ]]; then
-  make --no-print-directory login.op
   echo "Retrieving vault password"
   mkdir -p -m 0755 ~/.ansible
   touch ~/.ansible/dotfiles_vaultpass
