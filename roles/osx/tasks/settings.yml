@@ -13,11 +13,6 @@
   changed_when: false
   become: true
 
-- name: "Python requirements"
-  pip:
-    name: 
-      - pyobjc
-
 - include_tasks: defaults.yml
   vars: 
     domain: "{{ domain_item.key }}"

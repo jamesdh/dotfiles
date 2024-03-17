@@ -1,4 +1,4 @@
-SHELL := $(shell which bash) -e
+SHELL := $(shell which zsh) -e
 .DEFAULT_GOAL := help
 .PHONY: iterm idea code
 

@@ -51,6 +51,13 @@ if [[ ! -f ~/.ansible/dotfiles_vaultpass ]]; then
   op item get "Ansible Vault - Dotfiles" --fields password --format json | jq --raw-output ".value" > ~/.ansible/dotfiles_vaultpass
 fi
 
+echo "Checking for python environment..."
+eval "$(pyenv init -)"
+python -m venv venv
+source venv/bin/activate
+pip install -q -r requirements.txt
+
+echo ""
 echo "Finished bootstrapping! Run \`make install\` to proceed."
 echo ""
 echo "To reduce the number of security prompts during install which can interrupt the install flow, first perform the following:"
