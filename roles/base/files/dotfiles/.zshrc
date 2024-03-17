@@ -13,9 +13,10 @@ plugins=(
 )
 
 # Prompt colors
+fpath+=("$(brew --prefix)/share/zsh/site-functions")
 autoload -Uz promptinit
 promptinit
-prompt fade
+prompt pure
 
 # Load the shell dotfiles, and then some:
 # * ~/.extra can be used for other settings you don’t want to commit.
