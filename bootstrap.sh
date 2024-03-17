@@ -3,7 +3,7 @@ set -e
 
 echo "Checking for homebrew..."
 if ! brew config >& /dev/null; then 
-  if [[ ! -f "/opt/homebrew/bin/brew" || ! -d "/usr/local/bin/brew" ]]; then
+  if [[ ! -f "/opt/homebrew/bin/brew" || ! -f "/usr/local/bin/brew" ]]; then
     echo "Installing Homebrew..." 
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
@@ -53,7 +53,7 @@ fi
 
 echo "Checking for python environment..."
 eval "$(pyenv init -)"
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 pip install -q -r requirements.txt
 

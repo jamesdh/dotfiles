@@ -1,6 +1,5 @@
 tap "homebrew/bundle"
 tap "jakehilborn/jakehilborn"
-brew "ansible"
 brew "direnv"
 brew "displayplacer"
 brew "gpg"
