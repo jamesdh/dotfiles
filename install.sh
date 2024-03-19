@@ -27,4 +27,13 @@ if [[ ! -d .git ]]; then
     git clone https://github.com/jamesdh/dotfiles.git . 
 fi
 
+# If Homebrew cache doesn't exist locally, and an external drive is connected
+# that contains it, copy it over
+if [[ ! -d ~/Library/Caches/Homebrew ]]; then
+    if [[ -d /Volumes/SDXC/Homebrew ]]; then
+        echo "Copying Homebrew Cache locally..."
+        rsync -a /Volumes/SDXC/Homebrew ~/Library/Caches/Homebrew
+    fi
+fi
+
 source bootstrap.sh
