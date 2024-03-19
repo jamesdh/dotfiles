@@ -1,12 +1,8 @@
 - hosts: localhost
-  pre_tasks: 
-    - name: 1Password login check
-      debug:
-        msg: 
-          - "{{ lookup('community.general.onepassword', 'HAL 9000') }}"
-      tags: always
-      # no_log: true
-      
+  pre_tasks:
+    - name: Retrieve become password
+      ansible.builtin.set_fact: 
+        ansible_become_password: "{{ lookup('community.general.onepassword', 'Personal MacBook', field='password') }}"
   roles:
       - { role: base, tags: ['base']}
       - { role: ssh, tags: ['ssh']}
