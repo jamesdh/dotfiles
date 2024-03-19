@@ -34,33 +34,22 @@ bootstrap: ## Verifies/installs necessary tools to support syncing dotfiles
 bootstrap:
 	@./bootstrap.sh ;\
 
-login.op: ## Login to 1Password
-login.op:
-	@if op whoami > /dev/null 2>&1; then \
-		EMAIL=$$(op whoami --format json | jq ".email") ;\
-		echo "1Password logged in as $$EMAIL" ;\
-	else \
-		op user list ;\
-	fi ;\
-	
-login.all: login.op
-
 install: ## Install everything
-install: login.all
+install:
 	@source venv/bin/activate && ansible-playbook --diff ansible.yml ;\
 	
 install.filtered: ## Install optionally filtering on given tags
-install.filtered: login.all list.tags 
+install.filtered: list.tags 
 	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
 	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
 	ansible-playbook --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
 
 compare: ## Diff checks the ansible playbooks against the current environment
-compare: login.all
+compare:
 	@ansible-playbook --check --diff ansible.yml
 
 compare.filtered: ## Diff checks the specified playbook tags against the current environment
-compare.filtered: login.all list.tags 
+compare.filtered: list.tags 
 	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
 	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
 	ansible-playbook --check --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
