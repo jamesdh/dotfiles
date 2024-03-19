@@ -36,7 +36,11 @@ bootstrap:
 
 install: ## Install everything
 install:
-	@source venv/bin/activate && ansible-playbook --diff ansible.yml ;\
+	@source venv/bin/activate && ansible-playbook --diff --skip-tags=privileged ansible.yml ;\
+
+install.privileged: ## Install items requiring privilege escalation
+install.privileged:
+	@source venv/bin/activate && ansible-playbook --diff --tags=privileged ansible.yml ;\
 	
 install.filtered: ## Install optionally filtering on given tags
 install.filtered: list.tags 

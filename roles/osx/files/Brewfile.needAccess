@@ -1,0 +1,7 @@
+tap "homebrew/bundle"
+cask "bartender"
+cask "contexts"
+cask "dropbox"
+cask "iterm2"
+cask "viscosity"
+mas "Divvy", id: 413857545

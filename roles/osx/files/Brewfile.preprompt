@@ -10,12 +10,7 @@ brew "python"
 brew "pyenv"
 cask "1password"
 cask "1password-cli"
-cask "bartender"
-cask "contexts"
-cask "dropbox"
-cask "iterm2"
 cask "monitorcontrol"
 cask "switchresx"
-cask "viscosity"
 cask "visual-studio-code"
-mas "Divvy", id: 413857545
+instance_eval(File.read("roles/osx/files/Brewfile.needAccess"))

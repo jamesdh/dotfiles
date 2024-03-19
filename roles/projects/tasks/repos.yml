@@ -29,6 +29,8 @@
     - "{{github}}"
     - repos
   when: "not [item.0.org,item.1.name] | join('/') in projects_ls.stdout"
+  tags:
+    - privileged
 
 - name: Setup repo pre-commit hooks
   file: 
