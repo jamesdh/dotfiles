@@ -1,10 +1,10 @@
 
-- name: Install Essential Homebrew Apps
+- name: Install Priority Homebrew Apps
   shell: export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.priority
   register: brew_diff
   changed_when: '"Installing" in brew_diff.stdout'
 
-- name: Install Homebrew Apps - Changed output
+- name: Install Priority Homebrew Apps - Changed output
   debug:
     var: brew_diff.stdout
   when: 
