@@ -83,14 +83,14 @@ vault.encrypt.%:
 	@for i in $$(find $(subst .,/,$*) -name '*.vault.*' ! -name '*.enc'); do \
 		PREFORM=$$(ansible-vault view $$i.enc) ;\
 		POSTFORM=$$(cat $$i) ;\
-		if [ "$$PREFORM" == "$$POSTFORM" ]; then \
+		if [ "$$PREFORM" = "$$POSTFORM" ]; then \
 			echo "Restoring unchanged file $$i" ;\
 			mv -f $$i.enc $$i ;\
 		else \
 			rm $$i.enc ;\
 			echo "Encrypting $$i" ;\
 			ansible-vault encrypt $$i ;\
-		fi \
+		fi ;\
 	done
 
 vault.decrypt.%:
