@@ -33,6 +33,14 @@ if [[ "$output" == *"no account found"* ]]; then
 fi
 set -e
 
+echo "Checking for vault password file..."
+if [[ ! -f ~/.ansible/dotfiles_vaultpass ]]; then
+  echo "Retrieving vault password"
+  mkdir -p -m 0755 ~/.ansible
+  touch ~/.ansible/dotfiles_vaultpass
+  op item get "Ansible Vault - Dotfiles" --fields password --format json | jq --raw-output ".value" > ~/.ansible/dotfiles_vaultpass
+fi
+
 echo "Checking for mas..."
 if ! brew list mas >& /dev/null; then
   echo "Installing mas"
@@ -42,14 +50,6 @@ fi
 echo "Checking for required apps..."
 export HOMEBREW_CASK_OPTS='--no-quarantine'
 brew bundle -q --file=roles/osx/files/Brewfile.preprompt --no-lock | grep "Installing" || true
-
-echo "Checking for vault password file..."
-if [[ ! -f ~/.ansible/dotfiles_vaultpass ]]; then
-  echo "Retrieving vault password"
-  mkdir -p -m 0755 ~/.ansible
-  touch ~/.ansible/dotfiles_vaultpass
-  op item get "Ansible Vault - Dotfiles" --fields password --format json | jq --raw-output ".value" > ~/.ansible/dotfiles_vaultpass
-fi
 
 echo "Checking for python environment..."
 eval "$(pyenv init -)"
