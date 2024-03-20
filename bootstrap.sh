@@ -39,7 +39,7 @@ fi
 if [[ ! -d ~/Library/Caches/Homebrew ]]; then
     if [[ -d /Volumes/SDXC/Homebrew ]]; then
         echo "Copying Homebrew Cache locally..."
-        rsync -aP /Volumes/SDXC/Homebrew ~/Library/Caches/Homebrew
+        rsync -a /Volumes/SDXC/Homebrew ~/Library/Caches/Homebrew
     fi
 fi
 
