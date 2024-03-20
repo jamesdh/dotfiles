@@ -1,7 +1,7 @@
 tap "homebrew/bundle"
 tap "jakehilborn/jakehilborn"
 brew "direnv"
-brew "displayplacer"
+brew "jakehilborn/jakehilborn/displayplacer"
 brew "gpg"
 brew "jq"
 brew "pam-reattach"
