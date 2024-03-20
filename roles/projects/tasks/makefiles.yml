@@ -1,9 +1,0 @@
-- name: Link Makefiles to relevant Projects dir
-  file: 
-    src: "{{role_path}}/files/{{item.file}}"
-    path: "{{item.path}}/Makefile"
-    state: link
-    force: true
-  loop: "{{makefiles}}"
-  tags: 
-    - makefiles

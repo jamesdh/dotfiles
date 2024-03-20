@@ -10,6 +10,7 @@
   tags:
     - git
     - repos
+    - privileged
     
 - name: Configure dev environment
   import_tasks: env.yml
@@ -20,8 +21,3 @@
   import_tasks: sdk.yml
   tags:
     - sdk
-
-- name: Configure makefiles
-  import_tasks: makefiles.yml
-  tags:
-    - makefiles

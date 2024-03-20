@@ -45,3 +45,41 @@
   loop: "{{hooks}}"
   tags: 
     - hooks
+
+- name: Setup repo env files
+  file:
+    src: "{{role_path}}/files/{{item.src}}"
+    path: "{{item.dest}}/.env"
+    state: link
+    force: true
+  loop: "{{envfiles}}"
+  tags:
+    - envfiles
+
+- name: Setup default .envrc files
+  copy:
+    src: "{{role_path}}/files/.envrc"
+    dest: "{{item.dest}}/.envrc"
+    force: false
+  loop: "{{envfiles}}"
+  tags:
+    - envfiles
+
+- name: Allow direnv on env files
+  shell: direnv allow
+  args:
+    chdir: "{{item.dest}}"
+  loop: "{{envfiles}}"
+  changed_when: false
+  tags:
+    - envfiles
+
+- name: Link Makefiles to relevant Projects dir
+  file: 
+    src: "{{role_path}}/files/{{item.file}}"
+    path: "{{item.path}}/Makefile"
+    state: link
+    force: true
+  loop: "{{makefiles}}"
+  tags: 
+    - makefiles
