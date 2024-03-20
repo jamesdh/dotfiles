@@ -36,7 +36,7 @@ bootstrap:
 
 install: ## Install everything
 install:
-	@source venv/bin/activate && ansible-playbook --diffansible.yml ;\
+	@source venv/bin/activate && ansible-playbook --diff ansible.yml ;\
 	
 install.filtered: ## Install optionally filtering on given tags
 install.filtered: list.tags 

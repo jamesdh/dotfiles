@@ -1,6 +1,49 @@
 #!/bin/zsh
-set -e
 
+# Install Xcode Command Line Developer Tools if missing
+echo "Checking for Xcode Command Line Developer Tools..."
+xcode-select -p >& /dev/null || {
+    if [[ -f /Volumes/SDXC/Command_Line_Tools_for_Xcode_15.3.dmg ]]; then
+        echo "Waiting for Xcode Command Line Tools to finish installing..."
+        hdiutil attach /Volumes/SDXC/Command_Line_Tools_for_Xcode_15.3.dmg
+        sudo installer -pkg /Volumes/Command\ Line\ Developer\ Tools/Command\ Line\ Tools.pkg -target /
+        hdiutil detach /Volumes/Command\ Line\ Developer\ Tools
+    else
+        xcode-select --install
+        echo "Select \"Install\" when prompted for Command Line Developer Tools"
+        sleep 3
+        osascript -e 'tell application "Install Command Line Developer Tools" to activate'
+        while ! pkgutil --pkg-info=com.apple.pkg.CLTools_Executables &>/dev/null; do
+            echo "Waiting for Xcode Command Line Tools to finish installing..."
+            sleep 5
+        done
+    fi
+    echo "Xcode Command Line Tools are installed."
+}
+
+# Install Rosetta 2 if missing
+echo "Checking for Rosetta 2..."
+pkgutil --pkgs=com.apple.pkg.RosettaUpdateAuto >& /dev/null || {
+    softwareupdate --install-rosetta --agree-to-license
+}
+
+# Clone dotfiles locally if missing
+mkdir -p ~/Projects/jamesdh/dotfiles 
+cd ~/Projects/jamesdh/dotfiles 
+if [[ ! -d .git ]]; then
+    echo "Cloning dotfiles locally..."
+    git clone https://github.com/jamesdh/dotfiles.git . 
+fi
+
+# If Homebrew cache doesn't exist locally, and an external drive is connected that contains it, copy it over
+if [[ ! -d ~/Library/Caches/Homebrew ]]; then
+    if [[ -d /Volumes/SDXC/Homebrew ]]; then
+        echo "Copying Homebrew Cache locally..."
+        rsync -aP /Volumes/SDXC/Homebrew ~/Library/Caches/Homebrew
+    fi
+fi
+
+# Install Homebrew if missing
 echo "Checking for homebrew..."
 if ! brew config >& /dev/null; then 
   if [[ ! -f /opt/homebrew/bin/brew ]]; then
@@ -10,12 +53,13 @@ if ! brew config >& /dev/null; then
 fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-echo "Checking for 1Password..."
-if ! brew list | grep -q "1password"; then
-  echo "Installing 1Password..."
-  brew install 1password 1password-cli jq
-fi
-set +e
+# Install all apps that are immediately required for bootstrapping. 
+echo "Checking for required apps..."
+HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.bootstrap
+# HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle -q --file=roles/osx/files/Brewfile.bootstrap --no-lock | grep "Installing" || true
+
+# If 1Password does not have CLI integration enabled, prompt and wait for it
+echo "Checking for 1Password CLI integration..."
 output=$(op whoami 2>&1)
 if [[ "$output" == *"no account found"* ]]; then
   echo "Sign in to 1Password, then enable CLI integration in Settings -> Developer -> Command-Line Interface"
@@ -27,8 +71,8 @@ if [[ "$output" == *"no account found"* ]]; then
     output=$(op whoami 2>&1)
   done
 fi
-set -e
 
+# Restore Ansible vaultpass via 1Password if missing
 echo "Checking for vault password file..."
 if [[ ! -f ~/.ansible/dotfiles_vaultpass ]]; then
   echo "Retrieving vault password"
@@ -37,17 +81,8 @@ if [[ ! -f ~/.ansible/dotfiles_vaultpass ]]; then
   op item get "Ansible Vault - Dotfiles" --fields password --format json | jq --raw-output ".value" > ~/.ansible/dotfiles_vaultpass
 fi
 
-echo "Checking for mas..."
-if ! brew list mas >& /dev/null; then
-  echo "Installing mas"
-  brew install mas
-fi
-
-echo "Checking for required apps..."
-export HOMEBREW_CASK_OPTS='--no-quarantine'
-brew bundle -q --file=roles/osx/files/Brewfile.preprompt --no-lock | grep "Installing" || true
-
-echo "Checking for python environment..."
+# Install python environment to run ansible
+echo "Checking python environment..."
 eval "$(pyenv init -)"
 python3 -m venv venv
 source venv/bin/activate
