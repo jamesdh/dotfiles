@@ -10,7 +10,6 @@
   tags:
     - git
     - repos
-    - privileged
     
 - name: Configure dev environment
   import_tasks: env.yml
