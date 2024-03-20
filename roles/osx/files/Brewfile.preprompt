@@ -10,7 +10,5 @@ brew "python"
 brew "pyenv"
 cask "1password"
 cask "1password-cli"
-cask "monitorcontrol"
-cask "switchresx"
 cask "visual-studio-code"
 instance_eval(File.read("roles/osx/files/Brewfile.needAccess"))
