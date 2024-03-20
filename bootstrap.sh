@@ -3,16 +3,12 @@ set -e
 
 echo "Checking for homebrew..."
 if ! brew config >& /dev/null; then 
-  if [[ ! -f "/opt/homebrew/bin/brew" || ! -f "/usr/local/bin/brew" ]]; then
+  if [[ ! -f /opt/homebrew/bin/brew ]]; then
     echo "Installing Homebrew..." 
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
 fi
-if [[ "$(arch)" == "arm64" ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-else
-  eval "$(/usr/local/bin/brew shellenv)"
-fi
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 echo "Checking for 1Password..."
 if ! brew list | grep -q "1password"; then
