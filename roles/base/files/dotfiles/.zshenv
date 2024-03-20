@@ -9,15 +9,7 @@ else
 fi
 
 export HOMEBREW_CASK_OPTS='--no-quarantine'
-
-#Updated 'make'
-export PATH=$HOMEBREW_PREFIX/opt/make/libexec/gnubin:$PATH
-
-# Python path shenanigans
-export PATH=$HOMEBREW_PREFIX/opt/python/libexec/bin:$PATH
-
-# curl
-export PATH=$HOMEBREW_PREFIX/opt/curl/bin:$PATH
+export PATH="$HOMEBREW_PREFIX/bin:$PATH"
 
 # Needed for Krew (kubernetes)
 export PATH=$PATH:$KREW_BIN
