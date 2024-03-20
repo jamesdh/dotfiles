@@ -1,5 +1,5 @@
-brew "gpg"
 brew "jq"
+brew "make"
 brew "mas"
 brew "pure"
 brew "python"
