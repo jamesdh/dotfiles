@@ -2,12 +2,7 @@ export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
 # Exports HOMEBREW_PREFIX and updates the PATH to the appropriate Homebrew bin location
-if [ "$(arch)" = "arm64" ]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-else
-    eval "$(/usr/local/bin/brew shellenv)"
-fi
-
+eval "$(/opt/homebrew/bin/brew shellenv)"
 export HOMEBREW_CASK_OPTS='--no-quarantine'
 export PATH="$HOMEBREW_PREFIX/bin:$PATH"
 
