@@ -13,7 +13,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 echo "Checking for 1Password..."
 if ! brew list | grep -q "1password"; then
   echo "Installing 1Password..."
-  brew install 1password 1password-cli
+  brew install 1password 1password-cli jq
 fi
 set +e
 output=$(op whoami 2>&1)
