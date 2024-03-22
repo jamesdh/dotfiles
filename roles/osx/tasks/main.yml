@@ -32,6 +32,7 @@
   import_tasks: settings.yml
   tags: 
     - settings
+    - priority
 
 - name: Configure Learned Spellings Dictionary
   import_tasks: spelling.yml

@@ -1,7 +1,6 @@
 brew "awk"
 brew "curl"
 brew "enca"
-brew "git-lfs"
 brew "gnu-sed"
 brew "imagemagick"
 brew "kubernetes-cli"

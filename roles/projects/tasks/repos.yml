@@ -6,6 +6,8 @@
   args:
     chdir: "{{projects_dir}}"
   register: projects_ls
+  tags:
+    - priority
     
 # I mostly just do this because "dotfiles" is initially checked out using https
 # This takes care of fixing it so I can easily modify and push changes 
@@ -19,6 +21,8 @@
     - "{{github}}"
     - repos
   when: "[item.0.org,item.1.name] | join('/') in projects_ls.stdout"
+  tags:
+    - priority
 
 - name: Setup git repositories 
   git:
