@@ -55,14 +55,13 @@ fi
 # Install all apps that are immediately required for bootstrapping. 
 echo "Checking for required apps..."
 export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.bootstrap
-# HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle -q --file=roles/osx/files/Brewfile.bootstrap --no-lock | grep "Installing" || true
 
 # If 1Password does not have CLI integration enabled, prompt and wait for it
 echo "Checking for 1Password CLI integration..."
 output=$(op whoami 2>&1)
 if [[ "$output" == *"no account found"* ]]; then
   echo "Sign in to 1Password, then enable CLI integration in Settings -> Developer -> Command-Line Interface"
-  open -a "1Password"
+  open -a "/Applications/1Password.app"
   output=$(op whoami 2>&1)
   while [[ "$output" == *"no account found"* ]]; do
     echo "Waiting for 1Password CLI integration to be enabled..."
