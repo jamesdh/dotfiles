@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-sudo -s
+sudo echo ""
 
 # Install Xcode Command Line Developer Tools if missing
 echo "Checking for Xcode Command Line Developer Tools..."
