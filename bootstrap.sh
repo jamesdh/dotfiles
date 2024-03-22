@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+sudo echo ""
+
 # Install Xcode Command Line Developer Tools if missing
 echo "Checking for Xcode Command Line Developer Tools..."
 xcode-select -p >& /dev/null || {
@@ -40,7 +42,7 @@ echo "Checking for homebrew..."
 if ! brew config >& /dev/null; then 
   if [[ ! -f /opt/homebrew/bin/brew ]]; then
     echo "Installing Homebrew..." 
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null 
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
 fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
