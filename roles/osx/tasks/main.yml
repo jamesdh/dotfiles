@@ -2,12 +2,14 @@
   import_tasks: auth.yml
   tags: 
     - auth
+    - priority
 
 - name: Install applications necessary for immediate permissions approvals
   import_tasks: apps.pre.yml
   tags: 
     - preinstall
     - apps
+    - priority
 
 - name: Install core applications
   import_tasks: apps.yml

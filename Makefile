@@ -37,6 +37,15 @@ bootstrap:
 install: ## Install everything
 install:
 	@source venv/bin/activate && ansible-playbook --diff ansible.yml ;\
+
+install.priority: ## Install the minimal, highest priority items
+install.priority:
+	@source venv/bin/activate && ansible-playbook --tags=priority --diff ansible.yml ;\
+	launchctl reboot logout
+
+install.nonpriority: ## Install remaining, lower priority items
+install.nonpriority:
+	@source venv/bin/activate && ansible-playbook --skip-tags=priority --diff ansible.yml ;\
 	
 install.filtered: ## Install optionally filtering on given tags
 install.filtered: list.tags 

@@ -5,7 +5,7 @@
         ansible_become_password: "{{ lookup('community.general.onepassword', 'Personal MacBook', field='password') }}"
       tags: ['always']
   roles:
-      - { role: base, tags: ['base']}
-      - { role: ssh, tags: ['ssh']}
+      - { role: base, tags: ['base', 'priority']}
+      - { role: ssh, tags: ['ssh', 'priority']}
       - { role: osx, tags: ['osx']}
       - { role: projects, tags: [projects]}

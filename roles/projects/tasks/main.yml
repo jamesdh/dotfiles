@@ -4,12 +4,14 @@
   tags: 
     - git
     - gitconfig
+    - priority
 
 - name: Configure repos
   import_tasks: repos.yml
   tags:
     - git
     - repos
+    - priority
     
 - name: Configure dev environment
   import_tasks: env.yml

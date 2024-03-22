@@ -33,18 +33,21 @@
     loop_var: domain_item
   tags: 
     - defaults
+    - priority
 
 - import_tasks: per_app/finder.yml
   tags: 
     - finder
 
 - name: "Restart affected services"
-  shell: "killall cfprefsd Dock Finder Safari SystemUIServer TouchBarServer Divvy"
+  shell: "killall cfprefsd Dock Finder SystemUIServer TouchBarServer Divvy"
   become: true
   tags: 
     - restart
 
 - import_tasks: per_app/divvy.yml
+  tags:
+    - priority
 - import_tasks: per_app/contexts.yml
 # - import_tasks: per_app/viscosity.yml
 # - import_tasks: per_app/ngrok.yml
@@ -59,3 +62,4 @@
     state: link
   tags: 
     - icloud
+    - priority

@@ -8,12 +8,6 @@
       
     - name: Start Divvy so it responds to the global shortcut
       shell: "osascript -e 'tell application \"Divvy\" to activate'"
-      
-    - name: Open Accessibility panel
-      shell: osascript -l JavaScript jxa/open_accessibility.scpt 
-      tags: 
-        - never
-        - preprompt
         
   tags:
     - settings
