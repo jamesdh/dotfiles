@@ -1,22 +1,4 @@
-brew "awk"
-brew "curl"
-brew "enca"
-brew "gnu-sed"
-brew "imagemagick"
-brew "kubernetes-cli"
-brew "ngrep"
-brew "node"
-brew "nvm"
-brew "p7zip"
-brew "pngquant"
-brew "unp"
-brew "wget"
-cask "docker"
-cask "element"
-cask "gitify"
-cask "google-cloud-sdk"
-cask "ngrok"
-cask "p4v"
-cask "viscosity"
-mas "Airmail", id: 918858936
-mas "Slack", id: 803453959
+instance_eval(File.read("roles/osx/files/Brewfile.bootstrap"))
+instance_eval(File.read("roles/osx/files/Brewfile.priority"))
+instance_eval(File.read("roles/osx/files/Brewfile.nonpriority"))
+instance_eval(File.read("roles/osx/files/Brewfile.fonts"))

@@ -3,6 +3,14 @@ SHELL := $(shell which zsh) -e
 
 include ./roles/projects/files/utils.mak
 
+apps.check: ## Checks all available Brewfiles against the locally installed brews/casks
+apps.check:
+	@brew bundle check --verbose --file=roles/osx/files/Brewfile
+
+apps.update: ## Updates all apps defined in all available Brewfiles
+apps.update:
+	@brew bundle install --file=roles/osx/files/Brewfile
+
 open: ## Opens all Dotfiles project tools
 open: \
 	open.iterm \

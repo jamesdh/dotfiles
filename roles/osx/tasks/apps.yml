@@ -1,7 +1,7 @@
 # We need some way to show Brewfile differences in "check" mode
 # Hence this bizaro task and subsequent debug task after it
-- name: Check Brewfile against installed apps
-  shell: brew bundle check --verbose --file=roles/osx/files/Brewfile
+- name: Check Non-priority Brewfile against installed apps
+  shell: brew bundle check --verbose --file=roles/osx/files/Brewfile.nonpriority
   register: brew_diff
   ignore_errors: true
   failed_when: false
@@ -10,7 +10,7 @@
   when: 
     - ansible_check_mode
 
-- name: Check Brewfile - Changed output
+- name: Check Non-priority Brewfile - Changed output
   debug:
     var: brew_diff.stdout
   when: 
@@ -18,12 +18,12 @@
     - brew_diff.rc != 0
   changed_when: brew_diff.rc != 0
 
-- name: Install Homebrew Apps
-  shell: export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile
+- name: Install Non-priority Homebrew Apps
+  shell: export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.nonpriority
   register: brew_diff
   changed_when: '"Installing" in brew_diff.stdout'
 
-- name: Install Homebrew Apps - Changed output
+- name: Install Non-priority Homebrew Apps - Changed output
   debug:
     var: brew_diff.stdout
   when: 

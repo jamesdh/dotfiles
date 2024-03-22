@@ -1,46 +1,64 @@
+brew "awk"
 brew "bat"
 brew "coreutils"
+brew "curl"
 brew "dive"
+brew "enca"
 brew "exiftool"
 brew "ffmpeg"
+brew "gnu-sed"
 brew "hub"
+brew "imagemagick"
+brew "kubernetes-cli"
+brew "ngrep"
+brew "node"
+brew "nvm"
+brew "p7zip"
+brew "pngquant"
 brew "pyenv-virtualenv"
 brew "tree"
+brew "unp"
+brew "wget"
 brew "yt-dlp"
 cask "adobe-dng-converter"
 cask "aldente"
 cask "bettertouchtool"
-cask "coconutbattery"
 cask "discord"
+cask "docker"
+cask "element"
 cask "firefox"
+cask "gitify"
 cask "google-chrome"
+cask "google-cloud-sdk"
 cask "intellij-idea"
 cask "istat-menus"
 cask "jetbrains-toolbox"
-cask "mate-translate"
 cask "menuwhere"
-cask "microsoft-teams"
 cask "monitorcontrol"
+cask "ngrok"
 cask "opal-composer"
-cask "postman"
+cask "p4v"
 cask "proxyman"
 cask "raycast"
 cask "selfcontrol"
 cask "stay"
-cask "switchresx"
 cask "tableplus"
 cask "topnotch"
 cask "vlc"
+cask "viscosity"
 cask "whatsapp"
+mas "Airmail", id: 918858936
 mas "Amphetamine", id: 937984704
 mas "Blackmagic Disk Speed Test", id: 425264550
 mas "DaisyDisk", id: 411643860
 mas "Ghostery Lite", id: 1436953057
 mas "GIPHY", id: 668208984
 mas "LittleIpsum", id: 405772121
-mas "Photomator", id: 1444636541
 mas "Save to Pocket", id: 1477385213
-mas "Shush", id: 496437906
+mas "Slack", id: 803453959
 mas "The Unarchiver", id: 425424353
 mas "Trello", id: 1278508951
 mas "World Clock Pro", id: 858446756
+
+# cask "microsoft-outlook"
+# cask "microsoft-teams"

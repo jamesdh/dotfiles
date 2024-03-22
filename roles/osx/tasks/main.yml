@@ -38,9 +38,3 @@
   import_tasks: spelling.yml
   tags:
     - dictionary
-
-- name: Install remaining applications
-  import_tasks: apps.post.yml
-  tags:
-    - apps
-    - postinstall
