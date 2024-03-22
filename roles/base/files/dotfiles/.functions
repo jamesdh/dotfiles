@@ -96,7 +96,7 @@ killz() {
 defaulted() {
   PRE=$(mktemp)
   defaults read > $PRE
-  read -p "Make any necessary changes, and press Enter to finish diff"
+  read "reply?Make any necessary changes, and press Enter to finish diff"
   POST=$(mktemp)
   defaults read > $POST
   (p4merge $PRE $POST &)
