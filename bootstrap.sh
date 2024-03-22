@@ -35,14 +35,6 @@ if [[ ! -d .git ]]; then
     git clone https://github.com/jamesdh/dotfiles.git . 
 fi
 
-# If Homebrew cache doesn't exist locally, and an external drive is connected that contains it, copy it over
-if [[ ! -d ~/Library/Caches/Homebrew ]]; then
-    if [[ -d /Volumes/SDXC/Homebrew ]]; then
-        echo "Copying Homebrew Cache locally..."
-        rsync -a /Volumes/SDXC/Homebrew ~/Library/Caches
-    fi
-fi
-
 # Install Homebrew if missing
 echo "Checking for homebrew..."
 if ! brew config >& /dev/null; then 
@@ -53,9 +45,14 @@ if ! brew config >& /dev/null; then
 fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
+# If an attached external disk contains the cache, use that
+if [[ -d /Volumes/SDXC/Homebrew ]]; then
+  export HOMEBREW_CACHE=/Volumes/SDXC/Homebrew
+fi
+
 # Install all apps that are immediately required for bootstrapping. 
 echo "Checking for required apps..."
-HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.bootstrap
+export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.bootstrap
 # HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle -q --file=roles/osx/files/Brewfile.bootstrap --no-lock | grep "Installing" || true
 
 # If 1Password does not have CLI integration enabled, prompt and wait for it

@@ -5,6 +5,10 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 eval "$(/opt/homebrew/bin/brew shellenv)"
 export HOMEBREW_CASK_OPTS='--no-quarantine'
 export PATH="$HOMEBREW_PREFIX/bin:$PATH"
+# If an attached external disk contains the cache, use that
+if [[ -d /Volumes/SDXC/Homebrew ]]; then
+    export HOMEBREW_CACHE=/Volumes/SDXC/Homebrew
+fi
 
 # Needed for Krew (kubernetes)
 export PATH=$PATH:$KREW_BIN
