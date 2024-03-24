@@ -57,6 +57,7 @@ mas "Save to Pocket", id: 1477385213
 mas "Slack", id: 803453959
 mas "The Unarchiver", id: 425424353
 mas "Trello", id: 1278508951
+mas "Twitter", id: 1482454543
 mas "World Clock Pro", id: 858446756
 
 # cask "microsoft-outlook"
