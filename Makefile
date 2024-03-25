@@ -59,7 +59,7 @@ install.filtered: ## Install optionally filtering on given tags
 install.filtered: list.tags 
 	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
 	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
-	ansible-playbook --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
+	source venv/bin/activate && ansible-playbook --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
 
 compare: ## Diff checks the ansible playbooks against the current environment
 compare:
@@ -72,7 +72,7 @@ compare.filtered: list.tags
 	ansible-playbook --check --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
 
 list.tags: ## Lists all playbook tags that could be filtered upon
-	@TAGS=$$(bash -c 'ansible-playbook --list-tags ansible.yml | grep "TASK TAGS"') ;\
+	@TAGS=$$(bash -c 'source venv/bin/activate && ansible-playbook --list-tags ansible.yml | grep "TASK TAGS"') ;\
 	echo $$TAGS
 
 list.tasks:
@@ -98,7 +98,7 @@ secrets.encrypt: \
 
 vault.encrypt.%:
 	@for i in $$(find $(subst .,/,$*) -name '*.vault.*' ! -name '*.enc'); do \
-		PREFORM=$$(ansible-vault view $$i.enc) ;\
+		PREFORM=$$(source venv/bin/activate && ansible-vault view $$i.enc) ;\
 		POSTFORM=$$(cat $$i) ;\
 		if [ "$$PREFORM" = "$$POSTFORM" ]; then \
 			echo "Restoring unchanged file $$i" ;\
@@ -106,7 +106,7 @@ vault.encrypt.%:
 		else \
 			rm $$i.enc ;\
 			echo "Encrypting $$i" ;\
-			ansible-vault encrypt $$i ;\
+			source venv/bin/activate && ansible-vault encrypt $$i ;\
 		fi ;\
 	done
 
@@ -114,5 +114,5 @@ vault.decrypt.%:
 	@for i in $$(find $(subst .,/,$*) -name '*.vault.*' ! -name '*.enc'); do \
 		echo "Decrypting $$i" ;\
 		cp $$i $$i.enc ;\
-		ansible-vault decrypt $$i ;\
+		source venv/bin/activate && ansible-vault decrypt $$i ;\
 	done

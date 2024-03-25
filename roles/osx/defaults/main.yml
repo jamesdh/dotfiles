@@ -304,6 +304,7 @@ defaults:
 contexts: 
   license_path: "{{ home_dir }}/Library/Application\ Support/com.contextsformac.Contexts/license.contexts-license"
   license_url: "{{ lookup('community.general.onepassword', 'License: Contexts', field='License Link') }}"
+  license_key: "{{ lookup('community.general.onepassword', 'License: Contexts', field='license key') }}"
 
 iterm: 
   app_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2"

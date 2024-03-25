@@ -16,14 +16,9 @@
         path: "{{ contexts.license_path | dirname }}"
         state: directory
 
-    - name: Create Contexts license file
-      file: 
-        path: "{{ contexts.license_path }}"
-        state: touch
-
     - name: Download license
-      get_url:
-        url: '{{ contexts.license_url }}'
+      copy: 
+        content: "{{ contexts.license_key }}"
         dest: "{{ contexts.license_path }}"
         mode: 0644
 
