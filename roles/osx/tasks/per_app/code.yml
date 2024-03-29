@@ -1,0 +1,4 @@
+- name: Configure code
+  ansible.builtin.shell: "code ~/Projects/jamesdh/dotfiles && sleep 3 && cliclick c:575,555 && cliclick c:900,600 && cliclick c:655,160"
+  tags: 
+    - code

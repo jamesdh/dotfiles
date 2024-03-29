@@ -45,6 +45,9 @@
   tags: 
     - restart
 
+- import_tasks: per_app/code.yml
+  tags:
+    - priority
 - import_tasks: per_app/divvy.yml
   tags:
     - priority

@@ -1,4 +1,5 @@
 tap "jakehilborn/jakehilborn"
+brew "cliclick"
 brew "direnv"
 brew "jakehilborn/jakehilborn/displayplacer"
 brew "git"
