@@ -1,6 +1,9 @@
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
+# Prevents Pure from checking whether the current Git remote has been updated
+export PURE_GIT_PULL=0
+
 # Exports HOMEBREW_PREFIX and updates the PATH to the appropriate Homebrew bin location
 eval "$(/opt/homebrew/bin/brew shellenv)"
 export HOMEBREW_CASK_OPTS='--no-quarantine'
