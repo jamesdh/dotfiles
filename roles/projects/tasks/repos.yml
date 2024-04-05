@@ -6,8 +6,6 @@
   args:
     chdir: "{{projects_dir}}"
   register: projects_ls
-  tags:
-    - always
     
 # I mostly just do this because "dotfiles" is initially checked out using https
 # This takes care of fixing it so I can easily modify and push changes 

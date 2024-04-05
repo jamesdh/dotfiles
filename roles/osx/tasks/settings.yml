@@ -45,19 +45,6 @@
   tags: 
     - restart
 
-- import_tasks: per_app/code.yml
-  tags:
-    - priority
-- import_tasks: per_app/divvy.yml
-  tags:
-    - priority
-- import_tasks: per_app/contexts.yml
-# - import_tasks: per_app/viscosity.yml
-# - import_tasks: per_app/ngrok.yml
-- import_tasks: per_app/iterm.yml
-  tags: 
-    - iterm
-
 - name: "Link iCloud Drive to home dir for easier CLI access"
   file: 
     src: "~/Library/Mobile\ Documents/com~apple~CloudDocs/"
@@ -66,3 +53,23 @@
   tags: 
     - icloud
     - priority
+
+- import_tasks: per_app/code.yml
+  tags:
+    - priority
+    - code
+
+- import_tasks: per_app/tower.yml
+  tags:
+    - priority
+    - tower
+
+- import_tasks: per_app/divvy.yml
+  tags:
+    - priority
+    - divvy
+    
+- import_tasks: per_app/contexts.yml
+- import_tasks: per_app/iterm.yml
+  tags: 
+    - iterm

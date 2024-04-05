@@ -311,6 +311,10 @@ contexts:
   license_url: "{{ lookup('community.general.onepassword', 'License: Contexts', field='License Link') }}"
   license_key: "{{ lookup('community.general.onepassword', 'License: Contexts', field='license key') }}"
 
+tower: 
+  license_path: "{{ home_dir }}/Library/Application\ Support/com.fournova.Tower3/extendedLicenseInfo.json"
+  license_url: "{{ lookup('community.general.onepassword', 'Git-tower', field='registration') }}"
+
 iterm: 
   app_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2"
   dynamic_profile_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2/DynamicProfiles"
