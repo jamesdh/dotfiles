@@ -73,3 +73,7 @@
 - import_tasks: per_app/iterm.yml
   tags: 
     - iterm
+
+- import_tasks: per_app/appstore.yml
+  tags:
+    - appstore

@@ -105,24 +105,7 @@ defaults:
       MouseTwoFingerHorizSwipeGesture: {type: int, value: 1}
       MouseVerticalScroll: {type: bool, value: true}
       UserPreferences: {type: bool, value: true}
-    
-  touchbar: 
-    com.apple.controlstrip: 
-      FullCustomized: {type: array, value: [NSTouchBarItemIdentifierFlexibleSpace,
-            "com.apple.system.mission-control",
-            "com.apple.system.night-shift",
-            "com.apple.system.brightness",
-            NSTouchBarItemIdentifierFlexibleSpace,
-            "com.apple.system.group.media",
-            NSTouchBarItemIdentifierFlexibleSpace,
-            "com.apple.system.mute",
-            "com.apple.system.volume",
-            NSTouchBarItemIdentifierFlexibleSpace,
-            "com.apple.system.do-not-disturb",
-            "com.apple.system.screen-lock"]}
-    com.apple.touchbar.agent:
-      PresentationModeGlobal: {type: string, value: 'fullControlStrip'}
-      
+        
   finder:
     com.apple.desktopservices:
       DSDontWriteNetworkStores: {type: bool, value: true, desc: 'Avoid creating .DS_Store files on network volumes'}
@@ -199,6 +182,8 @@ defaults:
       DoNotOfferNewDisksForBackup: {type: bool, value: true, desc: 'Prevent Time Machine from prompting to use new hard drives as backup volume'}
   
   sysapps: 
+    com.apple.AppStore:
+      ASAcknowledgedOnboardingVersion: {type: int, value: 5}
     com.apple.sidecar.display:
       showTouchBar: {type: bool, value: false} 
       sidebarShown: {type: bool, value: false}
@@ -267,6 +252,7 @@ defaults:
       OpenMapsIn: {type: string, value: 'google'}
       WeekViewStartsWith: {type: bool, value: false}
     com.fournova.Tower3:
+      GTUserDefaultsAlwaysDiscardDiffContent: {type: bool, value: 1}
       GTUserDefaultsDefaultCloningDirectory: {type: string, value: "{{projects_dir}}"}
       GTUserDefaultsDefaultTerminalApplication: {type: string, value: 'com.googlecode.iterm2'}
       GTUserDefaultsDiffToolIdentifier: {type: string, value: 'p4merge'}
@@ -314,6 +300,9 @@ contexts:
 tower: 
   license_path: "{{ home_dir }}/Library/Application\ Support/com.fournova.Tower3/extendedLicenseInfo.json"
   license_url: "{{ lookup('community.general.onepassword', 'Git-tower', field='registration') }}"
+
+code: 
+  config_path: "{{ home_dir }}/.vscode"
 
 iterm: 
   app_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2"

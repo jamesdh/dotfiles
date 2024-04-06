@@ -1,0 +1,9 @@
+
+- name: Configure code
+  ansible.builtin.shell: | 
+    open -a "App Store"
+    cliclick w:1000 c:760,690
+    cliclick w:2000 c:460,860 w:500
+    osascript -e 'quit app "App Store"'
+  tags: 
+    - appstore
