@@ -46,6 +46,7 @@ if ! brew config >& /dev/null; then
   fi
 fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
+export PATH="$HOMEBREW_PREFIX/bin:$PATH"
 
 # If an attached external disk contains the cache, use that
 if [[ -d /Volumes/SDXC/Homebrew ]]; then

@@ -7,14 +7,14 @@ export PURE_GIT_PULL=0
 # Exports HOMEBREW_PREFIX and updates the PATH to the appropriate Homebrew bin location
 eval "$(/opt/homebrew/bin/brew shellenv)"
 export HOMEBREW_CASK_OPTS='--no-quarantine'
-export PATH="$HOMEBREW_PREFIX/bin:$PATH"
 # If an attached external disk contains the cache, use that
 if [[ -d /Volumes/SDXC/Homebrew ]]; then
     export HOMEBREW_CACHE=/Volumes/SDXC/Homebrew
 fi
 
 # Needed for Krew (kubernetes)
-export PATH=$PATH:$KREW_BIN
+export KREW_BIN="${HOME}/.krew/bin"
+export PATH="$PATH:$KREW_BIN"
 
 # JetBrains Toolbox (CLI tools)
 export PATH="/Users/jamesdh/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
@@ -50,4 +50,4 @@ export SDKMAN_DIR="$HOME/.sdkman"
 export NVM_HOMEBREW=$(brew --prefix nvm)
 export NVM_DIR="$HOME/.nvm"
 
-export KREW_BIN="${HOME}/.krew/bin"
+
