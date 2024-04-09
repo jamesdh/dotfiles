@@ -14,3 +14,7 @@ cask "p4v"
 cask "tower"
 cask "visual-studio-code"
 mas "Divvy", id: 413857545
+mas "1Password for Safari", id: 1569813296
+mas "Dark Mode for Safari", id: 1397180934
+mas "Ghostery", id: 1436953057
+mas "Save to Pocket", id: 1477385213
