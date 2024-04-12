@@ -26,7 +26,6 @@
     | combine(defaults.timemachine, recursive=true)
     | combine(defaults.sysapps, recursive=true)
     | combine(defaults.userapps, recursive=true)
-    | combine(defaults.touchbar, recursive=true)
     | dict2items }}
   loop_control:
     label: ""
