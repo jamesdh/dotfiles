@@ -179,11 +179,20 @@ commitAs() {
     echo "See \`man date\` for more info on date adjustments"
     return 1
   fi
-  dateadjusts="${@:1:$#-1}"
-  message="${@: -1}"
-  adjusteddate=$(date -Iseconds $dateadjusts)
-  read -p "Perform the following commit?: GIT_AUTHOR_DATE=\"$adjusteddate\" GIT_COMMITTER_DATE=\"$adjusteddate\" git commit -m \"$message\" " yn
-  case $yn in
+
+  local -a dateadjusts=()
+  local i=1
+  # Collect all but the last argument into an array
+  while [ $i -lt $# ]; do
+    dateadjusts+=("${@[$i]}")
+    i=$(( i + 1 ))
+  done
+  message="${@[$#]}"
+  adjusteddate=$(date -Iseconds "${dateadjusts[@]}")
+  read "reply?Perform the following commit?: 
+  GIT_AUTHOR_DATE=\"$adjusteddate\" GIT_COMMITTER_DATE=\"$adjusteddate\" git commit -m \"$message\" 
+  [y/N] "
+  case $reply in
     [Yy]* ) GIT_AUTHOR_DATE="$adjusteddate" GIT_COMMITTER_DATE="$adjusteddate" git commit -m "$message";;
     [Nn]* ) ;;
     * ) echo "Yes or no.";;
