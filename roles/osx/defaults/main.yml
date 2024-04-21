@@ -149,6 +149,8 @@ defaults:
       show-recents: {type: bool, value: false, desc: 'Dock: hide recent items'}
       static-only: {type: bool, value: true, desc: 'Dock: show only open apps'}
       tilesize: {type: int, value: 32, desc: 'Set Dock icons to 32 pixels'}
+      "wvous-br-corner": {type: int, value: 1, desc: 'Turn off Notes hot corner'}
+      "wvous-br-modifier": {type: int, value: 0, desc: 'Turn off hot corners'}
   
   safari:
     com.apple.Safari:
