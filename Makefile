@@ -46,6 +46,10 @@ install: ## Install everything
 install:
 	@source venv/bin/activate && ansible-playbook --diff ansible.yml ;\
 
+install.homelab: ## Install Homelab on remote PC
+install.homelab:
+	@source venv/bin/activate && ansible-playbook --diff homelab.yml ;\
+
 install.priority: ## Install the minimal, highest priority items
 install.priority:
 	@source venv/bin/activate && ansible-playbook --tags=priority --diff ansible.yml ;\
