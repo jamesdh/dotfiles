@@ -12,6 +12,7 @@
           - curl
           - ca-certificates
           - python3-pip
+          - bluez
         state: latest
 
     - name: Add Docker GPG apt Key
