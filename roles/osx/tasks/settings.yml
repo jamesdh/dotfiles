@@ -73,6 +73,10 @@
   tags: 
     - iterm
 
-- import_tasks: per_app/appstore.yml
-  tags:
-    - appstore
+- import_tasks: per_app/raycast.yml
+  tags: 
+    - raycast
+    
+# - import_tasks: per_app/appstore.yml
+#   tags:
+#     - appstore

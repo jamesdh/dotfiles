@@ -295,6 +295,8 @@ defaults:
     pl.maketheweb.TopNotch:
       hideOnBuiltInOnly: {type: bool, value: true}
       isEnabled: {type: bool, value: true}
+    com.raycast.macos:
+      raycastGlobalHotkey: {type: string, value: 'Command-49'}
 
 contexts: 
   license_path: "{{ home_dir }}/Library/Application\ Support/com.contextsformac.Contexts/license.contexts-license"
