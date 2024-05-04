@@ -88,10 +88,13 @@ source venv/bin/activate
 pip install -q -r requirements.txt
 
 echo ""
-echo "Finished bootstrapping!"
+echo "Finished bootstrapping! Before proceeding:"
+echo "  - Open Settings -> Privacy & Security -> Full Disk Access"
+echo "    - Add whatever terminal apps you prefer to use"
+echo "  - Open Settings -> Privacy & Security -> Accessibility"
+echo "    - Add whatever terminal apps you prefer to use"
 echo ""
-echo "- Open Settings -> Privacy & Security -> Accessibility"
-echo "- Add whatever terminal apps you prefer to use"
+echo "Then:"
 echo "- Run \`make install.priority\` to install the essentials."
 echo "- Run \`make install.nonpriority\` to install everything else."
 echo "- Run \`make install\` to install everything at once."
