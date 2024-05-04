@@ -172,8 +172,10 @@ defaults:
       SuppressSearchSuggestions: {type: bool, value: true, desc: 'Safari: dont show search suggestions'}
       UniversalSearchEnabled: {type: bool, value: false, desc: 'Safari: dont send search queries to Apple'}
       WebKitDeveloperExtrasEnabledPreferenceKey: {type: bool, value: true, desc: 'Safari: enable the Web Inspector'}
+      WebKitTabToLinksPreferenceKey: {type: bool, value: true, desc: 'Safari: fix keyboard/accessibility access'}
       "ShowFavoritesBar-v2": {type: bool, value: true, desc: 'Safari: show bookmarks bar by default'}
       "WebKitPreferences.developerExtrasEnabled": {type: bool, value: true, desc: 'Safari: enable the Develop menu'}
+      "WebKitPreferences.tabFocusesLinks": {type: bool, value: true, desc: 'Safari: fix keyboard/accesibility access'}
     com.apple.Safari.SandboxBroker:
       ShowDevelopMenu: {type: bool, value: true, desc: 'Safari: enable the Develop menu'}
     NSGlobalDomain:
