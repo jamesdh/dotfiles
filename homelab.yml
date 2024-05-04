@@ -1,11 +1,24 @@
 - hosts: homelab
   become: true
+  gather_facts: false
+
+  pre_tasks:
+    - name: Get facts from 1Password
+      run_once: true
+      set_fact:
+        ansible_become_password: "{{ lookup('community.general.onepassword', 'Homelab', field='password') }}"
+        ansible_user: "{{ lookup('community.general.onepassword', 'Homelab', field='username') }}"
+        ansible_ssh_pass: "{{ lookup('community.general.onepassword', 'Homelab', field='password') }}"
+    
+    - name: Gather facts
+      ansible.builtin.gather_facts:
+
   tasks:
     - name: Update apt
       apt:
         state: latest
         update_cache: true
-    
+
     - name: Required packages
       apt:
         pkg:

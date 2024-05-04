@@ -1,4 +1,1 @@
 ansible_python_interpreter: /usr/bin/python3
-ansible_become_password: "{{ lookup('community.general.onepassword', 'Homelab', field='password') }}"
-ansible_user: "{{ lookup('community.general.onepassword', 'Homelab', field='username') }}"
-ansible_ssh_pass: "{{ lookup('community.general.onepassword', 'Homelab', field='password') }}"
