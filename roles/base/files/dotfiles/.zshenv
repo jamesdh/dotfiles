@@ -1,3 +1,6 @@
+# https://unix.stackexchange.com/questions/71253/what-should-shouldnt-go-in-zshenv-zshrc-zlogin-zprofile-zlogout
+# .zshenv → .zprofile → .zshrc → .zlogin → .zlogout
+
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
@@ -47,7 +50,11 @@ export JAVA_OPTS="-Xms512m -Xmx2048m -Dfile.encoding=UTF-8"
 
 export SDKMAN_DIR="$HOME/.sdkman"
 
-export NVM_HOMEBREW=$(brew --prefix nvm)
 export NVM_DIR="$HOME/.nvm"
 
 
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+
+export ZSH="$HOME/.oh-my-zsh"

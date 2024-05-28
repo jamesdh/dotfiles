@@ -21,3 +21,26 @@
   tags: 
     - dotfiles
     - preprompt
+
+- name: Check if oh-my-zsh is already installed
+  stat: 
+    path: "{{home_dir}}/.oh-my-zsh"
+  register: omz
+
+
+- name: Install oh-my-sh
+  block: 
+    - name: Download install script
+      get_url:
+        url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+        dest: "{{home_dir}}/install_ohmyzsh.sh"
+
+    - name: Run Oh My Zsh script
+      command: "sh {{home_dir}}/install_ohmyzsh.sh --keep-zshrc"
+
+    - name: Remove installer script
+      file: 
+        path: "{{home_dir}}/install_ohmyzsh.sh"
+        state: absent
+
+  when: not omz.stat.exists

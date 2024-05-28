@@ -1,7 +1,6 @@
 #!/bin/zsh
 
-# https://0xmachos.com/2021-05-13-zsh-path-macos/
-export PATH="$HOMEBREW_PREFIX/bin:$PATH"
+export ZSH="$HOME/.oh-my-zsh"
 
 # zstyle ':omz:plugins:nvm' lazy no
 # zstyle ':omz:plugins:nvm' autoload yes
@@ -17,15 +16,16 @@ plugins=(
     sdk     # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/sdk
 )
 
+FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:${FPATH}"
+
 # Prompt colors
-fpath+=("$(brew --prefix)/share/zsh/site-functions")
-autoload -Uz promptinit
+autoload -U promptinit
 promptinit
 prompt pure
 
 # Load the shell dotfiles, and then some:
 # * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{path,aliases,functions,extra}; do
+for file in ~/.{aliases,functions,extra}; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
@@ -33,9 +33,4 @@ unset file;
 # Initialize SDKMAN
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-# Initialize NVM
-[ -s "$(brew --prefix nvm)/nvm.sh" ] && . "$(brew --prefix nvm)/nvm.sh"
-
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+source $ZSH/oh-my-zsh.sh
