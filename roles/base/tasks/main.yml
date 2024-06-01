@@ -28,7 +28,6 @@
     path: "{{home_dir}}/.oh-my-zsh"
   register: omz
 
-
 - name: Install oh-my-sh
   block: 
     - name: Download install script

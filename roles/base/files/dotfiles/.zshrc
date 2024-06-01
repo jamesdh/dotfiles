@@ -12,6 +12,7 @@ plugins=(
     brew    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/brew
     direnv  # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/direnv
     gcloud  # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gcloud
+    gradle  # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gradle
     iterm2  # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/iterm2
     nvm     # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nvm
     pyenv   # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/pyenv

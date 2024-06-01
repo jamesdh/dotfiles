@@ -71,15 +71,6 @@ unidecode() {
     echo # newline
 }
 
-# Default to a local gradlew file if it exists
-gradle() {
-  if [ -e ./gradlew ]; then
-    ./gradlew $@
-  else
-    ~/.sdkman/candidates/gradle/current/bin/gradle $@
-  fi
-}
-
 # Default to a local grailsw file if it exists 
 grails() {
   if [ -e ./grailsw ]; then
