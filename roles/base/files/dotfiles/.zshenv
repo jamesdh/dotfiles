@@ -50,8 +50,8 @@ export JAVA_OPTS="-Xms512m -Xmx2048m -Dfile.encoding=UTF-8"
 
 export SDKMAN_DIR="$HOME/.sdkman"
 
+export NVM_HOMEBREW=$(brew --prefix nvm)
 export NVM_DIR="$HOME/.nvm"
-
 
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
