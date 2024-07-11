@@ -454,3 +454,85 @@ find-common-substring() {
     done
     echo "$longest_common"
 }
+
+function copy_homebrew_cache {
+    # Get the Homebrew cache location
+    CACHE_LOCATION=$(brew --cache)
+
+    # List attached volumes, handle spaces in volume names
+    IFS=$'\n' volumes=($(ls -d /Volumes/*))
+    
+    # Filter out the volume that matches the Homebrew cache directory
+    filtered_volumes=()
+    for volume in "${volumes[@]}"; do
+        if [[ "$CACHE_LOCATION" != "$volume"* ]]; then
+            filtered_volumes+=("$volume")
+        fi
+    done
+
+    if [ ${#filtered_volumes[@]} -eq 0 ]; then
+        echo "No suitable volumes found for backup."
+        return 1
+    fi
+    
+    echo "Attached volumes:"
+    select volume in "${filtered_volumes[@]}"; do
+        if [[ -n "$volume" ]]; then
+            TARGET_PATH="$volume/Homebrew"
+            echo "Copying Homebrew cache to $TARGET_PATH..."
+            mkdir -p "$TARGET_PATH"
+            
+            # Use rsync to copy files
+            rsync -a "$CACHE_LOCATION/" "$TARGET_PATH/"
+            
+            echo "Homebrew cache successfully copied to $TARGET_PATH"
+            break
+        else
+            echo "Invalid selection. Please try again."
+        fi
+    done
+}
+
+function restore_homebrew_cache {
+    # Get the Homebrew cache location
+    CACHE_LOCATION=$(brew --cache)
+    
+    # List attached volumes, handle spaces in volume names
+    IFS=$'\n' volumes=($(ls -d /Volumes/*))
+    
+    # Initialize an array to hold paths to found backup caches
+    found_caches=()
+    
+    # Check each volume for a backup Homebrew cache
+    for volume in "${volumes[@]}"; do
+        BACKUP_PATH="$volume/Homebrew"
+        if [ -d "$BACKUP_PATH" ]; then
+            found_caches+=("$BACKUP_PATH")
+        fi
+    done
+    
+    # Handle different cases based on the number of found caches
+    if [ ${#found_caches[@]} -eq 0 ]; then
+        echo "No backup Homebrew cache found on any attached volume."
+        return 1
+    elif [ ${#found_caches[@]} -eq 1 ]; then
+        # Only one backup cache found
+        BACKUP_PATH=${found_caches[0]}
+        echo "Restoring Homebrew cache from $BACKUP_PATH..."
+        rsync -a "$BACKUP_PATH/" "$CACHE_LOCATION/"
+        echo "Homebrew cache successfully restored from $BACKUP_PATH"
+    else
+        # Multiple backup caches found, allow user to select one
+        echo "Multiple backup Homebrew caches found. Please select one to restore from:"
+        select BACKUP_PATH in "${found_caches[@]}"; do
+            if [[ -n "$BACKUP_PATH" ]]; then
+                echo "Restoring Homebrew cache from $BACKUP_PATH..."
+                rsync -a "$BACKUP_PATH/" "$CACHE_LOCATION/"
+                echo "Homebrew cache successfully restored from $BACKUP_PATH"
+                break
+            else
+                echo "Invalid selection. Please try again."
+            fi
+        done
+    fi
+}
