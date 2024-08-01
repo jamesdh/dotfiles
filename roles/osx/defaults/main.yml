@@ -161,13 +161,18 @@ defaults:
       AutoOpenSafeDownloads: {type: bool, value: false, desc: 'Safari: prevent Safari from opening ‘safe’ files automatically after downloading'}
       DebugSnapshotsUpdatePolicy: {type: int, value: 2, desc: 'Safari: disable thumbnail cache for History and Top Sites'}
       FindOnPageMatchesWordStartsOnly: {type: bool, value: false, desc: 'Safari: search banners default to Contains instead of Starts With'}
+      FinderSpawnTab: {type: bool, value: false}
       HomePage: {type: string, value: 'about:blank', desc: 'Safari: set home page to `about:blank` for faster loading'}
       IncludeDevelopMenu: {type: bool, value: true, desc: 'Safari: enable the Develop menu'}
       IncludeInternalDebugMenu: {type: bool, value: true, desc: 'Safari: enable debug menu'}
       ProxiesInBookmarksBar: {type: array, value: [], desc: 'Safari: remove useless icons from bookmarks bar'}
+      ShowExternalHardDrivesOnDesktop: {type: bool, value: false}
       ShowFullURLInSmartSearchField: {type: bool, value: true, desc: 'Safari: show the full URL in the address bar (note: this still hides the scheme)'}
+      ShowHardDrivesOnDesktop: {type: bool, value: false}
       ShowIconsInTabs: {type: bool, value: true, desc: 'Safari: show favicons in tabs'}
+      ShowMountedServersOnDesktop: {type: bool, value: false}
       ShowOverlayStatusBar: {type: bool, value: true, desc: 'Safari: show bottom status bar' }
+      ShowRemovableMediaOnDesktop: {type: bool, value: false}
       ShowSidebarInTopSites: {type: bool, value: false, desc: 'Safari: hide sidebar in Top Sites'}
       SuppressSearchSuggestions: {type: bool, value: true, desc: 'Safari: dont show search suggestions'}
       UniversalSearchEnabled: {type: bool, value: false, desc: 'Safari: dont send search queries to Apple'}
