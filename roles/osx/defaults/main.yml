@@ -204,6 +204,9 @@ defaults:
       SortColumn: {type: string, value: 'CPUUsage', desc: 'Sort results by CPU usage'}
       SortDirection: {type: int, value: 0, desc: 'Sort results descending'}
       WebKitDeveloperExtras: {type: bool, value: true, desc: 'Enable the WebKit Developer Tools in the Mac App Store'}
+    "com.apple.iCal": {
+      "Show Week Numbers": {type: bool, value: false}
+    }
     com.apple.ImageCapture:
       disableHotPlug: {type: bool, value: true, host: currentHost, desc: 'Stop Photos from opening automatically'}
     com.apple.assistant.support:
