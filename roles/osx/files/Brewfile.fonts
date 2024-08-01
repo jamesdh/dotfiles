@@ -1,4 +1,3 @@
-tap "homebrew/cask-fonts"
 cask "font-victor-mono"
 cask "font-inconsolata"
 cask "font-jetbrains-mono"
