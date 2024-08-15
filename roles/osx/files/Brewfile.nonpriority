@@ -34,6 +34,7 @@ cask "google-cloud-sdk"
 cask "intellij-idea"
 cask "istat-menus"
 cask "jetbrains-toolbox"
+cask "loopback"
 cask "menuwhere"
 cask "mimestream"
 cask "monitorcontrol"
@@ -47,20 +48,17 @@ cask "tableplus"
 cask "topnotch"
 cask "vlc"
 cask "viscosity"
-cask "whatsapp"
-mas "Airmail", id: 918858936
 mas "Amphetamine", id: 937984704
 mas "Blackmagic Disk Speed Test", id: 425264550
 mas "Compressor", id: 424390742
 mas "DaisyDisk", id: 411643860
 mas "Ghostery Privacy Ad Blocker", id: 6504861501
 mas "GIPHY", id: 668208984
-mas "LittleIpsum", id: 405772121
 mas "Save to Pocket", id: 1477385213
 mas "Slack", id: 803453959
 mas "The Unarchiver", id: 425424353
 mas "Trello", id: 1278508951
-mas "Twitter", id: 1482454543
+mas "WhatsApp", id: 310633997
 mas "World Clock Pro", id: 858446756
 
 # cask "microsoft-outlook"
