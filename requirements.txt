@@ -1,4 +1,4 @@
-ansible==9.3.0
-pyobjc==10.2
-paramiko==3.4.0
-jsondiff==2.0.0
+ansible==10.5.0
+pyobjc==10.3.1
+paramiko==3.5.0
+jsondiff==2.2.1
