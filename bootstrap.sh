@@ -5,9 +5,9 @@ sudo echo ""
 # Install Xcode Command Line Developer Tools if missing
 echo "Checking for Xcode Command Line Developer Tools..."
 xcode-select -p >& /dev/null || {
-    if [[ -f /Volumes/SDXC/Command_Line_Tools_for_Xcode_15.3.dmg ]]; then
+    if [[ -f /Volumes/SDXC/Command_Line_Tools_for_Xcode_16.dmg ]]; then
         echo "Waiting for Xcode Command Line Tools to finish installing..."
-        hdiutil attach /Volumes/SDXC/Command_Line_Tools_for_Xcode_15.3.dmg -quiet
+        hdiutil attach /Volumes/SDXC/Command_Line_Tools_for_Xcode_16.dmg -quiet
         sudo installer -pkg /Volumes/Command\ Line\ Developer\ Tools/Command\ Line\ Tools.pkg -target /
         hdiutil detach /Volumes/Command\ Line\ Developer\ Tools -quiet
     else
