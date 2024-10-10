@@ -1,5 +1,40 @@
 #!/bin/zsh
 
+# Function to check if com.apple.Terminal has Accessibility enabled
+check_accessibility() {
+    result=$(sudo sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db" \
+        "SELECT auth_value FROM access WHERE service='kTCCServiceAccessibility' AND client='com.apple.Terminal';")
+    # Return the value of result, indicating the status
+    if [[ "$result" == "2" ]]; then
+        return 0  # Accessibility is enabled
+    else
+        return 1  # Accessibility is not enabled
+    fi
+}
+
+# Function to check if Terminal has Full Disk Access enabled
+check_full_disk_access() {
+    result=$(sudo sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db" \
+        "SELECT auth_value FROM access WHERE service='kTCCServiceSystemPolicyAllFiles' AND client='com.apple.Terminal';")
+    
+    # Return 0 if Full Disk Access is enabled (auth_value is 1), otherwise return 1
+    if [[ "$result" == "1" ]]; then
+        return 0  # Full Disk Access is enabled
+    else
+        return 1  # Full Disk Access is not enabled
+    fi
+}
+
+# https://github.com/bvanpeski/SystemPreferences/blob/main/macos_preferencepanes-Ventura.md#privacy--security
+# Triggers the System Preferences -> Privacy & Security -> Accessibility w/ Terminal already added
+# and waits until permission has been enabled
+sudo osascript -e 'tell application "System Events" to click at {100, 100}' >& /dev/null
+open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"
+while ! check_accessibility; do
+    echo "Waiting for Accessibility for Terminal to be enabled..."
+    sleep 1
+done
+
 sudo echo ""
 
 # Install Xcode Command Line Developer Tools if missing
@@ -87,6 +122,14 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -q -r requirements.txt
 
+# Triggers the System Preferences -> Privacy & Security -> Full Disk Access and waits until 
+# Terminal has been added and enabled
+open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"
+while ! check_full_disk_access; do
+    echo "Waiting for Full Disk Access for Terminal to be enabled..."
+    sleep 1
+done
+
 echo ""
 echo "Finished bootstrapping! Before proceeding:"
 echo "  - Open Settings -> Privacy & Security -> Full Disk Access"
@@ -101,3 +144,4 @@ echo "- Run \`make install.priority\` to install the essentials."
 echo "- Run \`make install.nonpriority\` to install everything else."
 echo "- Run \`make install\` to install everything at once."
 echo ""
+
