@@ -18,7 +18,7 @@
       ansible.builtin.shell: "cliclick m:1155,55 w:250 c:1155,55"
 
     - name: Close app
-      ansible.builtin.shell: osascript -e 'quit app "Tower"'
+      ansible.builtin.shell: osascript -e 'tell application "Tower" to quit'
 
   when: not tower_license.stat.exists
   tags: 
