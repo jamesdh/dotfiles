@@ -1,5 +1,8 @@
 #!/bin/zsh
 
+# Prompt for sudo
+sudo echo ""
+
 # Function to check if com.apple.Terminal has Accessibility enabled
 check_accessibility() {
     result=$(sudo sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db" \
@@ -18,26 +21,37 @@ check_full_disk_access() {
         "SELECT auth_value FROM access WHERE service='kTCCServiceSystemPolicyAllFiles' AND client='com.apple.Terminal';")
     
     # Return 0 if Full Disk Access is enabled (auth_value is 1), otherwise return 1
-    if [[ "$result" == "1" ]]; then
+    if [[ "$result" == "2" ]]; then
         return 0  # Full Disk Access is enabled
     else
         return 1  # Full Disk Access is not enabled
     fi
 }
 
+# Triggers the System Preferences -> Privacy & Security -> Full Disk Access and waits until 
+# Terminal has been added and enabled
+if ! check_full_disk_access; then
+    open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"
+    while ! check_full_disk_access; do
+        echo "Waiting for Full Disk Access for Terminal to be enabled..."
+        sleep 1
+    done
+fi
+
 # https://github.com/bvanpeski/SystemPreferences/blob/main/macos_preferencepanes-Ventura.md#privacy--security
 # Triggers the System Preferences -> Privacy & Security -> Accessibility w/ Terminal already added
 # and waits until permission has been enabled
-sudo osascript -e 'tell application "System Events" to click at {100, 100}' >& /dev/null
-open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"
-while ! check_accessibility; do
-    echo "Waiting for Accessibility for Terminal to be enabled..."
-    sleep 1
-done
-
-sudo echo ""
+if ! check_accessibility; then
+    sudo osascript -e 'tell application "System Events" to click at {100, 100}' >& /dev/null
+    open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"
+    while ! check_accessibility; do
+        echo "Waiting for Accessibility for Terminal to be enabled..."
+        sleep 1
+    done
+fi
 
 # Install Xcode Command Line Developer Tools if missing
+# Get latest at https://developer.apple.com/download/all/
 echo "Checking for Xcode Command Line Developer Tools..."
 xcode-select -p >& /dev/null || {
     if [[ -f /Volumes/SDXC/Command_Line_Tools_for_Xcode_16.dmg ]]; then
@@ -121,14 +135,6 @@ eval "$(pyenv init -)"
 python3 -m venv venv
 source venv/bin/activate
 pip install -q -r requirements.txt
-
-# Triggers the System Preferences -> Privacy & Security -> Full Disk Access and waits until 
-# Terminal has been added and enabled
-open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"
-while ! check_full_disk_access; do
-    echo "Waiting for Full Disk Access for Terminal to be enabled..."
-    sleep 1
-done
 
 echo ""
 echo "Finished bootstrapping! Before proceeding:"
