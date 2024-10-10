@@ -1,3 +1,4 @@
+brew "cliclick"
 brew "jq"
 brew "make"
 brew "mas"
