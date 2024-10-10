@@ -12,10 +12,10 @@
       ansible.builtin.shell: "open -Fna 'Tower' --args {{ projects_dir }}/jamesdh/dotfiles && sleep 1"
       
     - name: Configure Tower license
-      ansible.builtin.shell: "open -u {{ tower.license_url }} && cliclick w:1000 c:645,520 w:500 c:950,690 w:500 c:950,690 w:500 c:820,350 w:500 c:820,350 w:500 c:820,350 w:500 c:915,780"
+      ansible.builtin.shell: "open -u {{ tower.license_url }} && cliclick w:1000 c:645,520 w:1000 c:950,690 w:1000 c:950,690 w:1000 c:820,350 w:1000 c:820,350 w:1000 c:820,350 w:1000 c:915,780"
 
     - name: Close notification
-      ansible.builtin.shell: "cliclick m:1155,55 w:250 c:1155,55"
+      ansible.builtin.shell: "cliclick m:1155,55 w:500 c:1155,55 w:1000"
 
     - name: Close app
       ansible.builtin.shell: osascript -e 'tell application "Tower" to quit'
