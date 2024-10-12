@@ -11,6 +11,7 @@ cask "contexts"
 cask "iterm2"
 cask "mysides"
 cask "p4v"
+cask "raycast"
 cask "tower"
 cask "visual-studio-code"
 mas "Divvy", id: 413857545
