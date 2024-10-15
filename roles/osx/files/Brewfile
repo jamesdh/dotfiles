@@ -1,4 +1,5 @@
 instance_eval(File.read("roles/osx/files/Brewfile.bootstrap"))
+instance_eval(File.read("roles/osx/files/Brewfile.privileged"))
 instance_eval(File.read("roles/osx/files/Brewfile.priority"))
 instance_eval(File.read("roles/osx/files/Brewfile.nonpriority"))
 instance_eval(File.read("roles/osx/files/Brewfile.fonts"))

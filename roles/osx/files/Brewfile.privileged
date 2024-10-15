@@ -1,0 +1,3 @@
+cask "adobe-dng-converter"
+cask "docker"
+cask "mysides"
