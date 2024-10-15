@@ -1,0 +1,2 @@
+- name: Grant sudo via UI
+  ansible.builtin.shell: "cliclick c:760,555 w:200 t:{{ ansible_become_password }} w:200 c:760,590 w:500"
