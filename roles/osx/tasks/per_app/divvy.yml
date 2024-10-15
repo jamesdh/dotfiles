@@ -6,6 +6,9 @@
     - name: Make Divvy start on login
       shell: "osascript -e 'tell application \"System Events\" to make login item at end with properties {path: \"/Applications/Divvy.app\", hidden: false}'"
       
+    - name: 
+      shell: "cliclick w:2000 c:815,410 w:2000 c:700,400 &"
+
     - name: Start Divvy so it responds to the global shortcut
       shell: "osascript -e 'tell application \"Divvy\" to activate'"
         
