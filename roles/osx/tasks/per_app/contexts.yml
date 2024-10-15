@@ -24,6 +24,12 @@
 
     - name: Open license file to register license with Contexts
       shell: "open '{{ contexts.license_path }}'"
+    
+    # - name: Grant accessibility via UI
+    #   shell: "cliclick w:2000 c:765,340 c:755,700"
+
+    # - name: Close prompt
+    #   shell: "cliclick c:755,700"
 
   when: not license_file.stat.exists
   tags: 

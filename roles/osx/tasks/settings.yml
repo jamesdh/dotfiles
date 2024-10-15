@@ -100,14 +100,17 @@
     - priority
     - divvy
     
-# - import_tasks: per_app/contexts.yml
-# - import_tasks: per_app/iterm.yml
-#   tags: 
-#     - iterm
+- import_tasks: per_app/contexts.yml
+  tags: 
+    - contexts
 
-# - import_tasks: per_app/raycast.yml
-#   tags: 
-#     - raycast
+- import_tasks: per_app/raycast.yml
+  tags: 
+    - raycast
+
+- import_tasks: per_app/iterm.yml
+  tags: 
+    - iterm
     
 # - import_tasks: per_app/appstore.yml
 #   tags:
