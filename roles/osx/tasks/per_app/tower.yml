@@ -12,7 +12,13 @@
       ansible.builtin.shell: "open -Fna 'Tower' --args {{ projects_dir }}/jamesdh/dotfiles && sleep 1"
       
     - name: Configure Tower license
-      ansible.builtin.shell: "open -u {{ tower.license_url }} && cliclick w:1000 c:645,520 w:1000 c:950,690 w:1000 c:950,690 w:1000 c:820,350 w:1000 c:820,350 w:1000 c:820,350 w:1000 c:915,780"
+      ansible.builtin.shell: "open -u {{ tower.license_url }}"
+
+    - name: Agree to license
+      ansible.builtin.shell: "cliclick w:1000 c:645,520 kp:return w:1000 kp:return"
+
+    - name: Permissions
+      ansible.builtin.shell: "cliclick w:1000 c:820,350 w:1000 c:820,350 w:1000 c:820,350 w:1000 c:915,780"
 
     - name: Close notification
       ansible.builtin.shell: "cliclick m:1155,55 w:500 c:1155,55 w:1000"
