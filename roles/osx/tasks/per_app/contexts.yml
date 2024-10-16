@@ -24,13 +24,22 @@
 
     - name: Open license file to register license with Contexts
       shell: "open '{{ contexts.license_path }}'"
+
+    - name: Close accessibility modal
+      shell: "cliclick w:2000 c:355,128"
+
+    - name: Open accessibility pane
+      ansible.builtin.shell: "open \"x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility\""
+
+    - name: Grant accessibility
+      ansible.builtin.shell: "cliclick w:500 c:1070,270 w:500"
+
+    - name: Grant sudo
+      include_tasks: escalate.yml
+      
+    - name: Quit settings
+      ansible.builtin.shell: "cliclick kd:cmd t:q ku:cmd w:500"
     
-    # - name: Grant accessibility via UI
-    #   shell: "cliclick w:2000 c:765,340 c:755,700"
-
-    # - name: Close prompt
-    #   shell: "cliclick c:755,700"
-
   when: not license_file.stat.exists
   tags: 
     - contexts
