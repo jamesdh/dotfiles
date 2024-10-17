@@ -58,7 +58,7 @@
       ansible.builtin.shell: "open \"x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility\""
 
     - name: Grant accessibility
-      ansible.builtin.shell: "cliclick w:500 c:1070,270 w:500"
+      ansible.builtin.shell: "cliclick w:500 c:1070,310 w:500"
 
     - name: Grant sudo
       include_tasks: escalate.yml
