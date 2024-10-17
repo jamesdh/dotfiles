@@ -257,12 +257,6 @@ defaults:
       CTPreferenceSidebarShowDockIconStatus: {type: bool, value: true}
       CTPreferenceWorkspaceConstrainWindowFrames: {type: bool, value: false}
       CTPreferenceWorkspacePressDockIconWhenActivatingApplication: {type: bool, value: true}
-    com.flexibits.fantastical2.mac:
-      DayEnds: {type: int, value: 20}
-      HideStatusItem: {type: bool, value: true}
-      HoursToShow: {type: int, value: 14}
-      OpenMapsIn: {type: string, value: 'google'}
-      WeekViewStartsWith: {type: bool, value: false}
     com.fournova.Tower3:
       GTUserDefaultsAlwaysDiscardDiffContent: {type: bool, value: 1}
       GTUserDefaultsDefaultCloningDirectory: {type: string, value: "{{projects_dir}}"}
