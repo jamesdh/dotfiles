@@ -18,7 +18,7 @@
       ansible.builtin.shell: "cliclick w:1000 c:645,520 kp:return w:1000 kp:return"
 
     - name: Permissions
-      ansible.builtin.shell: "cliclick w:1000 c:820,350 w:1000 c:820,350 w:1000 c:820,350 w:1000 c:915,780"
+      ansible.builtin.shell: "cliclick w:1000 c:820,350 w:1000 c:820,350 w:1000 c:820,350 w:1000 c:915,780 w:500"
 
     - name: Close notification
       ansible.builtin.shell: "cliclick m:1155,55 w:500 c:1155,55 w:1000"
@@ -27,10 +27,10 @@
       ansible.builtin.shell: killall Tower && sleep 1
 
     - name: Reopen Tower
-      ansible.builtin.shell: "open -Fna 'Tower'"
+      ansible.builtin.shell: "open -Fna 'Tower' && sleep 1"
     
     - name: Close popups
-      ansible.builtin.shell: "cliclick c:940,710 w:200 c:485,615"
+      ansible.builtin.shell: "cliclick c:940,710 w:500 c:485,615"
 
   when: not tower_license.stat.exists
   tags: 
