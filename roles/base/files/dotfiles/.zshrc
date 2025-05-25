@@ -38,3 +38,6 @@ source $ZSH/oh-my-zsh.sh
 # Theme
 autoload -U promptinit; promptinit
 prompt pure
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/jamesdh/.cache/lm-studio/bin"
