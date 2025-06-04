@@ -54,9 +54,16 @@ fi
 # Get latest at https://developer.apple.com/download/all/
 echo "Checking for Xcode Command Line Developer Tools..."
 xcode-select -p >& /dev/null || {
-    if [[ -f /Volumes/SDXC/Command_Line_Tools_for_Xcode_16.dmg ]]; then
+    # If cache is present locally
+    if [[ -f "/Volumes/SDXC/Command_Line_Tools_for_Xcode_16.4.dmg" ]]; then
         echo "Waiting for Xcode Command Line Tools to finish installing..."
         hdiutil attach /Volumes/SDXC/Command_Line_Tools_for_Xcode_16.4.dmg -quiet
+        sudo installer -pkg /Volumes/Command\ Line\ Developer\ Tools/Command\ Line\ Tools.pkg -target /
+        hdiutil detach /Volumes/Command\ Line\ Developer\ Tools -quiet
+    # If cache is shared with Parallels
+    elif [[ -f "/Volumes/My Shared Files/SDXC/Command_Line_Tools_for_Xcode_16.4.dmg" ]]; then
+        echo "Waiting for Xcode Command Line Tools to finish installing..."
+        hdiutil attach /Volumes/My\ Shared\ Files/SDXC/Command_Line_Tools_for_Xcode_16.4.dmg -quiet
         sudo installer -pkg /Volumes/Command\ Line\ Developer\ Tools/Command\ Line\ Tools.pkg -target /
         hdiutil detach /Volumes/Command\ Line\ Developer\ Tools -quiet
     else
