@@ -1,5 +1,6 @@
 tap "jakehilborn/jakehilborn"
 brew "cliclick"
+brew "cursor"
 brew "direnv"
 brew "jakehilborn/jakehilborn/displayplacer"
 brew "git"
