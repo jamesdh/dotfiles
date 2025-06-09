@@ -2,6 +2,7 @@ SHELL := $(shell which zsh) -e
 .DEFAULT_GOAL := help
 .PHONY: iterm idea code
 
+help: SHELL := /usr/bin/env bash
 help: ## This help screen
 	@IFS=$$'\n' ; \
 	help_lines=(`fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##/:/'`); \
