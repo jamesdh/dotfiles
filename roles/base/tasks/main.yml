@@ -44,3 +44,13 @@
         state: absent
 
   when: not omz.stat.exists
+
+- name: Create and set default pyenv-virtualenv for home dir
+  shell: |
+    pyenv virtualenv home
+    pyenv local home
+  args:
+    chdir: "{{ home_dir }}"
+  tags:
+    - pyenv
+    - virtualenv
