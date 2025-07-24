@@ -139,7 +139,8 @@ fi
 # Install python environment to run ansible
 echo "Checking python environment..."
 eval "$(pyenv init -)"
-python3 -m venv venv
+pyenv install
+python -m venv venv
 source venv/bin/activate
 pip install -q -r requirements.txt
 
