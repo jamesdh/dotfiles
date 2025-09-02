@@ -536,3 +536,17 @@ function restore_homebrew_cache {
         done
     fi
 }
+
+function selfcontrol {
+  # Check for an argument defining time in minutes to block
+  if [ $# -ne 1 ]; then
+    echo "Usage: selfcontrol <time_in_minutes>"
+    return 1
+  fi
+  # Calculate the end time from now in ISO8601 format accounting for my current timezone
+  END_TIME=$(date -v+${1}M -Iseconds)
+  # Start SelfControl with the calculated end time and the blocklist
+  /Applications/SelfControl.app/Contents/MacOS/selfcontrol-cli start \
+    --blocklist ~/Projects/jamesdh/dotfiles/roles/osx/files/blocklist.selfcontrol \
+    --enddate "$END_TIME" > /dev/null 2>&1 && echo "Blocking until $(date -v+${1}M "+%I:%M %p %Z on %D")" || echo "Block cancelled"   
+}
