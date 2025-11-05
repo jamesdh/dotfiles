@@ -11,6 +11,10 @@ apps.update: ## Updates all apps defined in all available Brewfiles
 apps.update:
 	@brew bundle install --file=roles/osx/files/Brewfile
 
+apps.diff: ## Prints apps that are not currently part of our Brewfiles
+apps.diff: 
+	@brew bundle cleanup --file=./roles/osx/files/Brewfile
+
 open: ## Opens all Dotfiles project tools
 open: \
 	open.iterm \
