@@ -52,7 +52,7 @@ fi
 
 # Install Xcode Command Line Developer Tools if missing
 # Get latest at https://developer.apple.com/download/all/
-XCODE_CLI_FILENAME=Command_Line_Tools_for_Xcode_26.1.dmg
+XCODE_CLI_FILENAME=Command_Line_Tools_for_Xcode_26.2.dmg
 echo "Checking for Xcode Command Line Developer Tools..."
 xcode-select -p >& /dev/null || {
     # If cache is present locally
@@ -153,4 +153,3 @@ echo "- Run \`make install.priority\` to install the essentials."
 echo "- Run \`make install.nonpriority\` to install everything else."
 echo "- Run \`make install\` to install everything at once."
 echo ""
-
