@@ -71,11 +71,20 @@
     - envfiles
 
 - name: Link Makefiles to relevant Projects dir
-  file: 
+  file:
     src: "{{role_path}}/files/{{item.file}}"
     path: "{{item.path}}/Makefile"
     state: link
     force: true
   loop: "{{makefiles}}"
-  tags: 
+  tags:
     - makefiles
+
+- name: Link CLAUDE.md to Projects root
+  file:
+    src: "{{role_path}}/files/CLAUDE.md"
+    path: "{{projects_dir}}/CLAUDE.md"
+    state: link
+    force: true
+  tags:
+    - claude
