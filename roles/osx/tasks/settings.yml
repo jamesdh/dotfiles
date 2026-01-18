@@ -72,12 +72,29 @@
     - restart
 
 - name: "Link iCloud Drive to home dir for easier CLI access"
-  file: 
+  file:
     src: "~/Library/Mobile\ Documents/com~apple~CloudDocs/"
     dest: "~/iCloud"
     state: link
-  tags: 
+  tags:
     - icloud
+    - priority
+
+- name: "Initiate download of preferred wallpaper from iCloud"
+  shell: 'brctl download "Personal Data/Media/Backgrounds/alpha_bravo_3600_2338_240.png"'
+  args:
+    chdir: "~/iCloud"
+  changed_when: false
+  tags:
+    - icloud
+    - priority
+
+- name: "Set preferred wallpaper"
+  shell: 'wallpaper set "~/iCloud/Personal Data/Media/Backgrounds/alpha_bravo_3600_2338_240.png"'
+  changed_when: false
+  tags:
+    - icloud
+    - wallpaper
     - priority
 
 - import_tasks: per_app/code.yml
