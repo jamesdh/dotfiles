@@ -1,5 +1,8 @@
 ---
 
+# To export Divvy shortcuts, enter "divvy://export" in a browser. 
+# Then paste the provided string into the com.mizage.Divvy:shortcuts defaults key in roles/osx/tasks/settings.yml
+# See https://mizage.com/help/divvy/export_import.html for more info
 - name: Configure Divvy
   block: 
 
