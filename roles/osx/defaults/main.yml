@@ -293,6 +293,10 @@ defaults:
       NoSyncPermissionToShowTip: {type: bool, value: false, desc: 'Disable tips on startup'}
       PromptOnQuit: {type: bool, value: false}
       SUEnableAutomaticChecks: {type: bool, value: false, desc: 'Disable auto check for updates'}
+      LoadPrefsFromCustomFolder: {type: bool, value: true}
+      NoSyncNeverRemindPrefsChangesLostForFile: {type: bool, value: true}
+      "NoSyncNeverRemindPrefsChangesLostForFile_selection": {type: integer, value: 2}
+      PrefsCustomFolder: {type: string, value: '/Users/jamesdh/Projects/jamesdh/dotfiles/roles/osx/files/iTerm'}
     com.twopeoplesoftware.InstantTranslate-nomas:
       SUEnableAutomaticChecks: {type: bool, value: true}
       SUSendProfileInfo: {type: bool, value: false}
