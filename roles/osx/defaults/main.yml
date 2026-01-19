@@ -26,8 +26,8 @@ defaults:
     "com.apple.Accessibility":
       EnhancedBackgroundContrastEnabled: {type: integer, value: 0, desc: "Turns off 'Reduce Transparency' so TopNotch works correctly"}
     com.apple.controlcenter:
-      "NSStatusItem Visible Display": {type: bool, value: true, desc: "Show display prefs in menu"}
-      "NSStatusItem Visible Bluetooth": {type: bool, value: true}
+      "NSStatusItem Visible Display": {type: bool, value: false, desc: "Show display prefs in menu"}
+      "NSStatusItem Visible Bluetooth": {type: bool, value: false}
     com.apple.LaunchServices:
       LSQuarantine: {type: bool, value: false, desc: 'Disable the “Are you sure you want to open this application?” dialog'}
     com.apple.menuextra.battery: 
