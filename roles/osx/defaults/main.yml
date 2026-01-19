@@ -24,7 +24,7 @@ defaults:
   
   ui: 
     "com.apple.Accessibility":
-      EnhancedBackgroundContrastEnabled: {type: bool, value: false, desc: "Turns off 'Reduce Transparency' so TopNotch works correctly"}
+      EnhancedBackgroundContrastEnabled: {type: integer, value: 0, desc: "Turns off 'Reduce Transparency' so TopNotch works correctly"}
     com.apple.controlcenter:
       "NSStatusItem Visible Display": {type: bool, value: true, desc: "Show display prefs in menu"}
       "NSStatusItem Visible Bluetooth": {type: bool, value: true}
