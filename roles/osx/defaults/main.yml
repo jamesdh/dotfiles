@@ -305,6 +305,9 @@ defaults:
       "LaunchAtLogin__hasMigrated": {type: bool, value: true}
       firstLaunch: {type: bool, value: true}
       lastAcceptedEulaVersion: {type: integer, value: 0}
+    "com.mimestream.Mimestream":
+      DeleteKeyAction: {type: string, value: 'Trash'}
+      KeyboardShortcutSet: {type: string, value: 'gmail'}
 
 contexts: 
   license_path: "{{ home_dir }}/Library/Application\ Support/com.contextsformac.Contexts/license.contexts-license"
