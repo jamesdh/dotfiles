@@ -299,12 +299,11 @@ defaults:
     pl.maketheweb.TopNotch:
       hideOnBuiltInOnly: {type: bool, value: true}
       isEnabled: {type: bool, value: true}
-    com.raycast.macos:
-      raycastGlobalHotkey: {type: string, value: 'Command-49'}
-    "pl.maketheweb.TopNotch":
       "LaunchAtLogin__hasMigrated": {type: bool, value: true}
       firstLaunch: {type: bool, value: true}
       lastAcceptedEulaVersion: {type: integer, value: 0}
+    com.raycast.macos:
+      raycastGlobalHotkey: {type: string, value: 'Command-49'}
     "com.mimestream.Mimestream":
       DeleteKeyAction: {type: string, value: 'Trash'}
       KeyboardShortcutSet: {type: string, value: 'gmail'}
