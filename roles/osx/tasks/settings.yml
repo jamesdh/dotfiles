@@ -89,8 +89,18 @@
     - icloud
     - priority
 
+- name: "Copy wallpaper to Pictures"
+  copy:
+    src: "~/iCloud/Personal Data/Media/Backgrounds/alpha_bravo_3600_2338_240.png"
+    dest: "~/Pictures/AlphaBravo.png"
+    remote_src: yes
+  tags:
+    - icloud
+    - wallpaper
+    - priority
+
 - name: "Set preferred wallpaper"
-  shell: 'wallpaper set "~/iCloud/Personal Data/Media/Backgrounds/alpha_bravo_3600_2338_240.png"'
+  shell: 'wallpaper set "~/Pictures/AlphaBravo.png"'
   changed_when: false
   tags:
     - icloud
