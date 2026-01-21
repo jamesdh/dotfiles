@@ -53,6 +53,7 @@ cask "menuwhere"
 cask "mimestream"
 cask "monitorcontrol"
 cask "obs"
+cask "passepartout"
 cask "proxyman"
 cask "selfcontrol"
 cask "stay"
@@ -62,7 +63,7 @@ cask "thinkorswim"
 cask "topnotch"
 cask "ungoogled-chromium"
 cask "vlc"
-cask "viscosity"
+cask "wispr-flow"
 mas "Amphetamine", id: 937984704
 mas "Blackmagic Disk Speed Test", id: 425264550
 mas "Compressor", id: 424390742
