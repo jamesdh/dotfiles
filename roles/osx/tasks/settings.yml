@@ -130,9 +130,13 @@
     - contexts
 
 - import_tasks: per_app/iterm.yml
-  tags: 
+  tags:
     - iterm
-    
+
+- import_tasks: per_app/claude.yml
+  tags:
+    - claude
+
 # - import_tasks: per_app/appstore.yml
 #   tags:
 #     - appstore

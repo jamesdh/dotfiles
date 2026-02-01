@@ -1,0 +1,26 @@
+- name: Create Claude config directory
+  file:
+    path: "{{ claude_code.config_dir }}"
+    state: directory
+    mode: 0755
+  tags:
+    - claude
+
+- name: Link Claude Code settings.json
+  file:
+    src: "{{ role_path }}/files/claude/settings.json"
+    path: "{{ claude_code.config_dir }}/settings.json"
+    state: link
+    force: true
+  tags:
+    - claude
+
+- name: Link Claude Code notification script
+  file:
+    src: "{{ role_path }}/files/claude/notify-prompt.sh"
+    path: "{{ claude_code.config_dir }}/notify-prompt.sh"
+    state: link
+    force: true
+    mode: 0755
+  tags:
+    - claude

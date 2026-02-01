@@ -324,10 +324,13 @@ tower:
 code: 
   config_path: "{{ home_dir }}/.vscode"
 
-iterm: 
+iterm:
   app_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2"
   dynamic_profile_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2/DynamicProfiles"
   autorun_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2/Scripts/AutoLaunch"
+
+claude_code:
+  config_dir: "{{ home_dir }}/.claude"
 
 ngrok:
   authtoken: "{{ lookup('community.general.onepassword', 'License: ngrok', field='license key') }}"
