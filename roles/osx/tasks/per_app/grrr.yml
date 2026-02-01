@@ -10,3 +10,62 @@
   when: not grrr_dotfiles_app.stat.exists
   tags:
     - grrr
+
+- name: Initiate download of Proximal icon from iCloud
+  shell: 'brctl download "App Configs/grrr/proximal.png"'
+  args:
+    chdir: "~/iCloud"
+  changed_when: false
+  tags:
+    - grrr
+    - icloud
+
+- name: Copy Proximal icon to Pictures
+  copy:
+    src: "~/iCloud/App Configs/grrr/proximal.png"
+    dest: "~/Pictures/proximal.png"
+    remote_src: yes
+  tags:
+    - grrr
+
+- name: Check if grrr Proximal app exists
+  stat:
+    path: "{{ home_dir }}/.growlrrr/apps/Proximal.app"
+  register: grrr_proximal_app
+  tags:
+    - grrr
+
+- name: Create grrr Proximal app
+  command: grrr apps add --appId Proximal --appIcon "{{ home_dir }}/Pictures/proximal.png"
+  when: not grrr_proximal_app.stat.exists
+  tags:
+    - grrr
+
+- name: Create Proximal .claude directory
+  file:
+    path: "{{ projects_dir }}/proximal-health/.claude"
+    state: directory
+    mode: 0755
+  tags:
+    - grrr
+
+- name: Configure Proximal Claude notifications
+  copy:
+    dest: "{{ projects_dir }}/proximal-health/.claude/settings.json"
+    content: |
+      {
+        "hooks": {
+          "Notification": [
+            {
+              "hooks": [
+                {
+                  "type": "command",
+                  "command": "jq -r '\"\\(.title // \"\")\\n\\(.message // \"Notification\")\"' | { read subtitle; read msg; grrr send --title Proximal --subtitle \"$subtitle\" --appId Proximal --reactivate \"$msg\"; }"
+                }
+              ]
+            }
+          ]
+        }
+      }
+  tags:
+    - grrr
