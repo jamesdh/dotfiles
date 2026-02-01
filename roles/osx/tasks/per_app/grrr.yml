@@ -1,0 +1,12 @@
+- name: Check if grrr Dotfiles app exists
+  stat:
+    path: "{{ home_dir }}/.growlrrr/apps/Dotfiles.app"
+  register: grrr_dotfiles_app
+  tags:
+    - grrr
+
+- name: Create grrr Dotfiles app
+  command: grrr apps add --appId Dotfiles --appIcon "{{ playbook_dir }}/dotfiles2.png"
+  when: not grrr_dotfiles_app.stat.exists
+  tags:
+    - grrr
