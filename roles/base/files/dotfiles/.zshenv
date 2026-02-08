@@ -22,6 +22,12 @@ export PATH="$PATH:$KREW_BIN"
 # JetBrains Toolbox (CLI tools)
 export PATH="/Users/jamesdh/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
 
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/jamesdh/.cache/lm-studio/bin"
+
+# Claude Code
+export PATH="$HOME/.local/bin:$PATH"
+
 # Make vim the default editor.
 export EDITOR='vim';
 
