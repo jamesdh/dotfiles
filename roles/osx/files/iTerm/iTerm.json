@@ -2,58 +2,170 @@
   "Profiles" : [
     {
       "Rewritable" : true,
-      "Guid" : "\/Users\/jamesdh\/Projects",
+      "Bold Color (Light)" : {
+        "Red Component" : 0.29234963655471802,
+        "Color Space" : "P3",
+        "Blue Component" : 0.67924320697784424,
+        "Alpha Component" : 1,
+        "Green Component" : 0.64873653650283813
+      },
       "Title Components" : 36,
-      "Normal Font" : "Monaco 12",
-      "Use Non-ASCII Font" : false,
-      "Name" : "Projects",
-      "Working Directory" : "\/Users\/jamesdh\/Projects",
-      "Transparency" : 0.20000000000000001,
-      "Unlimited Scrollback" : false,
-      "Non Ascii Font" : "Monaco 12",
-      "Custom Directory" : "Yes",
-      "Scrollback Lines" : 10000
-    },
-    {
-      "Rewritable" : true,
       "Guid" : "\/Users\/jamesdh\/Projects\/moltenbits\/teamtempo",
-      "Title Components" : 36,
-      "Normal Font" : "Monaco 12",
-      "Use Non-ASCII Font" : false,
       "Name" : "TeamTempo",
+      "Ansi 0 Color" : {
+        "Red Component" : 0.078431375324726105,
+        "Color Space" : "sRGB",
+        "Blue Component" : 0.11764705926179886,
+        "Alpha Component" : 1,
+        "Green Component" : 0.098039217293262482
+      },
       "Bound Hosts" : [
-        "\/Users\/jamesdh\/Projects\/moltenbits\/teamtempo"
+        "\/Users\/jamesdh\/Project\/moltenbits\/teamtempo"
       ],
+      "Use Separate Colors for Light and Dark Mode" : true,
+      "Bold Color" : {
+        "Red Component" : 0.062745101749897003,
+        "Color Space" : "sRGB",
+        "Blue Component" : 0.062745101749897003,
+        "Alpha Component" : 1,
+        "Green Component" : 0.062745101749897003
+      },
       "Working Directory" : "\/Users\/jamesdh\/Projects\/moltenbits\/teamtempo",
       "Transparency" : 0.20000000000000001,
-      "Unlimited Scrollback" : false,
-      "Non Ascii Font" : "Monaco 12",
+      "Foreground Color" : {
+        "Red Component" : 0.062745101749897003,
+        "Color Space" : "sRGB",
+        "Blue Component" : 0.062745101749897003,
+        "Alpha Component" : 1,
+        "Green Component" : 0.062745101749897003
+      },
+      "Ansi 0 Color (Light)" : {
+        "Red Component" : 0.078431375324726105,
+        "Color Space" : "sRGB",
+        "Blue Component" : 0.11764705926179886,
+        "Alpha Component" : 1,
+        "Green Component" : 0.098039217293262482
+      },
       "Custom Directory" : "Yes",
+      "Ansi 0 Color (Dark)" : {
+        "Red Component" : 0.078431375324726105,
+        "Color Space" : "sRGB",
+        "Blue Component" : 0.11764705926179886,
+        "Alpha Component" : 1,
+        "Green Component" : 0.098039217293262482
+      },
       "Scrollback Lines" : 10000
     },
     {
-      "Title Components" : 64,
-      "Working Directory" : "\/Users\/jamesdh\/Projects\/jamesdh\/dotfiles",
       "Rewritable" : true,
-      "Bound Hosts" : [
-        "\/Users\/jamesdh\/Projects\/jamesdh\/dotfiles"
-      ],
-      "Allow Title Setting" : false,
-      "Name" : "Dotfiles",
+      "Bold Color (Light)" : {
+        "Red Component" : 0.29234963655471802,
+        "Color Space" : "P3",
+        "Blue Component" : 0.67924320697784424,
+        "Alpha Component" : 1,
+        "Green Component" : 0.64873653650283813
+      },
+      "Title Components" : 64,
       "Guid" : "\/Users\/jamesdh\/Projects\/jamesdh\/dotfiles",
-      "Use Separate Colors for Light and Dark Mode" : true
+      "Name" : "Dotfiles",
+      "Bound Hosts" : [
+        "\/Users\/jamesdh\/Projects\/jamesdh\/dotfiles\/*"
+      ],
+      "Use Separate Colors for Light and Dark Mode" : true,
+      "Working Directory" : "\/Users\/jamesdh\/Projects\/jamesdh\/dotfiles",
+      "Transparency" : 0.20000000000000001,
+      "Custom Directory" : "Yes",
+      "Allow Title Setting" : false,
+      "Scrollback Lines" : 10000
     },
     {
-      "Title Components" : 36,
-      "Use Separate Colors for Light and Dark Mode" : true,
       "Rewritable" : true,
-      "Bound Hosts" : [
-        "\/Users\/jamesdh\/Projects\/proximal-health"
-      ],
-      "Allow Title Setting" : false,
+      "Bold Color (Light)" : {
+        "Red Component" : 0.13333333333333333,
+        "Color Space" : "P3",
+        "Blue Component" : 0.67843137254901964,
+        "Alpha Component" : 1,
+        "Green Component" : 0.6470588235294118
+      },
+      "Title Components" : 36,
       "Guid" : "\/Users\/jamesdh\/Projects\/proximal-health",
       "Name" : "Proximal",
-      "Working Directory" : "\/Users\/jamesdh\/Projects\/proximal-health\/platform"
+      "Bound Hosts" : [
+        "\/Users\/jamesdh\/Projects\/proximal-health\/*"
+      ],
+      "Use Separate Colors for Light and Dark Mode" : true,
+      "Working Directory" : "\/Users\/jamesdh\/Projects\/proximal-health\/platform",
+      "Transparency" : 0.20000000000000001,
+      "Custom Directory" : "Yes",
+      "Allow Title Setting" : false,
+      "Scrollback Lines" : 10000
+    },
+    {
+      "Rewritable" : true,
+      "Bold Color (Light)" : {
+        "Red Component" : 0.13333333333333333,
+        "Color Space" : "P3",
+        "Blue Component" : 0.67843137254901964,
+        "Alpha Component" : 1,
+        "Green Component" : 0.6470588235294118
+      },
+      "Title Components" : 64,
+      "Guid" : "25242F81-95B5-4B4D-BDCB-784289192849",
+      "Name" : "Growlrrr",
+      "Bound Hosts" : [
+        "\/Users\/jamesdh\/Projects\/moltenbits\/growlrrr\/*"
+      ],
+      "Use Separate Colors for Light and Dark Mode" : true,
+      "Working Directory" : "\/Users\/jamesdh\/Projects\/moltenbits\/growlrrr",
+      "Transparency" : 0.20000000000000001,
+      "Custom Directory" : "Yes",
+      "Allow Title Setting" : false,
+      "Scrollback Lines" : 10000
+    },
+    {
+      "Rewritable" : true,
+      "Bold Color (Light)" : {
+        "Red Component" : 0.13333333333333333,
+        "Color Space" : "P3",
+        "Blue Component" : 0.67843137254901964,
+        "Alpha Component" : 1,
+        "Green Component" : 0.6470588235294118
+      },
+      "Title Components" : 64,
+      "Guid" : "6799161B-98CA-4951-BC89-6809146A3024",
+      "Name" : "Listenly",
+      "Bound Hosts" : [
+        "\/Users\/jamesdh\/Projects\/moltenbits\/listenly\/*"
+      ],
+      "Use Separate Colors for Light and Dark Mode" : true,
+      "Working Directory" : "\/Users\/jamesdh\/Projects\/moltenbits\/listenly",
+      "Transparency" : 0.20000000000000001,
+      "Load Shell Integration Automatically" : true,
+      "Custom Directory" : "Yes",
+      "Allow Title Setting" : false,
+      "Scrollback Lines" : 10000
+    },
+    {
+      "Rewritable" : true,
+      "Bold Color (Light)" : {
+        "Red Component" : 0.1365580362142976,
+        "Color Space" : "P3",
+        "Blue Component" : 0.6815185546875,
+        "Alpha Component" : 1,
+        "Green Component" : 0.6496970037940506
+      },
+      "Title Components" : 64,
+      "Guid" : "37B8F950-6609-4B35-BF2C-385387C82A87",
+      "Name" : "Conlingo",
+      "Bound Hosts" : [
+        "\/Users\/jamesdh\/Projects\/moltenbits\/conlingo\/*"
+      ],
+      "Use Separate Colors for Light and Dark Mode" : true,
+      "Working Directory" : "\/Users\/jamesdh\/Projects\/moltenbits\/conlingo",
+      "Transparency" : 0.20000000000000001,
+      "Custom Directory" : "Yes",
+      "Allow Title Setting" : false,
+      "Scrollback Lines" : 10000
     }
   ]
 }
