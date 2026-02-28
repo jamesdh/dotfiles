@@ -45,6 +45,24 @@
 
   when: not omz.stat.exists
 
+- name: Create Atuin config directory
+  file:
+    path: "{{ home_dir }}/.config/atuin"
+    state: directory
+    mode: 0755
+  tags:
+    - atuin
+    - dotfiles
+
+- name: Deploy Atuin config
+  copy:
+    src: "{{ role_path }}/files/atuin/config.toml"
+    dest: "{{ home_dir }}/.config/atuin/config.toml"
+    mode: 0644
+  tags:
+    - atuin
+    - dotfiles
+
 - name: Create and set default pyenv-virtualenv for home dir
   shell: |
     pyenv virtualenv home

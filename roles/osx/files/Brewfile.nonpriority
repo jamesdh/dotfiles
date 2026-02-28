@@ -1,3 +1,4 @@
+brew "atuin"
 brew "awk"
 brew "bat"
 brew "coreutils"

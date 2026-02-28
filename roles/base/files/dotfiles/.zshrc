@@ -20,6 +20,7 @@ plugins=(
     nvm     # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nvm
     pyenv   # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/pyenv
     sdk     # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/sdk
+    atuin   # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/atuin
 )
 
 fpath+=("$HOMEBREW_PREFIX/share/zsh/site-functions")
