@@ -20,7 +20,6 @@ plugins=(
     nvm     # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nvm
     pyenv   # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/pyenv
     sdk     # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/sdk
-    atuin   # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/atuin
 )
 
 fpath+=("$HOMEBREW_PREFIX/share/zsh/site-functions")
@@ -42,3 +41,6 @@ source $ZSH/oh-my-zsh.sh
 # Theme
 autoload -U promptinit; promptinit
 prompt pure
+
+# Initialize Atuin (shell history)
+eval "$(atuin init zsh)"
