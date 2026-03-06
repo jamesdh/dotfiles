@@ -1,11 +1,31 @@
 {
   "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "grrr hook notify --appId Dotfiles"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '\"\\(.title // \"\")\\n\\(.message // \"Notification\")\"' | { read subtitle; read msg; grrr send --title Dotfiles --subtitle \"$subtitle\" --appId Dotfiles --reactivate \"$msg\"; }"
+            "command": "grrr hook notify --appId Dotfiles"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "grrr hook dismiss --appId Dotfiles"
           }
         ]
       }
