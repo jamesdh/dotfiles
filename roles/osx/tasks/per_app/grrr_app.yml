@@ -1,0 +1,42 @@
+---
+
+- name: "Setup growlrrr app: {{ item.appId }}"
+  block:
+
+  - name: "Check if grrr {{ item.appId }} app exists"
+    stat:
+      path: "{{ home_dir }}/.growlrrr/apps/{{ item.appId }}.app"
+    register: grrr_app
+
+  - name: "Create grrr {{ item.appId }} app"
+    command: "grrr apps add --appId {{ item.appId }}{{ ' --appIcon ' ~ item.icon if item.icon is defined else '' }}"
+    when: not grrr_app.stat.exists
+
+  - name: "Create {{ item.appId }} .claude directory"
+    file:
+      path: "{{ item.claude_settings_dir }}"
+      state: directory
+      mode: 0755
+
+  - name: "Configure {{ item.appId }} Claude notification hooks"
+    vars:
+      settings:
+        hooks:
+          Stop:
+            - hooks:
+                - type: command
+                  command: "grrr hook notify --appId {{ item.appId }}"
+          Notification:
+            - hooks:
+                - type: command
+                  command: "grrr hook notify --appId {{ item.appId }}"
+          UserPromptSubmit:
+            - hooks:
+                - type: command
+                  command: "grrr hook dismiss --appId {{ item.appId }}"
+    copy:
+      dest: "{{ item.claude_settings_dir }}/settings.json"
+      content: "{{ settings | to_nice_json }}\n"
+
+  tags:
+    - grrr

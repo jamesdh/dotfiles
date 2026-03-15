@@ -1,34 +1,34 @@
 {
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "grrr hook notify --appId Dotfiles"
-          }
+    "hooks": {
+        "Notification": [
+            {
+                "hooks": [
+                    {
+                        "command": "grrr hook notify --appId Dotfiles",
+                        "type": "command"
+                    }
+                ]
+            }
+        ],
+        "Stop": [
+            {
+                "hooks": [
+                    {
+                        "command": "grrr hook notify --appId Dotfiles",
+                        "type": "command"
+                    }
+                ]
+            }
+        ],
+        "UserPromptSubmit": [
+            {
+                "hooks": [
+                    {
+                        "command": "grrr hook dismiss --appId Dotfiles",
+                        "type": "command"
+                    }
+                ]
+            }
         ]
-      }
-    ],
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "grrr hook notify --appId Dotfiles"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "grrr hook dismiss --appId Dotfiles"
-          }
-        ]
-      }
-    ]
-  }
+    }
 }
