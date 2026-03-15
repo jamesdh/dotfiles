@@ -96,31 +96,44 @@ secrets.decrypt: ## Decrypts all secret files
 secrets.decrypt: \
 	vault.decrypt.roles.projects.vars.main \
 	vault.decrypt.roles.ssh.vars.main \
+	vault.decrypt.roles.osx.vars.main \
 	vault.decrypt.roles.projects.files
 
 secrets.encrypt: ## Encrypts all secret files
 secrets.encrypt: \
 	vault.encrypt.roles.projects.vars.main \
 	vault.encrypt.roles.ssh.vars.main \
+	vault.encrypt.roles.osx.vars.main \
 	vault.encrypt.roles.projects.files
 
 vault.encrypt.%:
 	@for i in $$(find $(subst .,/,$*) -name '*.vault.*' ! -name '*.enc'); do \
-		PREFORM=$$(source venv/bin/activate && ansible-vault view $$i.enc) ;\
-		POSTFORM=$$(cat $$i) ;\
-		if [ "$$PREFORM" = "$$POSTFORM" ]; then \
-			echo "Restoring unchanged file $$i" ;\
-			mv -f $$i.enc $$i ;\
+		if [ -f "$$i.enc" ] && head -1 $$i.enc | grep -q '$$ANSIBLE_VAULT'; then \
+			PREFORM=$$(source venv/bin/activate && ansible-vault view $$i.enc) ;\
+			POSTFORM=$$(cat $$i) ;\
+			if [ "$$PREFORM" = "$$POSTFORM" ]; then \
+				echo "Restoring unchanged file $$i" ;\
+				mv -f $$i.enc $$i ;\
+			else \
+				rm $$i.enc ;\
+				echo "Encrypting $$i" ;\
+				source venv/bin/activate && ansible-vault encrypt $$i ;\
+			fi ;\
+		elif head -1 $$i | grep -q '$$ANSIBLE_VAULT'; then \
+			echo "Already encrypted $$i" ;\
 		else \
-			rm $$i.enc ;\
-			echo "Encrypting $$i" ;\
+			echo "Encrypting new file $$i" ;\
 			source venv/bin/activate && ansible-vault encrypt $$i ;\
 		fi ;\
 	done
 
 vault.decrypt.%:
 	@for i in $$(find $(subst .,/,$*) -name '*.vault.*' ! -name '*.enc'); do \
-		echo "Decrypting $$i" ;\
-		cp $$i $$i.enc ;\
-		source venv/bin/activate && ansible-vault decrypt $$i ;\
+		if head -1 $$i | grep -q '$$ANSIBLE_VAULT'; then \
+			echo "Decrypting $$i" ;\
+			cp $$i $$i.enc ;\
+			source venv/bin/activate && ansible-vault decrypt $$i ;\
+		else \
+			echo "Already decrypted $$i" ;\
+		fi ;\
 	done
