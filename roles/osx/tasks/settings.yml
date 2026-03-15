@@ -137,6 +137,11 @@
   tags:
     - grrr
 
+- include_tasks: per_app/passepartout.yml
+  loop: "{{ passepartout }}"
+  tags:
+    - vpn
+
 # - import_tasks: per_app/appstore.yml
 #   tags:
 #     - appstore

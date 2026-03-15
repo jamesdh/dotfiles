@@ -1,0 +1,19 @@
+---
+
+- name: "Download {{ item.title }} VPN config to Downloads"
+  block:
+
+  - name: "Check if {{ item.file }} already downloaded"
+    stat:
+      path: "{{ home_dir }}/Downloads/{{ item.file }}"
+    register: vpn_file
+
+  - name: "Retrieve {{ item.title }} VPN config from 1Password"
+    copy:
+      content: "{{ lookup('community.general.onepassword', item.title, type='document') }}"
+      dest: "{{ home_dir }}/Downloads/{{ item.file }}"
+    when: not vpn_file.stat.exists
+
+  tags:
+    - vpn
+    - passepartout

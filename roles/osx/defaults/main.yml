@@ -273,13 +273,7 @@ defaults:
     com.surteesstudios.Bartender:
       license2: {type: string, value: "{{ lookup('community.general.onepassword', 'License: Bartender 3', field='license key') }}"}
       license2HoldersName: {type: string, value: "{{ lookup('community.general.onepassword', 'License: Bartender 3', field='licensee') }}"}
-    com.viscosityvpn.Viscosity:
-      DisableTimeMachine: {type: bool, value: true, desc: 'Disable Time Machine backups while on VPN'}
-      DisplayWelcome: {type: bool, value: false, desc: 'Disable startup dialogs'}
-      MenuBarIcons: {type: string, value: 'Leopard Gray'}
-      OfferedToImportApps: {type: bool, value: true, desc: 'Disable startup dialogs'}
-      ReconnectOnWake: {type: bool, value: false}
-      SUEnableAutomaticChecks: {type: bool, value: true}
+
     com.vmware.fusion:
       showStartMenu3: {type: integer, value: 0, desc: 'Remove VMWare icon from system menu'}
     com.googlecode.iterm2:
@@ -332,8 +326,9 @@ iterm:
 ngrok:
   authtoken: "{{ lookup('community.general.onepassword', 'License: ngrok', field='license key') }}"
 
-viscosity: 
-  - ExpressVPN - Denver
-  - ExpressVPN - New Jersey 1
-  - ExpressVPN - New Jersey 3
+passepartout:
+  - { title: "SurfShark VPN Dedicated IP (NYC)", file: "us-nyc.conf" }
+  - { title: "SurfShark VPN Atlanta", file: "us-atl.conf" }
+  - { title: "SurfShark VPN Miami", file: "us-mia.conf" }
+  - { title: "SurfShark VPN San Francisco", file: "us-sfo.conf" }
 
