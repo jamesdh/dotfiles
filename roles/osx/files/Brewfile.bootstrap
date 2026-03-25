@@ -1,5 +1,6 @@
 brew "cliclick"
 brew "jq"
+brew "just"
 brew "make"
 brew "mas"
 brew "pure"
