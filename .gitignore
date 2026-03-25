@@ -6,3 +6,4 @@ Brewfile*.lock.json
 *.enc
 venv
 .DS_Store
+.env
