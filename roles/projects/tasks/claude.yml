@@ -1,0 +1,43 @@
+---
+
+- name: Ensure Claude skills directories exist
+  file:
+    path: "{{item}}"
+    state: directory
+  loop:
+    - "{{home_dir}}/.claude/skills/github-pr-review"
+    - "{{home_dir}}/.claude/skills/local-review"
+
+- name: Link Claude github-pr-review skill subdirs
+  file:
+    src: "{{projects_dir}}/moltenbits/claude-review/github-pr-review/{{item}}"
+    path: "{{home_dir}}/.claude/skills/github-pr-review/{{item}}"
+    state: link
+    force: true
+  loop:
+    - agents
+    - commands
+    - hooks
+    - references
+    - templates
+
+- name: Link Claude github-pr-review SKILL.md
+  file:
+    src: "{{projects_dir}}/moltenbits/claude-review/github-pr-review/skills/github-pr-review/SKILL.md"
+    path: "{{home_dir}}/.claude/skills/github-pr-review/SKILL.md"
+    state: link
+    force: true
+
+- name: Link Claude local-review skill
+  file:
+    src: "{{projects_dir}}/moltenbits/claude-review/local-review/skills/local-review/SKILL.md"
+    path: "{{home_dir}}/.claude/skills/local-review/SKILL.md"
+    state: link
+    force: true
+
+- name: Link CLAUDE.md to Projects root
+  file:
+    src: "{{role_path}}/files/CLAUDE.md"
+    path: "{{projects_dir}}/CLAUDE.md"
+    state: link
+    force: true

@@ -22,3 +22,8 @@
   import_tasks: sdk.yml
   tags:
     - sdk
+
+- name: Configure Claude
+  import_tasks: claude.yml
+  tags:
+    - claude
