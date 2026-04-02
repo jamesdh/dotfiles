@@ -12,10 +12,23 @@
     state: directory
 
 - name: Use 1Password for all SSH keys
-  copy: 
+  copy:
     src: "{{role_path}}/files/config"
     dest: '{{ ssh_dir }}/config'
     mode: 0600
+
+- name: Copy GitHub SSH private key
+  copy:
+    content: "{{ keys.private.github }}"
+    dest: '{{ ssh_dir }}/id_rsa'
+    mode: 0600
+  no_log: true
+
+- name: Copy GitHub SSH public key
+  copy:
+    content: "{{ keys.public.github }}"
+    dest: '{{ ssh_dir }}/id_rsa.pub'
+    mode: 0644
     
 # - name: Retrieve other certificates
 #   copy: 
