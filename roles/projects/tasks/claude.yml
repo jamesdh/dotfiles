@@ -41,3 +41,10 @@
     path: "{{projects_dir}}/CLAUDE.md"
     state: link
     force: true
+
+- name: Link global CLAUDE.md to ~/.claude/
+  file:
+    src: "{{role_path}}/files/global-claude.md"
+    path: "{{home_dir}}/.claude/CLAUDE.md"
+    state: link
+    force: true
