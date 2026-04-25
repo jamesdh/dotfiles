@@ -560,6 +560,6 @@ function selfcontrol {
     --enddate "$END_TIME" > /dev/null 2>&1 && echo "Blocking until $(date -v+${1}M "+%I:%M %p %Z on %D")" || echo "Block cancelled"   
 }
 
-cc() { 
-  IS_SANDBOX=1 claude -c --dangerously-skip-permissions "$@";
+cc() {
+  claude -c --dangerously-skip-permissions "$@";
 }
