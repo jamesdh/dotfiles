@@ -59,14 +59,3 @@ The `roles/projects/` role manages:
 - `/etc/hosts` entries for local development
 
 Configuration is in `roles/projects/defaults/main.yml` with secrets in vault files.
-
-### Agent worktrees
-
-When spawning background agents with `isolation: "worktree"`:
-
-- **Pick a kebab-case slug** from the task (e.g. `extended-hours-bg`, `flag-cleanup`).
-- **In the agent's prompt, rename the branch before any push**: `git branch -m <slug>`. The remote branch and PR head ref pick up the slug. Renaming after push orphans the PR.
-- **After the agent completes**, run two cleanup steps before reporting back:
-    - `git worktree unlock <path>` — agent worktrees are created locked, and GUI clients (Tower) silently refuse to remove locked worktrees.
-    - `git worktree move <old-path> <new-path>` to rename the worktree directory to match the slug, so `git worktree list` and Tower's sidebar are readable.
-- **Don't retroactively rename** a branch whose PR is already open — the local branch diverges from the PR's head ref and the PR is stranded.
