@@ -14,6 +14,14 @@ When adding or modifying features, always write tests that validate the changes.
 - When unit testing isn't feasible (e.g., SwiftUI views interacting with macOS system APIs that require the running application), write integration tests where possible and acknowledge when manual testing is the only viable option.
 - Testable code is the goal — it tends to be easier to understand, easier to compose, and easier to maintain.
 
+## Imports Over Fully Qualified Names
+
+Always prefer importing types, functions, and modules at the top of the file over using fully qualified names (FQNs) inline. Inline FQNs are noisy, harder to read, and obscure the file's actual dependencies.
+
+- Add a top-of-file import for any symbol referenced more than once, and prefer it for one-off references too.
+- Only use an inline FQN when an import would cause a genuine conflict (name collision) or circular import that can't be resolved another way.
+- When editing existing code, follow the established import style of the file/module.
+
 ## Search the Web When Stuck
 
 When a problem isn't yielding to the first couple of attempts, search the web before trying a third variation of the same approach. Cryptic errors, unfamiliar library behavior, recent API/tooling changes, and obscure config issues are usually solved in seconds by a search — someone else has almost certainly hit the same thing.
