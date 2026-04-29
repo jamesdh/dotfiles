@@ -66,9 +66,9 @@
     - finder
 
 - name: "Restart affected services"
-  shell: "killall cfprefsd Dock Finder SystemUIServer TouchBarServer Divvy"
+  shell: "killall cfprefsd Dock Finder SystemUIServer TouchBarServer"
   become: true
-  tags: 
+  tags:
     - restart
 
 - name: "Link iCloud Drive to home dir for easier CLI access"
@@ -120,14 +120,6 @@
 - import_tasks: per_app/raycast.yml
   tags: 
     - raycast
-
-- import_tasks: per_app/divvy.yml
-  tags:
-    - divvy
-    
-- import_tasks: per_app/contexts.yml
-  tags: 
-    - contexts
 
 - import_tasks: per_app/iterm.yml
   tags:

@@ -227,38 +227,8 @@ defaults:
       Startup Window Settings: {type: string, value: 'Pro'}
 
   userapps: 
-    com.mizage.Divvy:
-      defaultColumnCount: {type: int, value: 12}
-      defaultRowCount: {type: int, value: 12}
-      defaultWindowMarginHeight: {type: int, value: 10}
-      defaultWindowMarginWidth: {type: int, value: 10}
-      # globalHotkey: See https://github.com/ansible/ansible/pull/24808
-      globalHotkey: {type: dict, value: {keyCode: 2, modifiers: 768}}
-      lastColumnCount: {type: int, value: 10}
-      lastRowCount: {type: int, value: 12}
-      # shortcuts: See https://github.com/ansible/ansible/pull/24808
-      shortcuts: {type: data, value: "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"}
-      showMenuIcon: {type: bool, value: false}
-      SuppressImportDialog: {type: bool, value: true}
-      useDefaultGrid: {type: bool, value: true}
-      useGlobalHotkey: {type: bool, value: true}
-      useMonitorCycling: {type: bool, value: true}
     com.mizage.shush:
       doubleTapLock: {type: bool, value: true}
-    com.contextsformac.Contexts:
-      CTAppearanceTheme: {type: string, value: 'CTAppearanceNamedVibrantDark'}
-      CTKeyboardEventCommandModeActive: {type: bool, value: false}
-      CTPreferenceAppearanceContentSizeCategory: {type: int, value: 1}
-      CTPreferenceAppearanceContrastLevel: {type: int, value: 0}
-      CTPreferenceInputSourceIdToUse: {type: string, value: 'kCTInputSourceIdNone'}
-      CTPreferencePanelDisplayMode: {type: string, value: 'CTDisplayModeMenubarScreen'}
-      CTPreferencePanelRecentItemsSwitcherKeyType: {type: string, value: 'CTPreferencePanelRecentItemsSwitcherKeyType'}
-      CTPreferencePanelWidth: {type: int, value: 0}
-      CTPreferenceSearchShortcutFunctionKeyEnabled: {type: bool, value: false}
-      CTPreferenceSidebarDisplayMode: {type: string, value: 'CTDisplayModeNone'}
-      CTPreferenceSidebarShowDockIconStatus: {type: bool, value: true}
-      CTPreferenceWorkspaceConstrainWindowFrames: {type: bool, value: false}
-      CTPreferenceWorkspacePressDockIconWhenActivatingApplication: {type: bool, value: true}
     com.fournova.Tower3:
       GTUserDefaultsAlwaysDiscardDiffContent: {type: bool, value: 1}
       GTUserDefaultsDefaultCloningDirectory: {type: string, value: "{{projects_dir}}"}
@@ -306,12 +276,7 @@ defaults:
       DeleteKeyAction: {type: string, value: 'Trash'}
       KeyboardShortcutSet: {type: string, value: 'gmail'}
 
-contexts: 
-  license_path: "{{ home_dir }}/Library/Application\ Support/com.contextsformac.Contexts/license.contexts-license"
-  license_url: "{{ lookup('community.general.onepassword', 'License: Contexts', field='License Link') }}"
-  license_key: "{{ lookup('community.general.onepassword', 'License: Contexts', field='license key') }}"
-
-tower: 
+tower:
   license_path: "{{ home_dir }}/Library/Application\ Support/com.fournova.Tower3/extendedLicenseInfo.json"
   license_url: "{{ lookup('community.general.onepassword', 'Git-tower', field='registration') }}"
 

@@ -10,7 +10,6 @@ brew "pam-reattach"
 brew "wallpaper"
 cask "bartender"
 cask "betterdisplay"
-cask "contexts"
 cask "cursor"
 cask "growlrrr"
 cask "iterm2"
@@ -19,5 +18,4 @@ cask "p4v"
 cask "raycast"
 cask "tower"
 cask "visual-studio-code"
-mas "Divvy", id: 413857545
 mas "1Password for Safari", id: 1569813296
