@@ -12,7 +12,12 @@
     - git
     - repos
     - priority
-    
+
+- name: Configure grrr apps
+  import_tasks: grrr.yml
+  tags:
+    - grrr
+
 - name: Configure dev environment
   import_tasks: env.yml
   tags: 

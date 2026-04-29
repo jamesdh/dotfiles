@@ -331,6 +331,3 @@ passepartout:
   - { title: "SurfShark VPN Atlanta", file: "us-atl.conf" }
   - { title: "SurfShark VPN Miami", file: "us-mia.conf" }
   - { title: "SurfShark VPN San Francisco", file: "us-sfo.conf" }
-
-growlrrr_apps: "{{ vaulted_growlrrr_apps }}"
-
