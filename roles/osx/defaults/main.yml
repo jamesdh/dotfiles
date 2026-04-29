@@ -41,7 +41,7 @@ defaults:
     com.apple.screensaver:
       idleTime: {type: int, value: 0, desc: 'Disable the screensaver'}
     com.apple.universalaccess:
-      reduceTransparency: {type: bool, value: true, desc: 'Disable transparency in the menu bar and elsewhere'}
+      reduceTransparency: {type: bool, value: false, desc: 'Disable transparency in the menu bar and elsewhere'}
     com.apple.WindowManager:
       EnableStandardClickToShowDesktop: {type: bool, value: false}
     NSGlobalDomain:
