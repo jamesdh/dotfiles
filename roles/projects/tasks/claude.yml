@@ -1,5 +1,10 @@
 ---
 
+- name: Install Claude Code via native installer
+  ansible.builtin.shell: "curl -fsSL https://claude.ai/install.sh | bash"
+  args:
+    creates: "{{home_dir}}/.local/bin/claude"
+
 - name: Ensure Claude skills directories exist
   file:
     path: "{{item}}"
