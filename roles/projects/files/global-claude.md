@@ -31,6 +31,25 @@ When a problem isn't yielding to the first couple of attempts, search the web be
 - Never give up on a problem as "too difficult" without having searched for it first.
 - Cycling through variations of the same failing approach is the anti-pattern to avoid. If two attempts haven't worked, stop and search instead of trying a third.
 
+## Convention Over Configuration
+
+Popular frameworks (Micronaut, Spring, and similar) ship with strong conventions that eliminate boilerplate. Lean on them. Don't restate defaults the framework already provides, and don't reinvent abstractions the framework has already solved idiomatically.
+
+- Don't repeat framework defaults. e.g. Micronaut's `@MappedEntity` derives the table name from the class name — don't pass `@MappedEntity("customer")` on a `Customer` class. Same for column names, ID generation strategies, default content types, etc. (One legitimate reason to override is when the derived name collides with a SQL reserved word — e.g. a `User` or `Order` class — in which case explicit naming is correct.)
+- Prefer **declarative HTTP clients** (Micronaut `@Client`, Spring `HttpExchange` / Feign) over hand-wiring `HttpClient`/`WebClient` boilerplate.
+- Use **Micronaut Data** or **Spring Data** repository conventions for standard CRUD and derived-name queries. For more refined querying, reach for a typed query builder like **jOOQ** — not hand-rolled SQL strings.
+- Hand-rolled SQL strings are a last resort, not a default. If a Data repository or jOOQ can express the query, use that instead. Raw strings lose type safety, refactor support, and SQL-injection guarantees.
+- When in doubt about whether a convention exists, check the framework docs before writing custom code. The convention is usually there.
+
+## Do the Work, Don't Defer to Me
+
+If you have the tools and access to do something yourself, do it. Don't ask me to check, look up, query, or run something on your behalf when you can do it directly.
+
+- If you need to know whether a file contains a key, read the file. Don't ask me.
+- If you need to know whether a database table contains a row, run the query. Don't ask me.
+- If you need to know what a process is doing, what version is installed, what a command outputs, whether a port is open, etc. — run the check yourself.
+- Asking me to verify something you're capable of verifying wastes a round trip and shifts work onto me. Only ask when the answer genuinely requires information I have and you don't (my intent, my preference, credentials I haven't shared, context outside the machine).
+
 ## Commit attribution
 
 When creating git commits or PRs on the user's behalf:
