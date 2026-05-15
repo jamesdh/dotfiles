@@ -3,6 +3,12 @@
 #   shell: "displayplacer 'res:1800x1169 hz:120 color_depth:8 enabled:true scaling:on origin:(0,0) degree:0'"
 #   changed_when: false
 
+- name: Check whether a "Battery Power" section exists
+  shell: pmset -g custom | grep -q '^Battery Power'
+  register: battery_section
+  ignore_errors: true
+  changed_when: false
+
 - name: Check current displaysleep values for both Battery and AC power
   shell: |
     pmset -g custom | awk '/Battery Power/,/AC Power/ {if ($1 == "displaysleep") print $2}' | head -n 1
@@ -11,6 +17,7 @@
     pmset -g custom | awk '/AC Power/,0 {if ($1 == "sleep") print $2}' | head -n 1
   register: displaysleep_values
   changed_when: false  # No change, as this is only gathering information
+  when: battery_section.rc == 0
 
 # - name: Debug displaysleep values
 #   debug:
@@ -22,22 +29,26 @@
     battery_sleep: "{{ displaysleep_values.stdout_lines[1] }}"
     ac_displaysleep: "{{ displaysleep_values.stdout_lines[2] }}"
     ac_sleep: "{{ displaysleep_values.stdout_lines[3] }}"
+  when: battery_section.rc == 0
 
 - name: "Prepare privilege escalation"
   shell: "cliclick w:3000 c:760,415 w:200 c:750,430 w:200 t:{{ ansible_become_password }} w:200 c:815,475 w:500 &"
   when: 
+    - battery_section.rc == 0
     - battery_displaysleep != "5" or battery_sleep != "5" or ac_displaysleep != "10" or ac_sleep != "0"
 
 - name: "Set preferred power settings when on battery"
   shell: "pmset -b displaysleep 5 sleep 5"
   become: true
   when: 
+    - battery_section.rc == 0
     - battery_displaysleep != "5" or battery_sleep != "5"
 
 - name: "Set preferred power settings when connected"
   shell: "pmset -c displaysleep 10 sleep 0"
   become: true
   when: 
+    - battery_section.rc == 0
     - ac_displaysleep != "10" or ac_sleep != "0"
 
 - include_tasks: defaults.yml
