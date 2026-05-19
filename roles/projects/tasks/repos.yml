@@ -70,6 +70,32 @@
   tags:
     - envfiles
 
+- name: Link workspace .env / .envrc files
+  file:
+    src: "{{role_path}}/files/{{item.src}}"
+    path: "{{item.dest}}"
+    state: link
+    force: true
+  loop:
+    - { src: "projects.vault.env", dest: "{{projects_dir}}/.env" }
+    - { src: "projects.envrc",     dest: "{{projects_dir}}/.envrc" }
+    - { src: "mb.envrc",           dest: "{{projects_dir}}/moltenbits/.envrc" }
+    - { src: "jamesdh.envrc",      dest: "{{projects_dir}}/jamesdh/.envrc" }
+  tags:
+    - envfiles
+
+- name: Allow direnv on workspace dirs
+  shell: direnv allow
+  args:
+    chdir: "{{item}}"
+  loop:
+    - "{{projects_dir}}"
+    - "{{projects_dir}}/moltenbits"
+    - "{{projects_dir}}/jamesdh"
+  changed_when: false
+  tags:
+    - envfiles
+
 - name: Link Makefiles to relevant Projects dir
   file:
     src: "{{role_path}}/files/{{item.file}}"
