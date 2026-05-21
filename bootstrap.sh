@@ -52,7 +52,7 @@ fi
 
 # Install Xcode Command Line Developer Tools if missing
 # Get latest at https://developer.apple.com/download/all/
-XCODE_CLI_FILENAME=Command_Line_Tools_for_Xcode_26.2.dmg
+XCODE_CLI_FILENAME=Command_Line_Tools_26.5_Apple_silicon.dmg
 echo "Checking for Xcode Command Line Developer Tools..."
 xcode-select -p >& /dev/null || {
     # If cache is present locally
