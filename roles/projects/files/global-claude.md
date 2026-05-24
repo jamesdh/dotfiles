@@ -60,6 +60,15 @@ Before stating any factual claim about timestamps, PR numbers, file contents, co
 - **Be especially careful with relative time.** You do not have reliable awareness of the current date/time, and you regularly miscompute things like "today / yesterday / last week / X days ago." Never translate a raw timestamp into a relative phrase without checking the current date (`date`) and the event's actual timestamp side by side. When in doubt, just state the absolute date/time and let me do the math.
 - **Inspect database schemas before querying them.** You regularly hallucinate column or table names that sound plausible but don't exist. Before composing any non-trivial query, look up the actual schema — `\d <table>` (psql), `DESCRIBE <table>` / `SHOW COLUMNS` (MySQL), `information_schema.columns`, or whatever the equivalent is for the database in use. Don't guess column names from context; verify them.
 
+## Don't Fragment Work Across PRs
+
+A described task should land as a single PR, not as a series of two, three, four, five smaller PRs. Bundle related changes that share a goal. Within that one PR, multiple focused commits are preferred — split the work at the commit level, not the PR level. Also: commits and PRs are not the same default. Commit eagerly when tests pass; do not open a PR unless explicitly asked.
+
+- **One described task = one PR.** Don't split a single piece of work into multiple PRs unless I explicitly ask you to. If you catch yourself thinking "I'll do part A in this PR and part B in a follow-up," stop and bundle them.
+- **Prefer multiple focused commits within a PR over multiple PRs.** Each commit should be a logical, atomic step — a refactor, a new feature, a bug fix, a passing test. Stack commits, not PRs.
+- **Commit by default when tests pass.** Once the test suite is green, create a commit. You don't need to ask first.
+- **Don't open a PR by default.** Creating a PR is a separate, explicit action — wait for me to ask (`gh pr create`, "open a PR", etc.). Local commits, and even pushed commits on a feature branch, are fine until I say to open the PR.
+
 ## Link PRs to the Issues They Resolve
 
 When a PR addresses an existing issue, always include a GitHub closing keyword (`Fixes #123`, `Closes #123`, `Resolves #123`) in the PR description so that merging the PR auto-closes the issue. A bare `#123` reference renders as a hyperlink but does not close anything on merge.
