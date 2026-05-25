@@ -95,15 +95,11 @@ secrets.view.%:
 secrets.decrypt: ## Decrypts all secret files
 secrets.decrypt: \
 	vault.decrypt.roles.projects.vars.main \
-	vault.decrypt.roles.ssh.vars.main \
-	vault.decrypt.roles.osx.vars.main \
 	vault.decrypt.roles.projects.files
 
 secrets.encrypt: ## Encrypts all secret files
 secrets.encrypt: \
 	vault.encrypt.roles.projects.vars.main \
-	vault.encrypt.roles.ssh.vars.main \
-	vault.encrypt.roles.osx.vars.main \
 	vault.encrypt.roles.projects.files
 
 vault.encrypt.%:
