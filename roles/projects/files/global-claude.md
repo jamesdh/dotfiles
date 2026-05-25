@@ -8,11 +8,13 @@ Do NOT re-run tests for every follow-up instruction within the same task. Only r
 
 ## Testing Requirements
 
-When adding or modifying features, always write tests that validate the changes.
+When adding or modifying features, always write tests that validate the changes. Prefer TDD: write the tests first, then write the code that makes them pass. Writing tests first forces you to think about the API up front and naturally pushes the implementation toward smaller, more encapsulated, more testable units.
 
 - **Favor small, composable components.** Write code in reusable, compartmentalized units that are easy to unit test.
 - **Use integration tests when unit tests aren't viable.** e.g., SwiftUI views interacting with macOS system APIs that require the running application. Write integration tests where possible, and acknowledge when manual testing is the only option.
 - **Testability is the design goal.** Code that's easy to test tends to be easier to understand, easier to compose, and easier to maintain.
+- **Cover edge and failure cases, not just the happy path.** A suite that only exercises the success path misses the bugs that actually ship. Test for null/empty inputs, boundary values, error conditions, invalid state, and concurrency where it applies.
+- **For bug fixes, write the failing test first.** Reproduce the bug in a test that fails for the same reason the bug exists, then write the fix that turns it green. This proves the fix actually addresses the bug *and* prevents it from regressing silently later.
 
 ## Imports Over Fully Qualified Names
 
@@ -59,6 +61,15 @@ Before stating any factual claim about timestamps, PR numbers, file contents, co
 - **Earlier turns aren't ground truth.** Don't paraphrase from earlier in the conversation as if it were authoritative. Prior turns and summaries can be stale, abbreviated, or wrong.
 - **Be especially careful with relative time.** You do not have reliable awareness of the current date/time, and you regularly miscompute things like "today / yesterday / last week / X days ago." Never translate a raw timestamp into a relative phrase without checking the current date (`date`) and the event's actual timestamp side by side. When in doubt, just state the absolute date/time and let me do the math.
 - **Inspect database schemas before querying them.** You regularly hallucinate column or table names that sound plausible but don't exist. Before composing any non-trivial query, look up the actual schema — `\d <table>` (psql), `DESCRIBE <table>` / `SHOW COLUMNS` (MySQL), `information_schema.columns`, or whatever the equivalent is for the database in use. Don't guess column names from context; verify them.
+
+## Write GitHub Issues for a Cleared Context
+
+When creating a GitHub issue, write it as if a future session — yours or mine — will pick it up cold, with **none** of the conversation context that led to filing it. The reader will not remember our discussion, will not have the same mental model of the problem, and will not have access to the chat history. Externalize everything that matters into the issue body.
+
+- **Assume zero context on the reader.** When you (or I, or a future you) come back to fix the issue, the context will be cleared. Write so the body alone is enough to act on — no "see our earlier discussion."
+- **Capture the why, not just the what.** Reproduce the relevant reasoning, the constraints, the approaches that were ruled out, and any decisions made during the discussion. A two-line title isn't enough; the body has to stand alone.
+- **Include concrete artifacts.** Error messages, file paths and line numbers, exact commands, observed vs expected behavior, relevant SHA/PR refs. Don't hand-wave with "the bug we discussed" — paste the actual evidence.
+- **Richer discussion → longer issue body.** The more context the conversation has built up, the more important it is to dump that context into the issue. Treat the issue as the artifact that captures the discussion, not a placeholder that depends on it.
 
 ## Don't Fragment Work Across PRs
 
