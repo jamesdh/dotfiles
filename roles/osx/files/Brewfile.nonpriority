@@ -41,7 +41,7 @@ cask "element"
 cask "firefox"
 cask "gitify"
 cask "google-chrome"
-cask "google-cloud-sdk"
+cask "gcloud-cli"
 cask "imazing"
 cask "intellij-idea"
 cask "istat-menus"
@@ -78,7 +78,6 @@ mas "GIPHY", id: 668208984
 mas "Slack", id: 803453959
 mas "The Unarchiver", id: 425424353
 mas "Trello", id: 1278508951
-mas "WhatsApp", id: 310633997
 mas "World Clock Pro", id: 858446756
 
 # cask "microsoft-outlook"
