@@ -1,5 +1,26 @@
 # Global CLAUDE.md
 
+## Basic Principles of Good Software Engineering
+
+These are the load-bearing fundamentals of design — apply them as defaults, but treat them as heuristics, not laws. They sometimes pull against each other (DRY vs. KISS, abstraction vs. YAGNI), and the right call is whichever keeps the code simplest to understand and cheapest to change. Reach for them to reason about tradeoffs, not to win arguments by citation.
+
+- **SOLID — five principles for object-oriented design:**
+    - **Single Responsibility (SRP)** — a class or module should have one reason to change. If it has two unrelated responsibilities, split it.
+    - **Open/Closed (OCP)** — open for extension, closed for modification. Add behavior by adding new code, not by editing code that already works.
+    - **Liskov Substitution (LSP)** — a subtype must be usable anywhere its base type is expected, without surprising the caller. If a subclass has to weaken a guarantee, the hierarchy is wrong.
+    - **Interface Segregation (ISP)** — prefer many small, client-specific interfaces over one fat one. No caller should depend on methods it never uses.
+    - **Dependency Inversion (DIP)** — depend on abstractions, not concretions. High-level policy shouldn't import low-level detail; both should depend on an interface.
+- **DRY (Don't Repeat Yourself).** Every piece of knowledge should have a single, authoritative home. But don't over-DRY — a little duplication is cheaper than the wrong abstraction, and coupling two things only because they look alike today is a trap.
+- **KISS (Keep It Simple).** Prefer the simplest thing that works. Clever, dense, or "flexible" code that's hard to read is a liability; the obvious solution is usually the right one.
+- **YAGNI (You Aren't Gonna Need It).** Build for the requirements you have, not the ones you imagine. Speculative generality and unused extension points add cost now for value that usually never arrives.
+- **Separation of Concerns.** Keep distinct responsibilities — I/O, business logic, presentation, persistence — in distinct units. Mixing them makes each harder to change and test in isolation.
+- **High Cohesion, Low Coupling.** Things that change together belong together (cohesion); things that don't should depend on each other as little as possible (coupling). This is the goal most of the other principles serve.
+- **Modularity.** Decompose the system into self-contained units with clear boundaries and well-defined interfaces. A module should be understandable, replaceable, and testable on its own.
+- **Encapsulation.** Hide internal state and implementation behind a stable interface. Callers depend on what a unit does, not how — so the how can change without breaking them.
+- **Composition Over Inheritance.** Build behavior by combining small parts rather than extending deep class hierarchies. Composition is more flexible and avoids the fragile-base-class coupling that inheritance creates.
+- **Law of Demeter (least knowledge).** A unit should talk only to its immediate collaborators, not reach through them (`a.getB().getC().doThing()`). Long reach chains couple you to the internal shape of things you don't own.
+- **Principle of Least Astonishment.** Code should behave the way a reader reasonably expects. Names, signatures, and side effects should hold no surprises; surprising behavior is a defect even when it's technically "correct."
+
 ## Pre-Task Test Validation
 
 Before beginning a new task — a new plan, a new feature, or a distinctly different direction from the prior work — run the project's test suite first. If any tests are failing, stop immediately and notify me. Failing tests should be addressed before starting new work.
@@ -53,6 +74,25 @@ If you have the tools and access to do something yourself, do it. Don't ask me t
 - **Only ask when the answer truly requires me.** My intent, my preference, credentials I haven't shared, context outside the machine. Asking me to verify what you can verify yourself wastes a round trip and shifts work onto me.
 - **Postgres runs in Docker, not on the host.** I rarely (if ever) have `psql` on the host pointed at a real database. Don't try `psql -U …` directly first and then fall back to Docker after it fails — go straight to `docker compose exec <service> psql …` (or `docker exec`) against the running container. If you can't find the container, check `docker ps` before assuming there's a host install.
 
+## Finish the Described Work — Don't Stop to Ask Permission Mid-Task
+
+When I describe a task or a multi-part piece of work, complete **all** of it in one go. Don't stop partway to summarize progress and ask whether to continue. Keep going until the work is done, the tests pass, and it's committed. A list of parts (e.g. "Phase 2: A, B, and C") is a single mandate to finish A, B, *and* C — not a set of checkpoints to pause at.
+
+- **Don't ask "want me to do X next?" when X is part of the work I already described.** Just do X. Asking is only warranted for something genuinely outside the described scope.
+- **A progress summary is not a stopping point.** If you want to note what's done mid-task, note it and keep working in the same turn. Don't end your turn on a status report when there's described work left.
+- **Don't self-impose scope reductions.** "I'll do the UI now and the streaming later" needs my explicit sign-off. If I asked for the whole thing, deliver the whole thing; don't unilaterally split it and hand part back to me.
+- **Only stop early when you are genuinely blocked or done.** Blocked = a decision only I can make (a credential I haven't shared, an irreversible/destructive action needing sign-off, a real ambiguity that changes the outcome), or tests that fail and you can't fix. "This next part is big / infra-heavy / careful" is *not* a reason to stop — it's the work.
+- **Effort and context length are not reasons to stop.** If the task is large, work through it; if you're running low on context, say so and keep going as far as you can rather than parking it back on me.
+
+## A Question Gets an Answer, Not an Implementation
+
+The rule above is about *described work* — directives. A question is not a directive. When I **ask** something, answer it; don't jump straight into implementing a change off the back of it. This is the counterweight to "finish the described work": finish what I told you to do, but don't manufacture work out of what I merely asked about.
+
+- **Treat questions as questions.** "Is it possible to…", "Can we…", "Should we…", "Do we…", "What if…", "Why don't we…" are requests for information, feasibility, or a recommendation — not instructions to build. Answer, lay out the options/tradeoffs, and stop there.
+- **A question is often me thinking, not me deciding.** I may be weighing whether it's worth doing, comparing it against another approach, or heading somewhere you can't see. Implementing pre-empts my decision and can churn the branch with work I never asked for.
+- **Wait for the build signal.** Only start changing code on an explicit instruction — "do it", "add it", "implement", "make the change", "go" — or when it's unambiguously part of a task I already directed. "Can we?" is not "do it."
+- **If a question might be an implied request, don't assume "yes, build it."** Answer it, say what you'd do and recommend, and let me give the go-ahead — or ask which I want. Erring toward action here is as wrong as erring toward stopping mid-task; calibrate to whether I gave a directive or asked a question.
+
 ## Verify Before Asserting
 
 Before stating any factual claim about timestamps, PR numbers, file contents, code paths, or external data, run the read-only verification command first. Session memory and conversation summaries are not authoritative.
@@ -71,14 +111,15 @@ When creating a GitHub issue, write it as if a future session — yours or mine 
 - **Include concrete artifacts.** Error messages, file paths and line numbers, exact commands, observed vs expected behavior, relevant SHA/PR refs. Don't hand-wave with "the bug we discussed" — paste the actual evidence.
 - **Richer discussion → longer issue body.** The more context the conversation has built up, the more important it is to dump that context into the issue. Treat the issue as the artifact that captures the discussion, not a placeholder that depends on it.
 
-## Don't Fragment Work Across PRs
+## Branches, Commits, and PRs
 
-A described task should land as a single PR, not as a series of two, three, four, five smaller PRs. Bundle related changes that share a goal. Within that one PR, multiple focused commits are preferred — split the work at the commit level, not the PR level. Also: commits and PRs are not the same default. Commit eagerly when tests pass; do not open a PR unless explicitly asked.
+Treat one described task as a single lifecycle — **branch → commits → one PR** — where each stage has its own default. Keep them distinct; don't collapse "commit" or "branch" into "open a PR."
 
-- **One described task = one PR.** Don't split a single piece of work into multiple PRs unless I explicitly ask you to. If you catch yourself thinking "I'll do part A in this PR and part B in a follow-up," stop and bundle them.
-- **Prefer multiple focused commits within a PR over multiple PRs.** Each commit should be a logical, atomic step — a refactor, a new feature, a bug fix, a passing test. Stack commits, not PRs.
-- **Commit by default when tests pass.** Once the test suite is green, create a commit. You don't need to ask first.
-- **Don't open a PR by default.** Creating a PR is a separate, explicit action — wait for me to ask (`gh pr create`, "open a PR", etc.). Local commits, and even pushed commits on a feature branch, are fine until I say to open the PR.
+- **Branch first, from an up-to-date `main`.** When you start a new task, create its branch *before the first commit* — but sync the base first: switch to `main` and bring it current (`git switch main && git pull --ff-only`), then `git switch -c <kebab-slug>`. Do **not** branch off a stale local `main`, and do **not** branch off whatever branch you happen to be sitting on — it may be old or already merged. Never commit a new task's work directly onto `main`. One task = one branch. (Branching off an out-of-date `main` has caused real problems.)
+- **Commit eagerly; no need to ask.** Once the test suite is green, commit. Prefer several small, logical commits on the branch (a refactor, a feature, a bug fix, a passing test) over one giant commit. Push freely.
+- **Open a PR only when I ask.** Creating a PR is a separate, explicit action — wait for "open a PR" / `gh pr create`. Local and pushed commits on the task branch are fine indefinitely until then.
+- **One described task = one branch = one PR.** Don't split a single task across multiple PRs. If the task has phases or parts, they are *more commits on the same branch* — not new branches or follow-up PRs. If you catch yourself thinking "part A now, part B in a follow-up PR," stop and keep them on one branch.
+- **Fixes to an in-flight PR go *on* that PR.** If I flag a problem with an open PR, push the fix as new commits to that PR's branch and update its body — never a new branch stacked behind it. If new work feels genuinely separate from the open PR, ask before branching rather than stacking.
 
 ## Link PRs to the Issues They Resolve
 
