@@ -63,6 +63,8 @@ Vault files are in:
 - `roles/*/vars/main/*.vault.yml` - Ansible variables
 - `roles/*/files/*.vault.*` - Env files and Makefiles
 
+**Committing — encrypt first:** The `*.vault.*` files are normally left **decrypted** in the working tree so they're usable day-to-day. That means they routinely show as modified in `git status` even when you haven't edited them — that diff is just the plaintext form, *not* a real change. **Always run `make secrets.encrypt` before committing** so commits never contain plaintext secrets; treat a dirty vault file as "needs encrypting," not "unrelated change." (A cleaner setup — e.g. sourcing these straight from 1Password — would avoid the decrypted-by-default state; worth exploring, but this works for now.)
+
 ## Key Locations
 
 | Purpose | Location |
