@@ -24,19 +24,21 @@ plugins=(
 
 fpath+=("$HOMEBREW_PREFIX/share/zsh/site-functions")
 
-# Load the shell dotfiles, and then some:
-# * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{aliases,functions,extra}; do
-	[ -r "$file" ] && [ -f "$file" ] && source "$file";
-done;
-unset file;
-
 # Initialize SDKMAN
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 DISABLE_MAGIC_FUNCTIONS=true
 
 source $ZSH/oh-my-zsh.sh
+
+# Load the shell dotfiles, and then some:
+# * ~/.extra can be used for other settings you don’t want to commit.
+# Sourced AFTER oh-my-zsh so our aliases/functions win over the framework's,
+# and so compdef (from omz's compinit) is available when .aliases runs.
+for file in ~/.{aliases,functions,extra}; do
+	[ -r "$file" ] && [ -f "$file" ] && source "$file";
+done;
+unset file;
 
 # Theme
 autoload -U promptinit; promptinit

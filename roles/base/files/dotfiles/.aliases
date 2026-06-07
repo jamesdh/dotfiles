@@ -27,11 +27,10 @@ alias dm="cd ~/Documents"
 alias dt="cd ~/Desktop"
 alias p="cd ~/Projects"
 
-# Always enable colored `grep` output
-# Note: `GREP_OPTIONS="--color=auto"` is deprecated, hence the alias usage.
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
+# Colored grep/egrep/fgrep come from oh-my-zsh's grep lib, which loads before
+# this file. Its `grep` alias carries --color=auto (plus --exclude-dir for VCS
+# dirs), and egrep/fgrep inherit color via recursive alias expansion through it,
+# so there's nothing to redefine here.
 
 # IP addresses
 alias ip.ext="curl -w '\n' ifconfig.me"
@@ -100,30 +99,53 @@ alias sniff="sudo ngrep -t '^(GET|POST|PUT)' 'tcp and port 80'"
 alias dud="du -d 1 -h | sort -h"
 alias dus="sudo du -hs * | sort -h"
 
-# Repo aliases
-alias cddf="cd ~/Projects/jamesdh/dotfiles/"
-alias cdj="cd ~/Projects/jamesdh"
-alias cdmb="cd ~/Projects/moltenbits"
-alias cdp="cd ~/Projects"
-alias cdphp="cd ~/Projects/proximal-health/platform"
-alias cd.mb="cd ~/Projects/moltenbits"
-alias cd.mb.pages="cd ~/Projects/moltenbits/moltenbits.github.io"
-alias cd.mb.conlingo="cd ~/Projects/moltenbits/conlingo"
-alias cd.mb.growlrrr="cd ~/Projects/moltenbits/growlrrr"
-alias cd.mb.listenly="cd ~/Projects/moltenbits/listenly"
-alias cd.mb.spaceballs="cd ~/Projects/moltenbits/spaceballs"
-alias cd.mb.tt="cd ~/Projects/moltenbits/teamtempo/"
-alias cd.mb.ttf="cd ~/Projects/moltenbits/teamtempo/front/"
-alias cd.mb.ttb="cd ~/Projects/moltenbits/teamtempo/back/"
-alias cd.conlingo="cd.mb.conlingo"
-alias cd.growlrrr="cd.mb.growlrrr"
-alias cd.listenly="cd.mb.listenly"
-alias cd.spaceballs="cd.mb.spaceballs"
-alias cd.tt="cd.mb.tt"
-alias cd.ttf="cd.mb.ttf"
-alias cd.ttb="cd.mb.ttb"
-alias cd.dotfiles="cd ~/Projects/jamesdh/dotfiles"
-alias cd.proximal="cd ~/Projects/proximal-health/platform"
+# ── Project navigation ──────────────────────────────────────────────────────
+# `<name> [subdir]` cds into a project root, or a subdir of it, with tab
+# completion on the subdir — e.g. `cd.proximal admin-ui`, `cdmb conlingo/src`.
+# These are functions (so they can take an argument); registering completion
+# needs compdef, which is why this file is sourced after oh-my-zsh (see .zshrc).
+# Add another with: _defcd <name> <root>
+typeset -gA _cdproj_roots
+_cdproj() { local root=${_cdproj_roots[$words[1]]}; [[ -n $root ]] && _path_files -/ -W $root }
+_defcd() {  # _defcd <name> <root>
+  local name=$1 root=${2%/}
+  _cdproj_roots[$name]=$root
+  functions[$name]="cd ${(q)root}/\"\${1:-}\""
+  (( $+functions[compdef] )) && compdef _cdproj "$name"
+}
+
+# Short shortcuts
+_defcd cdp   ~/Projects
+_defcd cdj   ~/Projects/jamesdh
+_defcd cdmb  ~/Projects/moltenbits
+_defcd cddf  ~/Projects/jamesdh/dotfiles
+_defcd cdphp ~/Projects/proximal-health/platform
+
+# jamesdh
+_defcd cd.dotfiles ~/Projects/jamesdh/dotfiles
+
+# proximal-health
+_defcd cd.proximal ~/Projects/proximal-health/platform
+
+# moltenbits
+_defcd cd.mb            ~/Projects/moltenbits
+_defcd cd.mb.pages      ~/Projects/moltenbits/moltenbits.github.io
+_defcd cd.mb.conlingo   ~/Projects/moltenbits/conlingo
+_defcd cd.mb.growlrrr   ~/Projects/moltenbits/growlrrr
+_defcd cd.mb.listenly   ~/Projects/moltenbits/listenly
+_defcd cd.mb.spaceballs ~/Projects/moltenbits/spaceballs
+_defcd cd.mb.tt         ~/Projects/moltenbits/teamtempo
+_defcd cd.mb.ttf        ~/Projects/moltenbits/teamtempo/front
+_defcd cd.mb.ttb        ~/Projects/moltenbits/teamtempo/back
+
+# moltenbits — short forms
+_defcd cd.conlingo   ~/Projects/moltenbits/conlingo
+_defcd cd.growlrrr   ~/Projects/moltenbits/growlrrr
+_defcd cd.listenly   ~/Projects/moltenbits/listenly
+_defcd cd.spaceballs ~/Projects/moltenbits/spaceballs
+_defcd cd.tt         ~/Projects/moltenbits/teamtempo
+_defcd cd.ttf        ~/Projects/moltenbits/teamtempo/front
+_defcd cd.ttb        ~/Projects/moltenbits/teamtempo/back
 
 # Help find whatever PID is holding onto secure input
 alias secureinput="ioreg -l -w 0 | grep kCGSSessionSecureInputPID"
