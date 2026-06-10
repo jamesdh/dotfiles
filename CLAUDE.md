@@ -65,6 +65,8 @@ Vault files are in:
 
 **Committing — encrypt first:** The `*.vault.*` files are normally left **decrypted** in the working tree so they're usable day-to-day. That means they routinely show as modified in `git status` even when you haven't edited them — that diff is just the plaintext form, *not* a real change. **Always run `make secrets.encrypt` before committing** so commits never contain plaintext secrets; treat a dirty vault file as "needs encrypting," not "unrelated change." (A cleaner setup — e.g. sourcing these straight from 1Password — would avoid the decrypted-by-default state; worth exploring, but this works for now.)
 
+**op-fast pilot (workspace env):** `roles/projects/files/projects.env` holds 1Password secret *references* (`op://…`), not secrets — it's committed in plaintext and is **not** a vault file. The workspace `.envrc` (`projects.envrc`) resolves the references at direnv-load time via `op-fast` (Homebrew: `cometkim/tap/op-fast`), which caches resolved values in the macOS Keychain — encrypted at rest, ~10ms reads, and still working offline within the TTL (30 days, configured in `roles/osx/files/op-fast/config.toml`). The remaining `*.vault.env` files are candidates for the same conversion, which would eventually retire the encrypt/decrypt workflow above.
+
 ## Key Locations
 
 | Purpose | Location |

@@ -77,7 +77,7 @@
     state: link
     force: true
   loop:
-    - { src: "projects.vault.env", dest: "{{projects_dir}}/.env" }
+    - { src: "projects.env",       dest: "{{projects_dir}}/.env" }
     - { src: "projects.envrc",     dest: "{{projects_dir}}/.envrc" }
     - { src: "mb.envrc",           dest: "{{projects_dir}}/moltenbits/.envrc" }
     - { src: "jamesdh.envrc",      dest: "{{projects_dir}}/jamesdh/.envrc" }
