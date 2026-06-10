@@ -1,0 +1,4 @@
+# op-fast: caching proxy for 1Password CLI (cached secrets live in macOS Keychain).
+# Long default TTL so cached secrets stay available through offline stretches.
+# Any read after expiry refreshes from 1Password when back online.
+default_ttl = "30days"

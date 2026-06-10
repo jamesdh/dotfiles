@@ -1,6 +1,8 @@
+tap "cometkim/tap"
 tap "jakehilborn/jakehilborn"
 tap "moltenbits/tap"
 brew "cliclick"
+brew "cometkim/tap/op-fast"
 brew "direnv"
 brew "jakehilborn/jakehilborn/displayplacer"
 brew "git"

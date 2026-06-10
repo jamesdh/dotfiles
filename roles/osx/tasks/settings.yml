@@ -136,6 +136,10 @@
   tags:
     - iterm
 
+- import_tasks: per_app/op_fast.yml
+  tags:
+    - op-fast
+
 - include_tasks: per_app/passepartout.yml
   loop: "{{ passepartout }}"
   tags:

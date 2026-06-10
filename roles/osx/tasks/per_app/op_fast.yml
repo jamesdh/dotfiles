@@ -1,0 +1,16 @@
+- name: Create op-fast config dir
+  file:
+    path: "{{ home_dir }}/.config/op-fast"
+    state: directory
+    mode: 0755
+  tags:
+    - op-fast
+
+- name: Link op-fast config
+  file:
+    src: "{{role_path}}/files/op-fast/config.toml"
+    path: "{{ home_dir }}/.config/op-fast/config.toml"
+    state: link
+    force: true
+  tags:
+    - op-fast
