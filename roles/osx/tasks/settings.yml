@@ -138,7 +138,7 @@
 
 - import_tasks: per_app/op_fast.yml
   tags:
-    - op-fast
+    - envfiles
 
 - include_tasks: per_app/passepartout.yml
   loop: "{{ passepartout }}"
