@@ -563,3 +563,7 @@ function selfcontrol {
 cc() {
   claude -c --dangerously-skip-permissions --effort max --model opus "$@";
 }
+
+co() {
+  codex --yolo "$@";
+}

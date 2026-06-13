@@ -32,3 +32,8 @@
   import_tasks: claude.yml
   tags:
     - claude
+
+- name: Configure Codex
+  import_tasks: codex.yml
+  tags:
+    - codex

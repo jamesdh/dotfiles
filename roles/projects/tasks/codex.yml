@@ -1,0 +1,15 @@
+---
+- name: Ensure ~/.codex exists
+  file:
+    path: "{{home_dir}}/.codex"
+    state: directory
+
+# Codex (and most non-Anthropic agents) read AGENTS.md, not CLAUDE.md. Point
+# Codex's global AGENTS.md at the same source as ~/.claude/CLAUDE.md so both
+# tools share a single set of global instructions.
+- name: Link global instructions to ~/.codex/AGENTS.md
+  file:
+    src: "{{role_path}}/files/agents.md"
+    path: "{{home_dir}}/.codex/AGENTS.md"
+    state: link
+    force: true
