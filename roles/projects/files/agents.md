@@ -1,4 +1,4 @@
-# Global CLAUDE.md
+# Global Agent Instructions
 
 ## Basic Principles of Good Software Engineering
 
