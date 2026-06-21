@@ -14,7 +14,8 @@ etchosts:
   - api.teamtempo.local
 
 github: "{{vaulted_github}}"
-envfiles: "{{vaulted_envfiles}}"
+envfiles:
+  - { src: ph.env, dest: "{{projects_dir}}/proximal-health" }
 makefiles: "{{vaulted_makefiles}}"
 hooks: "{{vaulted_hooks}}"
 growlrrr_apps: "{{vaulted_growlrrr_apps}}"

@@ -52,11 +52,12 @@
   tags:
     - envfiles
 
-- name: Setup default .envrc files
-  copy:
+- name: Link op-fast .envrc into env-file repos
+  file:
     src: "{{role_path}}/files/.envrc"
-    dest: "{{item.dest}}/.envrc"
-    force: false
+    path: "{{item.dest}}/.envrc"
+    state: link
+    force: true
   loop: "{{envfiles}}"
   tags:
     - envfiles
