@@ -80,6 +80,7 @@
   loop:
     - { src: "projects.env",       dest: "{{projects_dir}}/.env" }
     - { src: "projects.envrc",     dest: "{{projects_dir}}/.envrc" }
+    - { src: "mb.env",             dest: "{{projects_dir}}/moltenbits/.env" }
     - { src: "mb.envrc",           dest: "{{projects_dir}}/moltenbits/.envrc" }
     - { src: "jamesdh.envrc",      dest: "{{projects_dir}}/jamesdh/.envrc" }
   tags:
