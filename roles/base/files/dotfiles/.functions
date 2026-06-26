@@ -565,5 +565,5 @@ cc() {
 }
 
 co() {
-  codex --yolo "$@";
+  codex --yolo -c model_reasoning_effort="xhigh" "$@";
 }
