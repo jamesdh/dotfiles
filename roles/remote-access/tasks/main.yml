@@ -1,10 +1,10 @@
 ---
 - name: Assert this is a Debian/Ubuntu host
   ansible.builtin.assert:
-    that: ansible_os_family == "Debian"
+    that: ansible_facts['os_family'] == "Debian"
     fail_msg: >-
       The remote-access role targets Debian/Ubuntu and is meant to run locally on
-      a headless Linux VM (not macOS). Got ansible_os_family={{ ansible_os_family }}.
+      a headless Linux VM (not macOS). Got os_family={{ ansible_facts['os_family'] }}.
 
 - name: Install OpenSSH server
   ansible.builtin.apt:
@@ -57,7 +57,7 @@
 
 - name: Add Tailscale package signing key
   ansible.builtin.get_url:
-    url: "https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }}.noarmor.gpg"
+    url: "https://pkgs.tailscale.com/stable/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] }}.noarmor.gpg"
     dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
     owner: root
     group: root
@@ -65,7 +65,7 @@
 
 - name: Add Tailscale apt repository
   ansible.builtin.get_url:
-    url: "https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }}.tailscale-keyring.list"
+    url: "https://pkgs.tailscale.com/stable/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] }}.tailscale-keyring.list"
     dest: /etc/apt/sources.list.d/tailscale.list
     owner: root
     group: root

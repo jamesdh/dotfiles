@@ -6,7 +6,7 @@ github_users:
 
 # Local account that receives the SSH keys / remote access. Defaults to the user
 # running the bootstrap one-liner on the VM.
-ssh_user: "{{ ansible_env.USER }}"
+ssh_user: "{{ ansible_facts['env']['USER'] }}"
 
 # Harden sshd to key-only auth (disable password + keyboard-interactive) once the
 # GitHub keys are in place.
