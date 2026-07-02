@@ -4,5 +4,10 @@
   connection: local
   become: true
   gather_facts: true
+  vars:
+    # host_vars/localhost.yml pins the interpreter to the Mac repo's venv, which
+    # doesn't exist on a headless VM. Play vars outrank inventory host_vars, so
+    # use the system python here (same as host_vars/homelab.yml).
+    ansible_python_interpreter: /usr/bin/python3
   roles:
     - remote-access
