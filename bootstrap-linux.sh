@@ -45,16 +45,14 @@ if [[ ! -f "${vaultpass}" ]]; then
   chmod 600 "${vaultpass}"
 fi
 
-# Only prompt for a sudo password if this host actually needs one. Many cloud
-# images grant the first user passwordless sudo, and the apt step above already
-# primed the sudo timestamp.
-become_args=()
-if ! sudo -n true 2>/dev/null; then
-  become_args=(--ask-become-pass)
-fi
-
-echo "==> Running the remote-access playbook..."
-ansible-playbook --diff remote-access.yml "${become_args[@]}"
+# Always ask for the become (sudo) password; press Enter if this VM has
+# passwordless sudo. Auto-detecting passwordless sudo is unreliable — the sudo
+# timestamp primed by the apt step above is scoped to this shell's terminal and
+# does not carry into ansible's separate sudo session, so `sudo -n` here can't
+# predict whether ansible's become will need a password.
+echo "==> Running the remote-access playbook."
+echo "    Enter your sudo password when prompted (press Enter if sudo is passwordless)."
+ansible-playbook --diff remote-access.yml --ask-become-pass
 
 # The playbook joins the tailnet non-interactively when TS_AUTHKEY is set. If the
 # node still isn't connected (no key, or the key was rejected), fall back to the
