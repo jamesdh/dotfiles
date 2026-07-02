@@ -25,19 +25,34 @@
 
 - name: Harden sshd to key-only authentication
   ansible.builtin.copy:
-    src: 99-hardening.conf
-    dest: /etc/ssh/sshd_config.d/99-hardening.conf
+    src: 00-hardening.conf
+    dest: /etc/ssh/sshd_config.d/00-hardening.conf
     owner: root
     group: root
     mode: "0644"
   when: ssh_harden
   notify: Restart ssh
 
-# Validate the full effective config (main sshd_config Includes the drop-in) so a
-# bad config aborts the play before the handler restarts sshd.
-- name: Validate the effective sshd configuration
-  ansible.builtin.command: /usr/sbin/sshd -t
+# Verify the EFFECTIVE config (sshd -T merges every drop-in under first-value-wins)
+# so a competing file like 50-cloud-init.conf can't silently re-enable passwords.
+# sshd -T also fails on a syntactically bad config, aborting the play before the
+# handler restarts sshd.
+- name: Read the effective sshd configuration
+  ansible.builtin.command: /usr/sbin/sshd -T
   changed_when: false
+  register: sshd_effective
+  when: ssh_harden
+
+- name: Assert sshd enforces key-only authentication
+  ansible.builtin.assert:
+    that:
+      - "'passwordauthentication no' in sshd_effective.stdout"
+      - "'kbdinteractiveauthentication no' in sshd_effective.stdout"
+    fail_msg: >-
+      sshd is not enforcing key-only auth — a drop-in sorting before
+      00-hardening.conf (e.g. /etc/ssh/sshd_config.d/50-cloud-init.conf) is
+      overriding it. sshd_config is first-value-wins.
+    success_msg: sshd enforces key-only authentication.
   when: ssh_harden
 
 - name: Add Tailscale package signing key
