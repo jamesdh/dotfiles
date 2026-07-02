@@ -45,14 +45,21 @@ if [[ ! -f "${vaultpass}" ]]; then
   chmod 600 "${vaultpass}"
 fi
 
-# Always ask for the become (sudo) password; press Enter if this VM has
-# passwordless sudo. Auto-detecting passwordless sudo is unreliable — the sudo
-# timestamp primed by the apt step above is scoped to this shell's terminal and
-# does not carry into ansible's separate sudo session, so `sudo -n` here can't
-# predict whether ansible's become will need a password.
-echo "==> Running the remote-access playbook."
-echo "    Enter your sudo password when prompted (press Enter if sudo is passwordless)."
-ansible-playbook --diff remote-access.yml --ask-become-pass
+# Run ansible itself under sudo (as root) rather than relying on ansible's per-task
+# become. Escalating inside ansible from this non-interactive context is fragile —
+# depending on the VM's sudo/PAM setup it stalls with "interactive authentication
+# is required" or a become timeout. Running the whole play as root sidesteps it
+# (become: true then escalates root->root, which needs no password). We pass:
+#   --vault-password-file  absolute, since ~ resolves to root's home under sudo
+#   ssh_user               so GitHub keys land in the invoking user's account
+#   tailscale_authkey/ssh  forwarded explicitly because sudo drops the environment
+target_user="${USER:-$(id -un)}"
+echo "==> Running the remote-access playbook as root (enter your sudo password if prompted)..."
+sudo ansible-playbook --diff remote-access.yml \
+  --vault-password-file "${vaultpass}" \
+  -e "ssh_user=${target_user}" \
+  -e "tailscale_authkey=${TS_AUTHKEY:-}" \
+  -e "tailscale_ssh=${TS_SSH:-false}"
 
 # The playbook joins the tailnet non-interactively when TS_AUTHKEY is set. If the
 # node still isn't connected (no key, or the key was rejected), fall back to the
@@ -62,14 +69,14 @@ case "${TS_SSH:-}" in
   1 | true | yes | on) ts_ssh_flag=(--ssh) ;;
 esac
 
-if ! tailscale status >/dev/null 2>&1; then
+if ! sudo tailscale status >/dev/null 2>&1; then
   echo "==> Authorize this node on your tailnet — open the URL below in a browser:"
   sudo tailscale up "${ts_ssh_flag[@]}"
 fi
 
 echo
-if tailscale status >/dev/null 2>&1; then
-  ts_ip="$(tailscale ip -4 2>/dev/null | head -n1)"
+if sudo tailscale status >/dev/null 2>&1; then
+  ts_ip="$(sudo tailscale ip -4 2>/dev/null | head -n1)"
   echo "==> Done. This node is on your tailnet at ${ts_ip}."
   echo "    SSH from another tailnet device:  ssh ${USER:-$(id -un)}@${ts_ip}"
 else
