@@ -20,9 +20,15 @@ echo "==> Installing prerequisites (ansible, git, curl)..."
 sudo apt-get update
 sudo apt-get install -y ansible git curl
 
-echo "==> Cloning dotfiles into ${REPO_DIR}..."
-mkdir -p "${REPO_DIR}"
-if [[ ! -d "${REPO_DIR}/.git" ]]; then
+# Clone the repo, or force an existing clone to match origin/master so re-running
+# this one-liner always provisions with the latest pushed config. (The bootstrap
+# script itself is fetched fresh from raw-GitHub, but the repo it runs is not.)
+echo "==> Fetching dotfiles into ${REPO_DIR}..."
+if [[ -d "${REPO_DIR}/.git" ]]; then
+  git -C "${REPO_DIR}" fetch --quiet origin
+  git -C "${REPO_DIR}" reset --hard --quiet origin/master
+else
+  mkdir -p "${REPO_DIR}"
   git clone "${REPO_URL}" "${REPO_DIR}"
 fi
 cd "${REPO_DIR}"
