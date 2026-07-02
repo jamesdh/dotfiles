@@ -45,21 +45,19 @@ if [[ ! -f "${vaultpass}" ]]; then
   chmod 600 "${vaultpass}"
 fi
 
-# Run ansible itself under sudo (as root) rather than relying on ansible's per-task
-# become. Escalating inside ansible from this non-interactive context is fragile —
-# depending on the VM's sudo/PAM setup it stalls with "interactive authentication
-# is required" or a become timeout. Running the whole play as root sidesteps it
-# (become: true then escalates root->root, which needs no password). We pass:
-#   --vault-password-file  absolute, since ~ resolves to root's home under sudo
-#   ssh_user               so GitHub keys land in the invoking user's account
-#   tailscale_authkey/ssh  forwarded explicitly because sudo drops the environment
-target_user="${USER:-$(id -un)}"
-echo "==> Running the remote-access playbook as root (enter your sudo password if prompted)..."
-sudo ansible-playbook --diff remote-access.yml \
-  --vault-password-file "${vaultpass}" \
-  -e "ssh_user=${target_user}" \
-  -e "tailscale_authkey=${TS_AUTHKEY:-}" \
-  -e "tailscale_ssh=${TS_SSH:-false}"
+# Escalate the idiomatic way: run as this user and let ansible `become` root per
+# task. One wrinkle — Ubuntu 25.10+ defaults to sudo-rs, which doesn't implement
+# the -p prompt flag ansible uses to detect the sudo password prompt, so become
+# hangs and times out. Classic sudo still ships alongside it as `sudo.ws`; point
+# ansible's become at that when present (older releases use the default sudo).
+become_exe_args=()
+if sudo_ws="$(command -v sudo.ws 2>/dev/null)"; then
+  echo "==> Detected sudo-rs; using classic sudo (${sudo_ws}) for ansible become."
+  become_exe_args=(-e "ansible_become_exe=${sudo_ws}")
+fi
+echo "==> Running the remote-access playbook."
+echo "    Enter your sudo password when prompted (press Enter if sudo is passwordless)."
+ansible-playbook --diff remote-access.yml --ask-become-pass "${become_exe_args[@]}"
 
 # The playbook joins the tailnet non-interactively when TS_AUTHKEY is set. If the
 # node still isn't connected (no key, or the key was rejected), fall back to the
