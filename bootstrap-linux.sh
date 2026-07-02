@@ -20,6 +20,13 @@ echo "==> Installing prerequisites (ansible, git, curl)..."
 sudo apt-get update
 sudo apt-get install -y ansible git curl
 
+# Ubuntu's ansible bundle ships an older ansible.posix whose authorized_key module
+# imports from deprecated module_utils paths (deprecation warnings on core 2.19+,
+# removal in 2.24). Upstream fixed the imports in 2.2.1 — install it user-level,
+# which takes precedence over the apt-bundled copy.
+echo "==> Updating the ansible.posix collection..."
+ansible-galaxy collection install 'ansible.posix>=2.2.1' --upgrade
+
 # Clone the repo, or force an existing clone to match origin/master so re-running
 # this one-liner always provisions with the latest pushed config. (The bootstrap
 # script itself is fetched fresh from raw-GitHub, but the repo it runs is not.)
