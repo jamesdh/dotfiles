@@ -14,7 +14,7 @@
   
       - name: Move built {{item.name}} app to {{apps_dir}}
         shell: "mv {{item.name | regex_replace('\\s', '\\ ')}}-darwin-arm64/{{item.name | regex_replace('\\s', '\\ ')}}.app {{apps_dir}}/"
-        when: ansible_architecture == "arm64"
+        when: ansible_facts['architecture'] == "arm64"
       
       - name: Cleanup remaining artifacts
         file: 
@@ -22,7 +22,7 @@
           state: absent
 
     when: 
-     - ansible_architecture == "arm64"
+     - ansible_facts['architecture'] == "arm64"
      - not st.stat.exists
   
   tags: 

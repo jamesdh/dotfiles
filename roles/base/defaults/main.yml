@@ -1,2 +1,2 @@
-home_dir: "{{ ansible_env.HOME }}"
+home_dir: "{{ ansible_facts['env']['HOME'] }}"
 projects_dir: "{{ home_dir }}/Projects"
