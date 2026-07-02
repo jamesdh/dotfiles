@@ -2,8 +2,9 @@
 #
 # Bootstrap a fresh, headless Ubuntu VM for remote access (Tailscale + SSH).
 #
-# Run locally on the VM:
-#   bash <(curl -fsSL https://raw.githubusercontent.com/jamesdh/dotfiles/master/bootstrap-linux.sh)
+# Run locally on the VM (no-cache defeats the ~5 min raw.githubusercontent CDN cache,
+# so a just-pushed fix is never skipped):
+#   bash <(curl -fsSL -H "Cache-Control: no-cache" https://raw.githubusercontent.com/jamesdh/dotfiles/master/bootstrap-linux.sh)
 #
 # Join the tailnet non-interactively with a pre-generated auth key:
 #   TS_AUTHKEY=tskey-... bash <(curl -fsSL .../bootstrap-linux.sh)
