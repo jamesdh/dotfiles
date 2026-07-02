@@ -27,6 +27,18 @@ if [[ ! -d "${REPO_DIR}/.git" ]]; then
 fi
 cd "${REPO_DIR}"
 
+# The repo's ansible.cfg sets vault_password_file=~/.ansible/dotfiles_vaultpass and
+# ansible loads it at startup. The desktop bootstrap fills it with the real vault
+# password from 1Password (the macOS playbook decrypts vault files); this playbook
+# is vault-free, so on a headless VM we just drop a placeholder to satisfy ansible —
+# it is loaded but never used to decrypt anything.
+vaultpass="${HOME}/.ansible/dotfiles_vaultpass"
+if [[ ! -f "${vaultpass}" ]]; then
+  mkdir -p "${HOME}/.ansible"
+  printf 'unused-on-headless-vm\n' >"${vaultpass}"
+  chmod 600 "${vaultpass}"
+fi
+
 # Only prompt for a sudo password if this host actually needs one. Many cloud
 # images grant the first user passwordless sudo, and the apt step above already
 # primed the sudo timestamp.
