@@ -1,0 +1,23 @@
+---
+# GitHub accounts whose public keys (https://github.com/<user>.keys) are
+# imported into ssh_user's authorized_keys.
+github_users:
+  - jamesdh
+
+# Local account that receives the SSH keys / remote access. Defaults to the user
+# running the bootstrap one-liner on the VM.
+ssh_user: "{{ ansible_env.USER }}"
+
+# Harden sshd to key-only auth (disable password + keyboard-interactive) once the
+# GitHub keys are in place.
+ssh_harden: true
+
+# Tailscale auth key (tskey-...). When non-empty the node joins the tailnet
+# non-interactively; otherwise bootstrap-linux.sh falls back to the interactive
+# `tailscale up` login URL. Read from the TS_AUTHKEY env var so the key is never
+# passed on the command line.
+tailscale_authkey: "{{ lookup('env', 'TS_AUTHKEY') | default('', true) }}"
+
+# Enable Tailscale SSH (`tailscale up --ssh`) in addition to system sshd.
+# Toggle with the TS_SSH env var (e.g. TS_SSH=1).
+tailscale_ssh: "{{ lookup('env', 'TS_SSH') | bool }}"
