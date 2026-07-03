@@ -7,3 +7,9 @@ Brewfile*.lock.json
 venv
 .DS_Store
 .env
+
+# iTerm2 rewrites this monolithic prefs plist on every quit — noisy and redundant.
+# Profiles live in the Dynamic Profile (roles/osx/files/iTerm/iTerm.json); durable
+# app-level settings live in roles/osx/defaults/main.yml (com.googlecode.iterm2).
+# See roles/osx/files/iTerm/README.md.
+roles/osx/files/iTerm/com.googlecode.iterm2.plist
