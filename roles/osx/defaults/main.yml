@@ -249,6 +249,8 @@ defaults:
     com.googlecode.iterm2:
       AdjustWindowForFontSizeChange: {type: bool, value: false}
       HideScrollbar: {type: bool, value: false}
+      HideTab: {type: bool, value: true, desc: 'Auto-hide the tab bar (still shown in full screen)'}
+      ShowFullScreenTabBar: {type: bool, value: true}
       PreventEscapeSequenceFromChangingProfile: {type: bool, value: false}
       OnlyWhenMoreTabs: {type: bool, value: false}
       PreserveWindowSizeWhenTabBarVisibilityChanges: {type: bool, value: true}
@@ -257,10 +259,21 @@ defaults:
       NoSyncPermissionToShowTip: {type: bool, value: false, desc: 'Disable tips on startup'}
       PromptOnQuit: {type: bool, value: false}
       SUEnableAutomaticChecks: {type: bool, value: false, desc: 'Disable auto check for updates'}
-      LoadPrefsFromCustomFolder: {type: bool, value: true}
-      NoSyncNeverRemindPrefsChangesLostForFile: {type: bool, value: true}
-      "NoSyncNeverRemindPrefsChangesLostForFile_selection": {type: integer, value: 2}
-      PrefsCustomFolder: {type: string, value: '/Users/jamesdh/Projects/jamesdh/dotfiles/roles/osx/files/iTerm'}
+      EnableAPIServer: {type: bool, value: true, desc: 'Python API — required by the change_default_profile.py AutoLaunch script'}
+      HotkeyMigratedFromSingleToMulti: {type: bool, value: true}
+      # Right-click => context menu, middle-click => paste, three-finger swipes => tab/window nav
+      PointerActions:
+        type: dict
+        value:
+          "Button,1,1,,": {Action: kContextMenuPointerAction}
+          "Button,2,1,,": {Action: kPasteFromClipboardPointerAction}
+          "Gesture,ThreeFingerSwipeDown,,": {Action: kPrevWindowPointerAction}
+          "Gesture,ThreeFingerSwipeLeft,,": {Action: kPrevTabPointerAction}
+          "Gesture,ThreeFingerSwipeRight,,": {Action: kNextTabPointerAction}
+          "Gesture,ThreeFingerSwipeUp,,": {Action: kNextWindowPointerAction}
+      # Profiles now come from the Dynamic Profile (files/iTerm/iTerm.json); the monolithic
+      # prefs plist is no longer synced into the repo (it churned on every quit). See files/iTerm/README.md.
+      LoadPrefsFromCustomFolder: {type: bool, value: false, desc: 'Use the standard prefs location, not the repo folder'}
     com.twopeoplesoftware.InstantTranslate-nomas:
       SUEnableAutomaticChecks: {type: bool, value: true}
       SUSendProfileInfo: {type: bool, value: false}
