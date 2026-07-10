@@ -33,9 +33,11 @@
 
 - name: "Prepare privilege escalation"
   shell: "cliclick w:3000 c:760,415 w:200 c:750,430 w:200 t:{{ ansible_become_password }} w:200 c:815,475 w:500 &"
-  when: 
+  when:
     - battery_section.rc == 0
     - battery_displaysleep != "5" or battery_sleep != "5" or ac_displaysleep != "10" or ac_sleep != "0"
+  tags:
+    - cliclick
 
 - name: "Set preferred power settings when on battery"
   shell: "pmset -b displaysleep 5 sleep 5"

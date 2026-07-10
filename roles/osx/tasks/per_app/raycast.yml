@@ -70,7 +70,8 @@
       ansible.builtin.shell: "cliclick kp:return w:500 kp:return w:500 kd:cmd w:100 kp:space ku:cmd"
 
   when: not raycastOnboarded.value
-  tags: 
+  tags:
     - raycast
     - settings
+    - cliclick
 
