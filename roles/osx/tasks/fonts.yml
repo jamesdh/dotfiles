@@ -1,5 +1,5 @@
 - name: Install Homebrew Fonts
-  shell: export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.fonts
+  shell: brew bundle --file=roles/osx/files/Brewfile.fonts
   register: brew_diff
   changed_when: '"Installing" in brew_diff.stdout'
 

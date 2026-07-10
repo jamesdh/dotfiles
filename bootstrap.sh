@@ -127,7 +127,19 @@ fi
 
 # Install all apps that are immediately required for bootstrapping. 
 echo "Checking for required apps..."
-export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.bootstrap
+brew bundle --file=roles/osx/files/Brewfile.bootstrap
+
+# Homebrew 6 always quarantines cask apps (no more --no-quarantine), so strip the
+# xattr right away — 1Password is opened later in this bootstrap for the vault
+# password and must launch without a Gatekeeper prompt. jq arrives in the bundle above.
+brew info --cask --json=v2 --installed |
+  jq -r '.casks[].artifacts[] | select(.app) | .target // ("/Applications/" + .app[0])' |
+  while IFS= read -r app; do
+    if [[ -d "$app" ]] && xattr -p com.apple.quarantine "$app" >/dev/null 2>&1; then
+      xattr -dr com.apple.quarantine "$app"
+      echo "Removed quarantine: $app"
+    fi
+  done
 
 # If 1Password does not have CLI integration enabled, prompt and wait for it
 echo "Checking for 1Password CLI integration..."

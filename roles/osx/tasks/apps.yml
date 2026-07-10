@@ -1,7 +1,7 @@
 # We do this to get the privilege escalation prompts out of the way and to stop interrupting
 # the larger install process
 - name: Install Privileged Homebrew Apps
-  shell: export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.privileged
+  shell: brew bundle --file=roles/osx/files/Brewfile.privileged
   register: brew_diff
   changed_when: '"Installing" in brew_diff.stdout'
 
@@ -34,14 +34,16 @@
   changed_when: brew_diff.rc != 0
 
 - name: Install Non-priority Homebrew Apps
-  shell: export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.nonpriority
+  shell: brew bundle --file=roles/osx/files/Brewfile.nonpriority
   register: brew_diff
   changed_when: '"Installing" in brew_diff.stdout'
 
 - name: Install Non-priority Homebrew Apps - Changed output
   debug:
     var: brew_diff.stdout
-  when: 
+  when:
     - brew_diff.changed
     - not ansible_check_mode
   changed_when: brew_diff.changed
+
+- import_tasks: dequarantine.yml

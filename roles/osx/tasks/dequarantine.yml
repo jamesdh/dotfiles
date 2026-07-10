@@ -1,0 +1,17 @@
+# Homebrew 6 removed --no-quarantine (https://github.com/Homebrew/brew/issues/20755),
+# so cask apps now always land with com.apple.quarantine set and macOS prompts on each
+# app's first open. Recreate the old behavior: strip the xattr from every installed
+# cask app that still carries it. Runs right after each brew bundle.
+- name: Strip quarantine xattr from Homebrew cask apps
+  shell: |
+    set -o pipefail
+    brew info --cask --json=v2 --installed |
+      jq -r '.casks[].artifacts[] | select(.app) | .target // ("/Applications/" + .app[0])' |
+      while IFS= read -r app; do
+        if [ -d "$app" ] && xattr -p com.apple.quarantine "$app" >/dev/null 2>&1; then
+          xattr -dr com.apple.quarantine "$app"
+          echo "dequarantined: $app"
+        fi
+      done
+  register: dequarantine
+  changed_when: '"dequarantined:" in dequarantine.stdout'

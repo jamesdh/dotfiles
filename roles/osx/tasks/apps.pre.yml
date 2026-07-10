@@ -7,14 +7,16 @@
   changed_when: '"Trusted tap" in brew_trust.stdout'
 
 - name: Install Priority Homebrew Apps
-  shell: export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.priority
+  shell: brew bundle --file=roles/osx/files/Brewfile.priority
   register: brew_diff
   changed_when: '"Installing" in brew_diff.stdout'
 
 - name: Install Priority Homebrew Apps - Changed output
   debug:
     var: brew_diff.stdout
-  when: 
+  when:
     - brew_diff.changed
     - not ansible_check_mode
   changed_when: brew_diff.changed
+
+- import_tasks: dequarantine.yml
