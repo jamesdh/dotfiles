@@ -1,7 +1,22 @@
 #!/bin/zsh
 
-# Prompt for sudo
-sudo echo ""
+# Prompt for sudo — and fail fast if sudo itself is broken, instead of letting the
+# Full Disk Access wait below spin forever on a check that can never succeed.
+# (Known brick: /etc/pam.d/sudo referencing pam_reattach.so while pam-reattach isn't
+# installed — see roles/osx/tasks/auth.yml.)
+if ! sudo true; then
+    cat <<'EOF'
+
+ERROR: sudo is failing before bootstrap can start. If the message above says
+"unable to initialize PAM", then /etc/pam.d/sudo references a PAM module that is
+not installed (usually pam_reattach.so). Repair it with:
+
+  osascript -e 'do shell script "sed -i \"\" \"/pam_reattach/d; /pam_tid/d\" /etc/pam.d/sudo" with administrator privileges'
+
+then re-run this bootstrap.
+EOF
+    return 1 2>/dev/null || exit 1
+fi
 
 # Function to check if com.apple.Terminal has Accessibility enabled
 check_accessibility() {

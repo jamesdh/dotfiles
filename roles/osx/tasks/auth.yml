@@ -6,6 +6,17 @@
   tags:
     - touchid
 
+# Wiring a module path into /etc/pam.d/sudo while the module file is absent breaks
+# sudo system-wide ("sudo: unable to initialize PAM: No such file or directory"),
+# even though the entry is marked "optional" — so never add it until pam-reattach
+# (priority Brewfile) is actually installed.
+- name: Check that the pam_reattach module is installed
+  stat:
+    path: /opt/homebrew/lib/pam/pam_reattach.so
+  register: pam_reattach_mod
+  tags:
+    - touchid
+
 # See...
 # https://browniebroke.com/blog/enabling-sudo-via-touchid-using-ansible/
 # https://apple.stackexchange.com/a/355880
@@ -13,6 +24,8 @@
 - name: Set sudo via Touch ID if not setup
   become: yes
   command: sed -i '' 's/auth       sufficient     pam_smartcard.so/auth       sufficient     pam_smartcard.so\nauth       optional       \/opt\/homebrew\/lib\/pam\/pam_reattach.so\nauth       sufficient     pam_tid.so/g' /etc/pam.d/sudo
-  when: "'auth       sufficient     pam_tid.so' not in sudo_conf"
+  when:
+    - pam_reattach_mod.stat.exists
+    - "'auth       sufficient     pam_tid.so' not in sudo_conf"
   tags:
     - touchid

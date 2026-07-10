@@ -1,14 +1,17 @@
-- name: Setup auth/security customizations
-  import_tasks: auth.yml
-  tags: 
-    - auth
-    - priority
-
 - name: Install applications necessary for immediate permissions approvals
   import_tasks: apps.pre.yml
-  tags: 
+  tags:
     - preinstall
     - apps
+    - priority
+
+# Must run AFTER apps.pre.yml: auth.yml wires pam_reattach.so (installed by the
+# priority Brewfile) into /etc/pam.d/sudo — referencing it before it exists breaks
+# sudo system-wide ("sudo: unable to initialize PAM").
+- name: Setup auth/security customizations
+  import_tasks: auth.yml
+  tags:
+    - auth
     - priority
 
 - name: Install core applications
