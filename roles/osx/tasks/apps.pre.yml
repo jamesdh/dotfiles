@@ -1,3 +1,11 @@
+# Homebrew 6+ refuses to load formulae/casks from non-official taps until they are
+# explicitly trusted, so trust every tap the Brewfile declares before bundling.
+# The tap lines in Brewfile.priority are the single source of truth.
+- name: Trust third-party Homebrew taps
+  shell: set -o pipefail; grep '^tap ' roles/osx/files/Brewfile.priority | cut -d'"' -f2 | xargs brew trust
+  register: brew_trust
+  changed_when: '"Trusted tap" in brew_trust.stdout'
+
 - name: Install Priority Homebrew Apps
   shell: export HOMEBREW_CASK_OPTS='--no-quarantine'; brew bundle --file=roles/osx/files/Brewfile.priority
   register: brew_diff
