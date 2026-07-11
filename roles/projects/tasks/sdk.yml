@@ -11,14 +11,11 @@
         url: https://get.sdkman.io
         dest: "{{home_dir}}/.sdkman_installer"
 
-    - name: Make script executable
-      file: 
-        path: "{{home_dir}}/.sdkman_installer"
-        mode: u+rwx
-        state: file
-
+    # The installer's shebang is a hardcoded #!/bin/bash — Apple's frozen Bash 3.2 —
+    # and SDKMAN requires Bash 4+, so invoke it through Homebrew's bash explicitly
+    # (installed by Brewfile.priority before this role runs).
     - name: Run SDKMAN script
-      shell: "{{home_dir}}/.sdkman_installer"
+      shell: "/opt/homebrew/bin/bash {{home_dir}}/.sdkman_installer"
 
     - name: Remove installer script
       file: 
@@ -39,6 +36,8 @@
     
 - name: Install SDKMAN sdk's
   shell: "source {{home_dir}}/.sdkman/bin/sdkman-init.sh && sdk install {{item.name}} {{item.version}}"
+  args:
+    executable: /opt/homebrew/bin/bash # sdkman scripts require Bash 4+, not /bin/sh (3.2)
   loop: "{{sdks}}"
   register: result
   failed_when: 

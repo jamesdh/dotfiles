@@ -1,6 +1,7 @@
 tap "cometkim/tap"
 tap "jakehilborn/jakehilborn"
 tap "moltenbits/tap"
+brew "bash" # SDKMAN requires Bash 4+; Apple ships 3.2 forever (GPLv3)
 brew "cliclick"
 brew "cometkim/tap/op-fast"
 brew "direnv"
