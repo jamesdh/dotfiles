@@ -19,6 +19,30 @@ help: ## This help screen
 					printf "%s\n" $$help_info; \
 	done
 
+# Shared org-level clean: runs each immediate child repo's own clean via
+# whichever mechanism it exposes — a Makefile clean target, a Justfile clean
+# recipe, or a Gradle wrapper — and keeps going when one fails. Use from an
+# org Makefile as the body of its `clean` target: $(clean_child_repos)
+define clean_child_repos
+@for repo in */; do \
+	if [ -f "$$repo/Makefile" ] && $(MAKE) -C "$$repo" -n clean >/dev/null 2>&1; then \
+		echo "==> $$repo (make clean)"; \
+		$(MAKE) -C "$$repo" --no-print-directory clean || echo "    clean failed in $$repo — continuing"; \
+	else \
+		jf=""; \
+		[ -f "$$repo/justfile" ] && jf="$$repo/justfile"; \
+		[ -f "$$repo/Justfile" ] && jf="$$repo/Justfile"; \
+		if [ -n "$$jf" ] && just --justfile "$$jf" --working-directory "$$repo" -n clean >/dev/null 2>&1; then \
+			echo "==> $$repo (just clean)"; \
+			just --justfile "$$jf" --working-directory "$$repo" clean || echo "    clean failed in $$repo — continuing"; \
+		elif [ -x "$$repo/gradlew" ]; then \
+			echo "==> $$repo (gradlew clean)"; \
+			(cd "$$repo" && ./gradlew -q clean) || echo "    clean failed in $$repo — continuing"; \
+		fi; \
+	fi; \
+done
+endef
+
 iterm.start.%:
 	@(nohup /Applications/iTerm.app/Contents/MacOS/iTerm2 -"Default Arrangement Name" "$*" -OpenArrangementAtStartup 1 >/dev/null 2>&1 &)
 

@@ -18,9 +18,11 @@ stop: \
 	dotfiles.stop \
 	code.stop
 
-clean: ## Cleans all organization projects
-	-@$(MAKE) proximal.clean --no-print-directory 2>/dev/null
-	-@$(MAKE) moltenbits.clean --no-print-directory 2>/dev/null
+# Delegates to every org's own clean — Makefile or Justfile, same detection
+# the orgs use on their repos (clean_child_repos in utils.mak). Orgs without
+# a clean entry point are skipped.
+clean: ## Cleans generated artifacts across all organizations' projects
+	$(clean_child_repos)
 
 moltenbits: ## Lists available targets in the moltenbits project
 	@$(MAKE) -C moltenbits --no-print-directory -f Makefile 
