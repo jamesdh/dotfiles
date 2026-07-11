@@ -22,9 +22,11 @@ help: ## This help screen
 # Shared org-level clean: runs each immediate child repo's own clean via
 # whichever mechanism it exposes — a Makefile clean target, a Justfile clean
 # recipe, or a Gradle wrapper — and keeps going when one fails. Regardless of
-# mechanism, also deletes every node_modules under each child (always
-# regenerable, and a huge file-count burden on backups). Use from an org
-# Makefile as the body of its `clean` target: $(clean_child_repos)
+# mechanism, also deletes every node_modules and .venv under each child
+# (always regenerable, and a huge file-count burden on backups). NOTE: only
+# dot-prefixed .venv — plain `venv` dirs (e.g. dotfiles' own ansible venv)
+# are deliberately left alone. Use from an org Makefile as the body of its
+# `clean` target: $(clean_child_repos)
 define clean_child_repos
 @for repo in */; do \
 	if [ -f "$$repo/Makefile" ] && $(MAKE) -C "$$repo" -n clean >/dev/null 2>&1; then \
@@ -44,7 +46,7 @@ define clean_child_repos
 			(cd "$$repo" && ./gradlew -q clean) || echo "    clean failed in $$repo — continuing"; \
 		fi; \
 	fi; \
-	find "$$repo" -type d -name node_modules -prune -print -exec rm -rf {} + | sed 's/^/    rm -rf /'; \
+	find "$$repo" -type d \( -name node_modules -o -name .venv \) -prune -print -exec rm -rf {} + | sed 's/^/    rm -rf /'; \
 done
 endef
 
