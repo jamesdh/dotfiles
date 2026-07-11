@@ -1,0 +1,54 @@
+# Spaceballs settings sync via its CLI. The exported JSON lives in iCloud
+# (App Configs/spaceballs), so one machine's export becomes every machine's
+# import. The cask (moltenbits/tap, Brewfile.priority) links the CLI into
+# /opt/homebrew/bin before this runs; older machines may have a manual
+# /usr/local/bin symlink instead — hence a PATH lookup, not a fixed stat.
+# tagged `always` (read-only check): both blocks below need this fact, and any
+# other tag combo would leave it unregistered under --tags=export or
+# --skip-tags=export selections.
+- name: Check for spaceballs CLI
+  shell: command -v spaceballs
+  register: spaceballs_bin
+  changed_when: false
+  failed_when: false
+  tags:
+    - always
+
+# Manual/on-demand only: overwrites the iCloud copy with THIS machine's
+# settings. Excluded from default installs via --skip-tags=export in the
+# Makefile; run deliberately with `make settings.export`.
+- name: Export Spacebar settings to iCloud
+  block:
+    - name: Create spaceballs dir in iCloud App Configs
+      file:
+        path: "{{ spaceballs.config_dir }}"
+        state: directory
+
+    - name: Export settings
+      shell: "spaceballs settings export '{{ spaceballs.config_file }}'"
+
+  when: spaceballs_bin.rc == 0
+  tags:
+    - spaceballs
+    - export
+
+# Normal-install path: pull the iCloud copy into this machine's Spacebar.
+- name: Import Spacebar settings from iCloud
+  block:
+    - name: Ensure settings file is materialized from iCloud
+      shell: "brctl download '{{ spaceballs.config_file }}'"
+      changed_when: false
+      failed_when: false
+
+    - name: Check exported settings exist in iCloud
+      stat:
+        path: "{{ spaceballs.config_file }}"
+      register: spaceballs_settings
+
+    - name: Import settings
+      shell: "spaceballs settings import '{{ spaceballs.config_file }}'"
+      when: spaceballs_settings.stat.exists
+
+  when: spaceballs_bin.rc == 0
+  tags:
+    - spaceballs

@@ -17,6 +17,7 @@ cask "iterm2"
 cask "mysides"
 cask "p4v"
 cask "raycast"
+cask "spaceballs" # window switcher + CLI; settings import task depends on this
 cask "tower"
 cask "visual-studio-code"
 mas "1Password for Safari", id: 1569813296

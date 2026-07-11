@@ -142,6 +142,10 @@
   tags:
     - envfiles
 
+- import_tasks: per_app/spaceballs.yml
+  tags:
+    - spaceballs
+
 - include_tasks: per_app/passepartout.yml
   loop: "{{ passepartout }}"
   tags:

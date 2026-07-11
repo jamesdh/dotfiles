@@ -46,9 +46,9 @@ bootstrap: ## Verifies/installs necessary tools to support syncing dotfiles
 bootstrap:
 	@./bootstrap.sh ;\
 
-install: ## Install everything (except UI-automation steps; see install.cliclick)
+install: ## Install everything (except UI-automation steps and settings exports)
 install:
-	@source venv/bin/activate && ansible-playbook --skip-tags=cliclick --diff ansible.yml ;\
+	@source venv/bin/activate && ansible-playbook --skip-tags=cliclick,export --diff ansible.yml ;\
 
 install.homelab: ## Install Homelab on remote PC
 install.homelab:
@@ -56,16 +56,20 @@ install.homelab:
 
 install.priority: ## Install the minimal, highest priority items
 install.priority:
-	@source venv/bin/activate && ansible-playbook --tags=priority --skip-tags=cliclick --diff ansible.yml ;\
+	@source venv/bin/activate && ansible-playbook --tags=priority --skip-tags=cliclick,export --diff ansible.yml ;\
 	launchctl reboot logout
 
 install.nonpriority: ## Install remaining, lower priority items
 install.nonpriority:
-	@source venv/bin/activate && ansible-playbook --skip-tags=priority,cliclick --diff ansible.yml ;\
+	@source venv/bin/activate && ansible-playbook --skip-tags=priority,cliclick,export --diff ansible.yml ;\
 
 install.cliclick: ## Run the cliclick UI-automation app setup steps (excluded from all other install targets)
 install.cliclick:
 	@source venv/bin/activate && ansible-playbook --tags=cliclick --diff ansible.yml ;\
+
+settings.export: ## Export app settings (Spacebar/spaceballs) to iCloud — manual, excluded from installs
+settings.export:
+	@source venv/bin/activate && ansible-playbook --tags=export --diff ansible.yml ;\
 
 install.filtered: ## Install optionally filtering on given tags
 install.filtered: list.tags 
@@ -75,7 +79,7 @@ install.filtered: list.tags
 
 compare: ## Diff checks the ansible playbooks against the current environment
 compare:
-	@ansible-playbook --check --diff --skip-tags=cliclick ansible.yml
+	@ansible-playbook --check --diff --skip-tags=cliclick,export ansible.yml
 
 compare.filtered: ## Diff checks the specified playbook tags against the current environment
 compare.filtered: list.tags 

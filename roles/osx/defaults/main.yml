@@ -295,6 +295,10 @@ tower:
 code: 
   config_path: "{{ home_dir }}/.vscode"
 
+spaceballs:
+  config_dir: "{{ home_dir }}/iCloud/App Configs/spaceballs"
+  config_file: "{{ home_dir }}/iCloud/App Configs/spaceballs/settings.json"
+
 iterm:
   app_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2"
   dynamic_profile_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2/DynamicProfiles"
