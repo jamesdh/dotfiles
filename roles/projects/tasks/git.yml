@@ -76,8 +76,11 @@
     name: diff.tool
     value: p4merge
 
+# Reading a value via git_config was removed in newer community.general
+# (state=present now requires `value`); reads live in git_config_info, which
+# returns the same config_value key the check below relies on.
 - name: Check if Git LFS is installed
-  git_config:
+  community.general.git_config_info:
     scope: global
     name: filter.lfs.process
   register: lfs_config
