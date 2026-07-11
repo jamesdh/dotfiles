@@ -28,6 +28,8 @@ define clean_child_repos
 	if [ -f "$$repo/Makefile" ] && $(MAKE) -C "$$repo" -n clean >/dev/null 2>&1; then \
 		echo "==> $$repo (make clean)"; \
 		$(MAKE) -C "$$repo" --no-print-directory clean || echo "    clean failed in $$repo — continuing"; \
+	elif [ -f "$$repo/Makefile" ] && head -1 "$$repo/Makefile" 2>/dev/null | grep -q ANSIBLE_VAULT; then \
+		echo "!!  $$repo Makefile is vault-encrypted; run 'make secrets.decrypt' in jamesdh/dotfiles, then re-run"; \
 	else \
 		jf=""; \
 		[ -f "$$repo/justfile" ] && jf="$$repo/justfile"; \
