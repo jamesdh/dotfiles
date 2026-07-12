@@ -257,6 +257,7 @@ defaults:
       OnlyWhenMoreTabs: {type: bool, value: false}
       PreserveWindowSizeWhenTabBarVisibilityChanges: {type: bool, value: true}
       AlternateMouseScroll: {type: bool, value: true, desc: 'Allow mouse scrolling'}
+      ClickToSelectCommand: {type: bool, value: false, desc: 'Dont restrict Find/Filter to the clicked command'}
       DisableWindowSizeSnap: {type: bool, value: true, desc: 'Allow window to resize correctly'}
       NoSyncPermissionToShowTip: {type: bool, value: false, desc: 'Disable tips on startup'}
       PromptOnQuit: {type: bool, value: false}
