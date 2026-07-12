@@ -44,6 +44,8 @@ defaults:
       reduceTransparency: {type: bool, value: false, desc: 'Disable transparency in the menu bar and elsewhere'}
     com.apple.WindowManager:
       EnableStandardClickToShowDesktop: {type: bool, value: false}
+      StandardHideWidgets: {type: bool, value: true, desc: 'Hide widgets on the desktop'}
+      StageManagerHideWidgets: {type: bool, value: true, desc: 'Hide widgets in Stage Manager'}
     NSGlobalDomain:
       NSAutomaticDashSubstitutionEnabled: {type: bool, value: false, desc: 'Disable smart dashes as they’re annoying when coding'}
       NSAutomaticQuoteSubstitutionEnabled: {type: bool, value: false, desc: 'Disable smart quotes as they’re annoying when coding'}
