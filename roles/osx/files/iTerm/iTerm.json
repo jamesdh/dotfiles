@@ -79,26 +79,19 @@
       "Scrollback Lines" : 10000
     },
     {
-      "Rewritable" : true,
-      "Bold Color (Light)" : {
-        "Red Component" : 0.13333333333333333,
-        "Color Space" : "P3",
-        "Blue Component" : 0.67843137254901964,
-        "Alpha Component" : 1,
-        "Green Component" : 0.6470588235294118
-      },
       "Title Components" : 36,
-      "Guid" : "\/Users\/jamesdh\/Projects\/proximal-health",
-      "Name" : "Proximal",
+      "Scrollback Lines" : 10000,
+      "Rewritable" : true,
       "Bound Hosts" : [
         "\/Users\/jamesdh\/Projects\/proximal-health\/*"
       ],
-      "Use Separate Colors for Light and Dark Mode" : true,
       "Working Directory" : "\/Users\/jamesdh\/Projects\/proximal-health\/platform",
       "Transparency" : 0.20000000000000001,
+      "Guid" : "\/Users\/jamesdh\/Projects\/proximal-health",
+      "Name" : "Proximal",
       "Custom Directory" : "Yes",
       "Allow Title Setting" : false,
-      "Scrollback Lines" : 10000
+      "Use Separate Colors for Light and Dark Mode" : true
     },
     {
       "Rewritable" : true,
