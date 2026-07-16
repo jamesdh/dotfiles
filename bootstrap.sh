@@ -70,18 +70,21 @@ fi
 XCODE_CLI_FILENAME=Command_Line_Tools_26.6_Apple_silicon.dmg
 echo "Checking for Xcode Command Line Developer Tools..."
 xcode-select -p >& /dev/null || {
-    # If cache is present locally
-    if [[ -f "/Volumes/SDXC/$XCODE_CLI_FILENAME" ]]; then
-        echo "Waiting for Xcode Command Line Tools to finish installing..."
-        hdiutil attach "/Volumes/SDXC/$XCODE_CLI_FILENAME" -quiet
-        sudo installer -pkg /Volumes/Command\ Line\ Developer\ Tools/Command\ Line\ Tools.pkg -target /
-        hdiutil detach /Volumes/Command\ Line\ Developer\ Tools -quiet
-    # If cache is shared with Parallels
-    elif [[ -f "/Volumes/My Shared Files/SDXC/$XCODE_CLI_FILENAME" ]]; then
-        echo "Waiting for Xcode Command Line Tools to finish installing..."
-        hdiutil attach "/Volumes/My\ Shared\ Files/SDXC/$XCODE_CLI_FILENAME" -quiet
-        sudo installer -pkg /Volumes/Command\ Line\ Developer\ Tools/Command\ Line\ Tools.pkg -target /
-        hdiutil detach /Volumes/Command\ Line\ Developer\ Tools -quiet
+    # Look for a cached installer dmg on an attached external drive (T7 SSD
+    # preferred, SDXC card as fallback), including their Parallels shares.
+    XCODE_CLI_DMG=""
+    for vol in "/Volumes/T7" "/Volumes/SDXC" "/Volumes/My Shared Files/T7" "/Volumes/My Shared Files/SDXC"; do
+        if [[ -f "$vol/$XCODE_CLI_FILENAME" ]]; then
+            XCODE_CLI_DMG="$vol/$XCODE_CLI_FILENAME"
+            break
+        fi
+    done
+
+    if [[ -n "$XCODE_CLI_DMG" ]]; then
+        echo "Installing Xcode Command Line Tools from $XCODE_CLI_DMG..."
+        hdiutil attach "$XCODE_CLI_DMG" -quiet
+        sudo installer -pkg "/Volumes/Command Line Developer Tools/Command Line Tools.pkg" -target /
+        hdiutil detach "/Volumes/Command Line Developer Tools" -quiet
     else
         xcode-select --install
         echo "Select \"Install\" when prompted for Command Line Developer Tools"
