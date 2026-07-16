@@ -8,9 +8,11 @@
       path: "{{ home_dir }}/Downloads/{{ item.file }}"
     register: vpn_file
 
+  # onepassword_doc, not onepassword: documents aren't fields — the old
+  # type='document' kwarg was silently ignored and returned empty content
   - name: "Retrieve {{ item.title }} VPN config from 1Password"
     copy:
-      content: "{{ lookup('community.general.onepassword', item.title, type='document') }}"
+      content: "{{ lookup('community.general.onepassword_doc', item.title, vault='Dotfiles', service_account_token=op_sa_token) }}"
       dest: "{{ home_dir }}/Downloads/{{ item.file }}"
     when: not vpn_file.stat.exists
 
