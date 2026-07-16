@@ -242,10 +242,6 @@ defaults:
       GTUserDefaultsGettingStartedPassed: {type: bool, value: 1}
       GTUserDefaultsShowInvisibleCharacters: {type: bool, value: 1}
       SUHasLaunchedBefore: {type: bool, value: 1}
-    com.surteesstudios.Bartender:
-      license2: {type: string, value: "{{ lookup('community.general.onepassword', 'License: Bartender 3', field='license key') }}"}
-      license2HoldersName: {type: string, value: "{{ lookup('community.general.onepassword', 'License: Bartender 3', field='licensee') }}"}
-
     com.vmware.fusion:
       showStartMenu3: {type: integer, value: 0, desc: 'Remove VMWare icon from system menu'}
     com.googlecode.iterm2:
