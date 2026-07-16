@@ -48,6 +48,19 @@
 
 - import_tasks: dequarantine.yml
 
+# App Store apps live in Brewfile.mas — aggregated into the main Brewfile for
+# interactive `make apps.*` use, but excluded from the ansible-run bundles: mas
+# requires root and sudo-execs itself, and an in-bundle sudo prompt can never be
+# answered (the worker tree is a background process group — reading the tty stops
+# it with SIGTTIN). Ansible's become pipes the password instead, promptlessly.
+- name: Install App Store apps (mas needs root; an in-bundle sudo prompt hangs forever)
+  become: yes
+  shell: "set -o pipefail; grep -o 'id: [0-9]*' roles/osx/files/Brewfile.mas | awk '{print $2}' | xargs mas install"
+  register: mas_install
+  changed_when: mas_install.stdout | length > 0
+  tags:
+    - mas
+
 # After the nonpriority bundle so the binary exists (and is dequarantined) first
 - import_tasks: per_app/ngrok.yml
   tags:

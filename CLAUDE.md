@@ -83,4 +83,4 @@ Vault files are in:
 - Tasks use `when:` clauses for conditional execution based on file/package existence
 - 1Password lookups (`community.general.onepassword`) retrieve licenses and credentials
 - `check_mode: no` on tasks that must run even in dry-run mode
-- Brewfiles split by priority: `Brewfile.bootstrap`, `Brewfile.priority`, `Brewfile.privileged`, `Brewfile.nonpriority`, `Brewfile.fonts`
+- Brewfiles split by priority: `Brewfile.bootstrap`, `Brewfile.priority`, `Brewfile.privileged`, `Brewfile.nonpriority`, `Brewfile.mas` (App Store apps — installed by ansible with become, since mas needs root and brew bundle cannot sudo without a tty), `Brewfile.fonts`
