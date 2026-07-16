@@ -14,7 +14,7 @@ brew "wallpaper"
 cask "betterdisplay"
 cask "growlrrr"
 cask "iterm2"
-cask "mysides"
+# cask "mysides"  # disabled upstream 2025-10-13; sidebar setup paused, likely removing
 cask "p4v"
 cask "raycast"
 cask "spaceballs" # window switcher + CLI; settings import task depends on this

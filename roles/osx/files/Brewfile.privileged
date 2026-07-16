@@ -1,2 +1,2 @@
 cask "docker-desktop"
-cask "mysides"
+# cask "mysides"  # disabled upstream 2025-10-13; sidebar setup paused, likely removing

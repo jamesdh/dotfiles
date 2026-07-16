@@ -1,21 +1,24 @@
 ---
 
-- name: Get list of current Finder sidebar items
-  shell: mysides list
-  register: mysides_items
-  changed_when: false
-  
-- name: Remove undesired Finder sidebar items
-  shell: "mysides remove '{{ item }}'"
-  loop: "{{ finder_dels }}"
-  when: "item in mysides_items.stdout"
-  ignore_errors: true
-  
-- name: Add desired Finder sidebar items
-  shell: "mysides add '{{ item.name }}' {{ item.path }}"
-  loop: "{{ finder_adds }}"
-  when: "item.name not in mysides_items.stdout"
-  
+# Sidebar management disabled for now: the mysides cask was disabled upstream
+# (unmaintained, 2025-10-13) and its pkg needs sudo. Likely to be removed entirely.
+# - name: Get list of current Finder sidebar items
+#   shell: mysides list
+#   register: mysides_items
+#   changed_when: false
+#
+# - name: Remove undesired Finder sidebar items
+#   shell: "mysides remove '{{ item }}'"
+#   loop: "{{ finder_dels }}"
+#   when: "item in mysides_items.stdout"
+#   ignore_errors: true
+#
+# - name: Add desired Finder sidebar items
+#   shell: "mysides add '{{ item.name }}' {{ item.path }}"
+#   loop: "{{ finder_adds }}"
+#   when: "item.name not in mysides_items.stdout"
+
+
 - name: Show hidden folders
   command: "chflags nohidden {{ item }}"
   become: true
