@@ -1,8 +1,3 @@
-# The private key never touches disk — the 1Password SSH agent owns it. The public
-# key is still needed by the projects role for git's user.signingkey (op-ssh-sign).
-keys:
-  public:
-    github: "{{ lookup('community.general.onepassword', 'GitHub SSH Key', field='public key') }}"
 ssh_dir: "{{ ansible_facts['env']['HOME'] }}/.ssh"
 cert_dir: '{{ home_dir }}/.certs'
 

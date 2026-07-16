@@ -10,11 +10,16 @@
     name: user.email
     value: jamesdh@gmail.com
 
+# Public half of the signing key (the 1Password agent holds the private half),
+# resolved from GitHub's registered SSH *signing* keys (a separate registry from
+# the authentication keys at github.com/<user>.keys), anchored on the key title.
+# Fails loudly if the title disappears. curl instead of the url lookup because
+# urllib inside a forked worker trips macOS's Objective-C fork-safety abort.
 - name: Git config signing key
   git_config:
     scope: global
     name: user.signingkey
-    value: "{{keys.public.github}}"
+    value: "{{ lookup('ansible.builtin.pipe', 'curl -sf https://api.github.com/users/jamesdh/ssh_signing_keys') | from_json | selectattr('title', 'equalto', 'GitHub') | map(attribute='key') | first }}"
 
 - name: Git gpg format
   git_config:
