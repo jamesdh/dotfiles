@@ -304,8 +304,9 @@ iterm:
   autorun_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2/Scripts/AutoLaunch"
 
 ngrok:
-  # The "license key" field actually holds the authtoken (free tier still needs one)
-  authtoken: "{{ lookup('community.general.onepassword', 'ngrok', field='license key', vault='Dotfiles', service_account_token=op_sa_token) }}"
+  # The "license key" field actually holds the authtoken (free tier still needs one).
+  # Item title in 1Password is still "License: ngrok" — update here if it gets retitled.
+  authtoken: "{{ lookup('community.general.onepassword', 'License: ngrok', field='license key', vault='Dotfiles', service_account_token=op_sa_token) }}"
 
 passepartout:
   - { title: "SurfShark VPN Dedicated IP (NYC)", file: "us-nyc.conf" }
