@@ -1,8 +1,18 @@
-- name: Add ngrok auth token config
-  lineinfile:
-    path: "{{ home_dir }}/.ngrok2/ngrok.yml"
-    line: "authtoken: {{ ngrok.authtoken }}"
-    regexp: '^authtoken:'
-    create: yes
-  tags: 
+# ngrok v3 requires an authtoken for all usage (free tier included) and reads
+# ~/Library/Application Support/ngrok/ngrok.yml — the old ~/.ngrok2 path is v2-era.
+# `ngrok config add-authtoken` writes the current config format for us.
+- name: Check whether the ngrok authtoken is current
+  shell: 'grep -qs "authtoken: {{ ngrok.authtoken }}" "{{ home_dir }}/Library/Application Support/ngrok/ngrok.yml"'
+  register: ngrok_conf
+  failed_when: false
+  changed_when: false
+  no_log: true
+  tags:
+    - ngrok
+
+- name: Configure ngrok authtoken
+  command: ngrok config add-authtoken {{ ngrok.authtoken }}
+  when: ngrok_conf.rc != 0
+  no_log: true
+  tags:
     - ngrok
