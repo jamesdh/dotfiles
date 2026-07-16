@@ -15,3 +15,21 @@
       done
   register: dequarantine
   changed_when: '"dequarantined:" in dequarantine.stdout'
+
+# Casks that ship CLI binaries (ngrok, …) get the same quarantine treatment, and a
+# quarantined binary exec'd by ansible fails with EACCES. Binary artifact paths are
+# relative to the Caskroom stage, so resolve through the /opt/homebrew/bin symlink.
+- name: Strip quarantine xattr from Homebrew cask binaries
+  shell: |
+    set -o pipefail
+    brew info --cask --json=v2 --installed |
+      jq -r '.casks[].artifacts[] | select(.binary) | (.target // (.binary[0] | split("/") | last))' |
+      while IFS= read -r bin; do
+        tgt="$(readlink -f "/opt/homebrew/bin/$bin" 2>/dev/null)" || continue
+        if [ -f "$tgt" ] && xattr -p com.apple.quarantine "$tgt" >/dev/null 2>&1; then
+          xattr -d com.apple.quarantine "$tgt"
+          echo "dequarantined: $tgt"
+        fi
+      done
+  register: dequarantine_bins
+  changed_when: '"dequarantined:" in dequarantine_bins.stdout'

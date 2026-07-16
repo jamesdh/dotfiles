@@ -1,18 +1,33 @@
 # ngrok v3 requires an authtoken for all usage (free tier included) and reads
 # ~/Library/Application Support/ngrok/ngrok.yml — the old ~/.ngrok2 path is v2-era.
 # `ngrok config add-authtoken` writes the current config format for us.
+#
+# These tasks run under the priority tag (via settings.yml) but the cask arrives
+# with the nonpriority Brewfile — so guard on the binary existing, else priority
+# installs on fresh machines die here.
+- name: Check for ngrok
+  stat:
+    path: /opt/homebrew/bin/ngrok
+  register: ngrok_bin
+  tags:
+    - ngrok
+
 - name: Check whether the ngrok authtoken is current
   shell: 'grep -qs "authtoken: {{ ngrok.authtoken }}" "{{ home_dir }}/Library/Application Support/ngrok/ngrok.yml"'
   register: ngrok_conf
   failed_when: false
   changed_when: false
+  check_mode: no  # read-only probe; must run in --check or the task below sees a skipped register
   no_log: true
+  when: ngrok_bin.stat.exists
   tags:
     - ngrok
 
 - name: Configure ngrok authtoken
   command: ngrok config add-authtoken {{ ngrok.authtoken }}
-  when: ngrok_conf.rc != 0
   no_log: true
+  when:
+    - ngrok_bin.stat.exists
+    - ngrok_conf.rc != 0
   tags:
     - ngrok
