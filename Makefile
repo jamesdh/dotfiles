@@ -46,8 +46,14 @@ bootstrap: ## Verifies/installs necessary tools to support syncing dotfiles
 bootstrap:
 	@./bootstrap.sh ;\
 
+# Prime the sudo timestamp once, up front. Workers share the terminal session
+# (see ansible.yml), so every descendant sudo — become tasks, brew pkg casks,
+# mas — rides this tty's ticket instead of prompting mid-run.
+sudo.prime:
+	@sudo -v
+
 install: ## Install everything (except UI-automation steps and settings exports)
-install:
+install: sudo.prime
 	@source venv/bin/activate && ansible-playbook --skip-tags=cliclick,export --diff ansible.yml ;\
 
 install.homelab: ## Install Homelab on remote PC
@@ -55,34 +61,34 @@ install.homelab:
 	@source venv/bin/activate && ansible-playbook --diff homelab.yml ;\
 
 install.priority: ## Install the minimal, highest priority items
-install.priority:
+install.priority: sudo.prime
 	@source venv/bin/activate && ansible-playbook --tags=priority --skip-tags=cliclick,export --diff ansible.yml ;\
 	launchctl reboot logout
 
 install.nonpriority: ## Install remaining, lower priority items
-install.nonpriority:
+install.nonpriority: sudo.prime
 	@source venv/bin/activate && ansible-playbook --skip-tags=priority,cliclick,export --diff ansible.yml ;\
 
 install.cliclick: ## Run the cliclick UI-automation app setup steps (excluded from all other install targets)
-install.cliclick:
+install.cliclick: sudo.prime
 	@source venv/bin/activate && ansible-playbook --tags=cliclick --diff ansible.yml ;\
 
 settings.export: ## Export app settings (Spacebar/spaceballs) to iCloud — manual, excluded from installs
-settings.export:
+settings.export: sudo.prime
 	@source venv/bin/activate && ansible-playbook --tags=export --diff ansible.yml ;\
 
 install.filtered: ## Install optionally filtering on given tags
-install.filtered: list.tags 
+install.filtered: list.tags sudo.prime
 	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
 	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
 	source venv/bin/activate && ansible-playbook --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
 
 compare: ## Diff checks the ansible playbooks against the current environment
-compare:
+compare: sudo.prime
 	@ansible-playbook --check --diff --skip-tags=cliclick,export ansible.yml
 
 compare.filtered: ## Diff checks the specified playbook tags against the current environment
-compare.filtered: list.tags 
+compare.filtered: list.tags sudo.prime
 	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
 	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
 	ansible-playbook --check --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml

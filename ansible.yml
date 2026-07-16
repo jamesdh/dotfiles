@@ -1,4 +1,12 @@
 - hosts: localhost
+  vars:
+    # Workers normally setsid() into tty-less sessions, which breaks anything that
+    # sudos internally (brew pkg casks, mas — "a terminal is required to read the
+    # password") and gives 1Password a new client identity per task. Sharing the
+    # launching terminal's session instead lets the `sudo -v` priming in the make
+    # targets cover every descendant sudo via the normal per-tty ticket, silently.
+    # Requires ansible-core 2.21+ (ansible/ansible#86762).
+    ansible_worker_session_isolation: false
   pre_tasks:
     # Both desktop-app lookups here share this task's single biometric authorization —
     # the only 1Password dialog a run costs. Every other lookup in the play passes

@@ -1,2 +1,4 @@
-localhost   ansible_connection=local
+# become_success_timeout: local-connection become waits this long (default 10s) for
+# sudo to succeed — safety net if a run outlives the primed ticket and PAM prompts
+localhost   ansible_connection=local ansible_local_become_success_timeout=60
 homelab     ansible_connection=paramiko
