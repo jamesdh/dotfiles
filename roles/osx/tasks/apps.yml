@@ -47,3 +47,8 @@
   changed_when: brew_diff.changed
 
 - import_tasks: dequarantine.yml
+
+# After the nonpriority bundle so the binary exists (and is dequarantined) first
+- import_tasks: per_app/ngrok.yml
+  tags:
+    - ngrok

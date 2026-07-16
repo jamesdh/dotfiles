@@ -2,9 +2,8 @@
 # ~/Library/Application Support/ngrok/ngrok.yml — the old ~/.ngrok2 path is v2-era.
 # `ngrok config add-authtoken` writes the current config format for us.
 #
-# These tasks run under the priority tag (via settings.yml) but the cask arrives
-# with the nonpriority Brewfile — so guard on the binary existing, else priority
-# installs on fresh machines die here.
+# Imported after the nonpriority bundle installs the cask; the existence guard
+# only matters for targeted `--tags=ngrok` runs on machines without it yet.
 - name: Check for ngrok
   stat:
     path: /opt/homebrew/bin/ngrok
