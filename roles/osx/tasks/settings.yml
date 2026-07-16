@@ -8,6 +8,7 @@
   register: battery_section
   ignore_errors: true
   changed_when: false
+  check_mode: no  # read-only probe; must run in --check or the parse below sees a skipped register
 
 - name: Check current displaysleep values for both Battery and AC power
   shell: |
@@ -17,6 +18,7 @@
     pmset -g custom | awk '/AC Power/,0 {if ($1 == "sleep") print $2}' | head -n 1
   register: displaysleep_values
   changed_when: false  # No change, as this is only gathering information
+  check_mode: no  # read-only probe; must run in --check or the parse below sees a skipped register
   when: battery_section.rc == 0
 
 # - name: Debug displaysleep values
