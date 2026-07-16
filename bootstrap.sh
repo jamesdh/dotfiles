@@ -120,8 +120,13 @@ fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
 export PATH="$HOMEBREW_PREFIX/bin:$PATH"
 
-# If an attached external disk contains the cache, use that
-if [[ -d /Volumes/SDXC/Homebrew ]]; then
+# If an attached external disk should hold the cache, use it. Prefer the T7 SSD
+# (kept connected across reinstalls); create its Homebrew dir so the cache
+# self-populates on a fresh setup. Fall back to the SDXC card if its cache exists.
+if [[ -d /Volumes/T7 ]]; then
+  mkdir -p /Volumes/T7/Homebrew
+  export HOMEBREW_CACHE=/Volumes/T7/Homebrew
+elif [[ -d /Volumes/SDXC/Homebrew ]]; then
   export HOMEBREW_CACHE=/Volumes/SDXC/Homebrew
 fi
 
