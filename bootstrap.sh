@@ -72,11 +72,12 @@ xcode-select -p >& /dev/null || {
     done
 
     if [[ -n "$XCODE_CLI_DMG" ]]; then
-        echo "Installing Xcode Command Line Tools from $XCODE_CLI_DMG..."
+        echo "Using cached Xcode CLI tools from $XCODE_CLI_DMG"
         hdiutil attach "$XCODE_CLI_DMG" -quiet
         sudo installer -pkg "/Volumes/Command Line Developer Tools/Command Line Tools.pkg" -target /
         hdiutil detach "/Volumes/Command Line Developer Tools" -quiet
     else
+        echo "No cached $XCODE_CLI_FILENAME found on any external drive; downloading from Apple..."
         xcode-select --install
         echo "Select \"Install\" when prompted for Command Line Developer Tools"
         sleep 3
