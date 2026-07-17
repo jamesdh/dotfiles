@@ -65,9 +65,16 @@
           ansible.builtin.pause:
             seconds: 3
 
-        - name: Walk through each missing permission one at a time
+        # Permissions sharing a deeplink (e.g. the folder permissions, all requested by one
+        # file-search command) are grouped into a single trigger-and-grant prompt.
+        - name: Walk through each missing grant flow one at a time
           ansible.builtin.include_tasks: raycast_grant_permission.yml
-          loop: "{{ raycast_missing_permissions }}"
+          loop: "{{ raycast_missing_permissions | groupby('deeplink') | map('last') | list }}"
           loop_control:
-            label: "{{ item.name }}"
+            loop_var: perm_group
+            label: "{{ perm_names }}"
+          vars:
+            perm_names: "{{ perm_group | map(attribute='name') | join(', ') }}"
+            perm_pane: "{{ perm_group[0].pane }}"
+            perm_deeplink: "{{ perm_group[0].deeplink }}"
 
