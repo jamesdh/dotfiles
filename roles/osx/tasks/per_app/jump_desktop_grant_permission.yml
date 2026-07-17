@@ -1,0 +1,13 @@
+# Grant one Jump Desktop Connect permission: open its Privacy pane and wait for the manual
+# toggle. There's no prompt to trigger — Connect's TCC rows are pre-registered in a denied
+# state, and macOS never re-prompts a denied permission — so the pane toggle is the only path.
+- name: "Open the {{ item.name }} privacy pane"
+  ansible.builtin.command:
+    argv: [open, "x-apple.systempreferences:com.apple.preference.security?{{ item.pane }}"]
+  changed_when: false
+
+- name: "Wait while {{ item.name }} is granted to Jump Desktop Connect"
+  ansible.builtin.pause:
+    prompt: |-
+      In the pane that just opened, switch ON "Jump Desktop Connect" under {{ item.name }}.
+      Press Enter when done.

@@ -23,38 +23,25 @@
     - defaults
 
 # Detect which macOS permissions Raycast lacks and walk through granting each. The grant
-# step pauses for manual TCC toggles, so the whole block is tagged raycast_permissions and
-# skipped by the unattended install targets — run it via `make install.raycast-permissions`.
+# step pauses for manual TCC toggles, so the whole block is tagged permissions and skipped
+# by the unattended install targets — run it via `make install.permissions`.
 - name: Grant Raycast the macOS permissions it needs
   tags:
-    - raycast_permissions
+    - permissions
   block:
-    - name: Read Raycast's macOS permission (TCC) grants
-      ansible.builtin.command:
-        argv:
-          - sqlite3
-          - "{{ '/Library/Application Support/com.apple.TCC/TCC.db' if item.scope == 'system' else home_dir ~ '/Library/Application Support/com.apple.TCC/TCC.db' }}"
-          - "SELECT auth_value FROM access WHERE service='{{ item.service }}' AND client='com.raycast.macos';"
-      loop: "{{ raycast.tcc_permissions }}"
-      loop_control:
-        label: "{{ item.name }}"
-      register: raycast_tcc
-      changed_when: false
-      check_mode: no
-      failed_when: false
-
-    # auth_value 2 = allowed; a denied row (0) or a missing row (empty) both mean not yet granted.
-    - name: Determine which Raycast permissions still need granting
-      ansible.builtin.set_fact:
-        raycast_missing_permissions: "{{ raycast_tcc.results | rejectattr('stdout', 'equalto', '2') | map(attribute='item') | list }}"
+    - name: Detect Raycast's missing macOS permissions
+      ansible.builtin.include_tasks: tcc_missing_permissions.yml
+      vars:
+        tcc_client: com.raycast.macos
+        tcc_permissions: "{{ raycast.tcc_permissions }}"
 
     - name: Report Raycast permissions that still need a manual grant
       ansible.builtin.debug:
-        msg: "Raycast still needs granting: {{ raycast_missing_permissions | map(attribute='name') | join(', ') }}"
-      when: raycast_missing_permissions | length > 0
+        msg: "Raycast still needs granting: {{ tcc_missing_permissions | map(attribute='name') | join(', ') }}"
+      when: tcc_missing_permissions | length > 0
 
     - name: Trigger and grant each missing permission
-      when: raycast_missing_permissions | length > 0
+      when: tcc_missing_permissions | length > 0
       block:
         - name: Launch Raycast so it can service the permission-triggering deeplinks
           ansible.builtin.command:
@@ -69,7 +56,7 @@
         # file-search command) are grouped into a single trigger-and-grant prompt.
         - name: Walk through each missing grant flow one at a time
           ansible.builtin.include_tasks: raycast_grant_permission.yml
-          loop: "{{ raycast_missing_permissions | groupby('deeplink') | map('last') | list }}"
+          loop: "{{ tcc_missing_permissions | groupby('deeplink') | map('last') | list }}"
           loop_control:
             loop_var: perm_group
             label: "{{ perm_names }}"

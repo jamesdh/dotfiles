@@ -1,0 +1,23 @@
+# Query the TCC databases and set tcc_missing_permissions to the entries of tcc_permissions
+# not yet granted to tcc_client. Callers pass:
+#   tcc_client      - the app's bundle id (e.g. com.raycast.macos)
+#   tcc_permissions - list of {name, service, scope, pane, ...}; scope selects the database
+#                     (system = /Library, user = ~/Library)
+- name: "Read {{ tcc_client }}'s macOS permission (TCC) grants"
+  ansible.builtin.command:
+    argv:
+      - sqlite3
+      - "{{ '/Library/Application Support/com.apple.TCC/TCC.db' if item.scope == 'system' else home_dir ~ '/Library/Application Support/com.apple.TCC/TCC.db' }}"
+      - "SELECT auth_value FROM access WHERE service='{{ item.service }}' AND client='{{ tcc_client }}';"
+  loop: "{{ tcc_permissions }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: tcc_grants
+  changed_when: false
+  check_mode: no
+  failed_when: false
+
+# auth_value 2 = allowed; a denied row (0) or a missing row (empty) both mean not yet granted.
+- name: "Determine which permissions {{ tcc_client }} still needs"
+  ansible.builtin.set_fact:
+    tcc_missing_permissions: "{{ tcc_grants.results | rejectattr('stdout', 'equalto', '2') | map(attribute='item') | list }}"

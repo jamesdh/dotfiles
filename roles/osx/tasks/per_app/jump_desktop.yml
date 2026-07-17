@@ -1,0 +1,23 @@
+# Detect which macOS permissions Jump Desktop Connect lacks and walk through granting each.
+# The grant step pauses for manual TCC toggles, so the whole block is tagged permissions and
+# skipped by the unattended install targets — run it via `make install.permissions`.
+- name: Grant Jump Desktop Connect the macOS permissions it needs
+  tags:
+    - permissions
+  block:
+    - name: Detect Jump Desktop Connect's missing macOS permissions
+      ansible.builtin.include_tasks: tcc_missing_permissions.yml
+      vars:
+        tcc_client: com.p5sys.jump.connect
+        tcc_permissions: "{{ jump_desktop.tcc_permissions }}"
+
+    - name: Report Jump Desktop Connect permissions that still need a manual grant
+      ansible.builtin.debug:
+        msg: "Jump Desktop Connect still needs granting: {{ tcc_missing_permissions | map(attribute='name') | join(', ') }}"
+      when: tcc_missing_permissions | length > 0
+
+    - name: Walk through granting each missing permission
+      ansible.builtin.include_tasks: jump_desktop_grant_permission.yml
+      loop: "{{ tcc_missing_permissions }}"
+      loop_control:
+        label: "{{ item.name }}"

@@ -133,8 +133,12 @@
     - tower
 
 - import_tasks: per_app/raycast.yml
-  tags: 
+  tags:
     - raycast
+
+- import_tasks: per_app/jump_desktop.yml
+  tags:
+    - jump
 
 - import_tasks: per_app/iterm.yml
   tags:

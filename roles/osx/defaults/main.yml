@@ -344,6 +344,28 @@ raycast:
       pane: Privacy_FilesAndFolders
       deeplink: "raycast://extensions/raycast/file-search/search-files"
 
+jump_desktop:
+  # macOS permissions (TCC) Jump Desktop Connect needs for remote access. Unlike Raycast
+  # there's no deeplink to make Connect request a grant — its TCC rows sit pre-registered in
+  # a denied state, which macOS never re-prompts for — so each is a manual toggle in its pane.
+  tcc_permissions:
+    - name: Accessibility
+      service: kTCCServiceAccessibility
+      scope: system
+      pane: Privacy_Accessibility
+    - name: Screen & System Audio Recording
+      service: kTCCServiceScreenCapture
+      scope: system
+      pane: Privacy_ScreenCapture
+    - name: Remote Desktop
+      service: kTCCServiceRemoteDesktop
+      scope: system
+      pane: Privacy_RemoteDesktop
+    - name: Microphone
+      service: kTCCServiceMicrophone
+      scope: user
+      pane: Privacy_Microphone
+
 tower:
   license_path: "{{ home_dir }}/Library/Application\ Support/com.fournova.Tower3/extendedLicenseInfo.json"
   license_url: "{{ lookup('community.general.onepassword', 'Git-tower', field='registration', vault='Dotfiles', service_account_token=op_sa_token) }}"
