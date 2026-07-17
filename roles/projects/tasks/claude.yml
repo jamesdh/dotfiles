@@ -1,9 +1,13 @@
 ---
 
+# priority: Claude Code should be usable right after the essential install; the
+# skill-link tasks below stay nonpriority since they need the repos cloned first
 - name: Install Claude Code via native installer
   ansible.builtin.shell: "curl -fsSL https://claude.ai/install.sh | bash"
   args:
     creates: "{{home_dir}}/.local/bin/claude"
+  tags:
+    - priority
 
 - name: Ensure Claude skills directories exist
   file:
