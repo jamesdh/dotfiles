@@ -283,9 +283,44 @@ defaults:
       lastAcceptedEulaVersion: {type: integer, value: 0}
     com.raycast.macos:
       raycastGlobalHotkey: {type: string, value: 'Command-49'}
+      mainWindow_isMonitoringGlobalHotkeys: {type: bool, value: true}
+      raycastShouldFollowSystemAppearance: {type: bool, value: true}
+      useHyperKeyIcon: {type: bool, value: false}
+      # Suppresses the first-run walkthrough. Seed these before Raycast's first launch;
+      # onboardingCompleted is the flag the wizard itself gates on. Undocumented and
+      # version-specific — re-capture with `defaults read com.raycast.macos` after a
+      # major Raycast update. See per_app/raycast.yml.
+      onboardingCompleted: {type: bool, value: true}
+      showGettingStartedLink: {type: bool, value: false}
+      hasQueuedStatusBarHint: {type: bool, value: false}
+      hasShownStatusBarHintAfterOnboarding: {type: bool, value: true}
+      onboarding_showTasksProgress: {type: bool, value: true}
+      onboarding_raycastShortcuts: {type: array, value: ['Esc']}
+      floatingNotes_didCreateOnboardingNote: {type: bool, value: true}
+      # Raycast's folder-index scope lives in `permissions.folders.read:<path>` keys, which
+      # can't go here — see raycast.folder_scopes below.
     "com.mimestream.Mimestream":
       DeleteKeyAction: {type: string, value: 'Trash'}
       KeyboardShortcutSet: {type: string, value: 'gmail'}
+
+raycast:
+  # Raycast's own folder-index scopes, applied as `permissions.folders.read:<scope>` bools by
+  # per_app/raycast.yml. Kept out of defaults.userapps because the literal colon in the key
+  # trips library/osx_defaults.py's nested-key parser. TCC still gates the actual reads.
+  folder_scopes:
+    - "{{ home_dir }}/Desktop"
+    - "{{ home_dir }}/Documents"
+    - "{{ home_dir }}/Downloads"
+    - cloudStorage
+    - removableVolumes
+  # macOS permissions (TCC) Raycast needs; each must be granted by hand (TCC can't be
+  # scripted). scope selects the database: system = /Library, user = ~/Library.
+  tcc_permissions:
+    - { name: Accessibility,    service: kTCCServiceAccessibility,               scope: system }
+    - { name: Calendar,         service: kTCCServiceCalendar,                    scope: user }
+    - { name: Desktop folder,   service: kTCCServiceSystemPolicyDesktopFolder,   scope: user }
+    - { name: Documents folder, service: kTCCServiceSystemPolicyDocumentsFolder, scope: user }
+    - { name: Downloads folder, service: kTCCServiceSystemPolicyDownloadsFolder, scope: user }
 
 tower:
   license_path: "{{ home_dir }}/Library/Application\ Support/com.fournova.Tower3/extendedLicenseInfo.json"
