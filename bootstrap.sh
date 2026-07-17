@@ -18,48 +18,39 @@ EOF
     return 1 2>/dev/null || exit 1
 fi
 
-# Function to check if com.apple.Terminal has Accessibility enabled
-check_accessibility() {
-    result=$(sudo sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db" \
-        "SELECT auth_value FROM access WHERE service='kTCCServiceAccessibility' AND client='com.apple.Terminal';")
-    # Return the value of result, indicating the status
-    if [[ "$result" == "2" ]]; then
-        return 0  # Accessibility is enabled
-    else
-        return 1  # Accessibility is not enabled
+# Return 0 if <bundle_id> (arg 2) is granted <service> (arg 1) in the system TCC.db.
+# auth_value 2 = allowed; a denied row or no row both count as not granted.
+tcc_granted() {
+    local service="$1" bundle="$2"
+    [[ "$(sudo sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db" \
+        "SELECT auth_value FROM access WHERE service='$service' AND client='$bundle';")" == "2" ]]
+}
+
+# Open a Privacy pane and block until <bundle_id> is granted <service>. The grant is manual:
+# add the app with the pane's "+" if it isn't listed, then switch it on.
+# Args: <service> <bundle_id> <pane_anchor> <label>
+wait_for_tcc() {
+    local service="$1" bundle="$2" anchor="$3" label="$4"
+    if ! tcc_granted "$service" "$bundle"; then
+        open "x-apple.systempreferences:com.apple.preference.security?$anchor"
+        while ! tcc_granted "$service" "$bundle"; do
+            echo "Waiting for $label to be enabled..."
+            sleep 1
+        done
     fi
 }
 
-# Function to check if Terminal has Full Disk Access enabled
-check_full_disk_access() {
-    result=$(sudo sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db" \
-        "SELECT auth_value FROM access WHERE service='kTCCServiceSystemPolicyAllFiles' AND client='com.apple.Terminal';")
-    
-    # Return 0 if Full Disk Access is enabled (auth_value is 1), otherwise return 1
-    if [[ "$result" == "2" ]]; then
-        return 0  # Full Disk Access is enabled
-    else
-        return 1  # Full Disk Access is not enabled
-    fi
-}
-
-# Triggers the System Preferences -> Privacy & Security -> Full Disk Access and waits until 
-# Terminal has been added and enabled
-if ! check_full_disk_access; then
-    open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"
-    while ! check_full_disk_access; do
-        echo "Waiting for Full Disk Access for Terminal to be enabled..."
-        sleep 1
-    done
-fi
+# Terminal hosts this bootstrap: grant it Full Disk Access (to read TCC state) and
+# Accessibility (for UI automation) before the ansible run needs them.
+wait_for_tcc kTCCServiceSystemPolicyAllFiles com.apple.Terminal Privacy_AllFiles "Full Disk Access for Terminal"
 
 # https://github.com/bvanpeski/SystemPreferences/blob/main/macos_preferencepanes-Ventura.md#privacy--security
-# Triggers the System Preferences -> Privacy & Security -> Accessibility w/ Terminal already added
-# and waits until permission has been enabled
-if ! check_accessibility; then
+if ! tcc_granted kTCCServiceAccessibility com.apple.Terminal; then
+    # Poke System Events so Terminal is added to the Accessibility list up front, leaving
+    # only the toggle for the user.
     sudo osascript -e 'tell application "System Events" to click at {100, 100}' >& /dev/null
     open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"
-    while ! check_accessibility; do
+    while ! tcc_granted kTCCServiceAccessibility com.apple.Terminal; do
         echo "Waiting for Accessibility for Terminal to be enabled..."
         sleep 1
     done
@@ -179,6 +170,16 @@ pyenv install
 python -m venv venv
 source venv/bin/activate
 pip install -q -r requirements.txt
+
+# Same grants for iTerm, in case `make install` is run from it rather than Terminal. iTerm
+# isn't pre-listed in either pane and can't be poked into the Accessibility list from this
+# Terminal-hosted script, so add it with the pane's "+" when it opens.
+if [[ -d /Applications/iTerm.app ]]; then
+    wait_for_tcc kTCCServiceSystemPolicyAllFiles com.googlecode.iterm2 Privacy_AllFiles "Full Disk Access for iTerm"
+    wait_for_tcc kTCCServiceAccessibility com.googlecode.iterm2 Privacy_Accessibility "Accessibility for iTerm"
+else
+    echo "WARNING: iTerm.app not found; skipping its Full Disk Access / Accessibility setup."
+fi
 
 echo ""
 echo " Do not change from default resolution until after setup is complete."
