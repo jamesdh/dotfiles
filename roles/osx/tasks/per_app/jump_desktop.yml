@@ -58,13 +58,18 @@
     - name: Add the remote access user
       when: jump_users | length == 0
       block:
+        # The code is displayed (and often pasted) with digit-group spaces the API rejects,
+        # so strip all whitespace. JumpConnect also exits 0 on API errors ("Request failed:
+        # ... invite-not-found"), so success has to be read from its output, not exit code.
         - name: Add the remote access user with the Connect Code from 1Password
           ansible.builtin.command:
             argv:
               - /Applications/Jump Desktop Connect.app/Contents/MacOS/JumpConnect
               - --connectcode
-              - "{{ lookup('community.general.onepassword', 'Jump Desktop Connect Code', field='password', vault='Dotfiles', service_account_token=op_sa_token) }}"
+              - "{{ lookup('community.general.onepassword', 'Jump Desktop Connect Code', field='password', vault='Dotfiles', service_account_token=op_sa_token) | regex_replace('\\s', '') }}"
           become: yes
+          register: jump_connectcode_add
+          failed_when: "'Success' not in jump_connectcode_add.stdout"
 
         # The registration talks to Jump's servers, so give the user entry a moment to land.
         - name: Verify the remote access user was added
@@ -81,7 +86,6 @@
           register: jump_auth_tokens_added
           changed_when: false
           check_mode: no
-          failed_when: false
           retries: 10
           delay: 3
           until: >-
