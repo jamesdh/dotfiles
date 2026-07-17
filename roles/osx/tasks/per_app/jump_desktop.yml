@@ -31,8 +31,6 @@
 # A remote access user (a Jump Desktop account allowed to connect to this machine) shows up
 # as an entry with a non-empty email in the ServerAuthTokensEncoded JSON array of Connect's
 # root-side preferences; a fresh install holds only a placeholder entry with empty fields.
-# (Adding the user could be automated with `JumpConnect --connectcode <code>` if the connect
-# code were kept in 1Password.)
 - name: Ensure Jump Desktop Connect has a remote access user
   tags:
     - permissions
@@ -57,17 +55,35 @@
       ansible.builtin.set_fact:
         jump_users: "{{ (jump_auth_tokens.stdout | from_json | selectattr('email', 'ne', '') | map(attribute='email') | list) if jump_auth_tokens.rc | default(1) == 0 else [] }}"
 
-    - name: Walk through adding a remote access user
+    - name: Add the remote access user
       when: jump_users | length == 0
       block:
-        - name: Open Jump Desktop Connect to add a user
+        - name: Add the remote access user with the Connect Code from 1Password
           ansible.builtin.command:
-            argv: [open, -a, "Jump Desktop Connect"]
-          changed_when: false
+            argv:
+              - /Applications/Jump Desktop Connect.app/Contents/MacOS/JumpConnect
+              - --connectcode
+              - "{{ lookup('community.general.onepassword', 'Jump Desktop Connect Code', field='password', vault='Dotfiles', service_account_token=op_sa_token) }}"
+          become: yes
 
-        - name: Wait while a remote access user is added to Jump Desktop Connect
-          ansible.builtin.pause:
-            prompt: |-
-              No remote access user is configured in Jump Desktop Connect.
-              In the Connect window that just opened, add yourself (sign in or enter your Connect Code).
-              Press Enter when done.
+        # The registration talks to Jump's servers, so give the user entry a moment to land.
+        - name: Verify the remote access user was added
+          ansible.builtin.command:
+            argv:
+              - plutil
+              - -extract
+              - ServerAuthTokensEncoded
+              - raw
+              - -o
+              - "-"
+              - /var/root/Library/Preferences/com.p5sys.jump.connect.plist
+          become: yes
+          register: jump_auth_tokens_added
+          changed_when: false
+          check_mode: no
+          failed_when: false
+          retries: 10
+          delay: 3
+          until: >-
+            jump_auth_tokens_added.rc | default(1) == 0 and
+            jump_auth_tokens_added.stdout | from_json | selectattr('email', 'ne', '') | list | length > 0
