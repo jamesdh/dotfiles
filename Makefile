@@ -54,7 +54,7 @@ sudo.prime:
 
 install: ## Install everything (except UI-automation steps and settings exports)
 install: sudo.prime
-	@source venv/bin/activate && ansible-playbook --skip-tags=cliclick,export --diff ansible.yml ;\
+	@source venv/bin/activate && ansible-playbook --skip-tags=cliclick,export,raycast_permissions --diff ansible.yml ;\
 
 install.homelab: ## Install Homelab on remote PC
 install.homelab:
@@ -62,16 +62,20 @@ install.homelab:
 
 install.priority: ## Install the minimal, highest priority items
 install.priority: sudo.prime
-	@source venv/bin/activate && ansible-playbook --tags=priority --skip-tags=cliclick,export --diff ansible.yml ;\
+	@source venv/bin/activate && ansible-playbook --tags=priority --skip-tags=cliclick,export,raycast_permissions --diff ansible.yml ;\
 	launchctl reboot logout
 
 install.nonpriority: ## Install remaining, lower priority items
 install.nonpriority: sudo.prime
-	@source venv/bin/activate && ansible-playbook --skip-tags=priority,cliclick,export --diff ansible.yml ;\
+	@source venv/bin/activate && ansible-playbook --skip-tags=priority,cliclick,export,raycast_permissions --diff ansible.yml ;\
 
 install.cliclick: ## Run the cliclick UI-automation app setup steps (excluded from all other install targets)
 install.cliclick: sudo.prime
 	@source venv/bin/activate && ansible-playbook --tags=cliclick --diff ansible.yml ;\
+
+install.raycast-permissions: ## Walk through granting Raycast its macOS permissions (interactive; excluded from other targets)
+install.raycast-permissions:
+	@source venv/bin/activate && ansible-playbook --tags=raycast_permissions --diff ansible.yml ;\
 
 settings.export: ## Export app settings (Spacebar/spaceballs) to iCloud — manual, excluded from installs
 settings.export: sudo.prime
@@ -85,7 +89,7 @@ install.filtered: list.tags sudo.prime
 
 compare: ## Diff checks the ansible playbooks against the current environment
 compare: sudo.prime
-	@ansible-playbook --check --diff --skip-tags=cliclick,export ansible.yml
+	@ansible-playbook --check --diff --skip-tags=cliclick,export,raycast_permissions ansible.yml
 
 compare.filtered: ## Diff checks the specified playbook tags against the current environment
 compare.filtered: list.tags sudo.prime

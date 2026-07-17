@@ -1,0 +1,20 @@
+# Grant one Raycast permission: fire the deeplink that makes Raycast request it, open the
+# relevant Privacy pane, then wait. One permission per include so each gets its own pause —
+# firing the next deeplink would dismiss this one's Raycast confirmation dialog.
+- name: "Trigger Raycast's request for {{ item.name }}"
+  ansible.builtin.command:
+    argv: [open, "{{ item.deeplink }}"]
+  changed_when: false
+
+- name: "Open the {{ item.name }} privacy pane"
+  ansible.builtin.command:
+    argv: [open, "x-apple.systempreferences:com.apple.preference.security?{{ item.pane }}"]
+  changed_when: false
+
+- name: "Wait while {{ item.name }} is granted to Raycast"
+  ansible.builtin.pause:
+    prompt: |-
+      Raycast needs "{{ item.name }}":
+        1. Click "Run Command" in the Raycast popup to trigger the request.
+        2. Approve the macOS prompt, or switch Raycast on in the Privacy pane that opened.
+      Press Enter when done.
