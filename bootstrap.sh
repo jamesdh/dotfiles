@@ -96,6 +96,16 @@ pkgutil --pkgs=com.apple.pkg.RosettaUpdateAuto >& /dev/null || {
     softwareupdate --install-rosetta --agree-to-license
 }
 
+# Install Claude Code as early as possible so it's available to help debug
+# anything that fails from here on (repo clones, ansible runs, etc.)
+echo "Checking for Claude Code..."
+if [[ ! -f "$HOME/.local/bin/claude" ]]; then
+    echo "Installing Claude Code..."
+    curl -fsSL https://claude.ai/install.sh | bash
+fi
+# Make it usable in this very shell, before the dotfiles PATH setup exists
+export PATH="$HOME/.local/bin:$PATH"
+
 # Clone dotfiles locally if missing
 mkdir -p ~/Projects/jamesdh/dotfiles 
 cd ~/Projects/jamesdh/dotfiles 
