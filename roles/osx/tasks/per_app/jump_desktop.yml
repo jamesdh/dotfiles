@@ -27,3 +27,47 @@
               Jump Desktop Connect still needs: {{ tcc_missing_permissions | map(attribute='name') | join(', ') }}
               Step through the permission approvals in the Connect window that just opened.
               Press Enter when done.
+
+# A remote access user (a Jump Desktop account allowed to connect to this machine) shows up
+# as an entry with a non-empty email in the ServerAuthTokensEncoded JSON array of Connect's
+# root-side preferences; a fresh install holds only a placeholder entry with empty fields.
+# (Adding the user could be automated with `JumpConnect --connectcode <code>` if the connect
+# code were kept in 1Password.)
+- name: Ensure Jump Desktop Connect has a remote access user
+  tags:
+    - permissions
+  block:
+    - name: Read Connect's remote access users
+      ansible.builtin.command:
+        argv:
+          - plutil
+          - -extract
+          - ServerAuthTokensEncoded
+          - raw
+          - -o
+          - "-"
+          - /var/root/Library/Preferences/com.p5sys.jump.connect.plist
+      become: yes
+      register: jump_auth_tokens
+      changed_when: false
+      check_mode: no
+      failed_when: false  # a missing key or plist just means no users yet
+
+    - name: Determine Connect's configured remote access users
+      ansible.builtin.set_fact:
+        jump_users: "{{ (jump_auth_tokens.stdout | from_json | selectattr('email', 'ne', '') | map(attribute='email') | list) if jump_auth_tokens.rc | default(1) == 0 else [] }}"
+
+    - name: Walk through adding a remote access user
+      when: jump_users | length == 0
+      block:
+        - name: Open Jump Desktop Connect to add a user
+          ansible.builtin.command:
+            argv: [open, -a, "Jump Desktop Connect"]
+          changed_when: false
+
+        - name: Wait while a remote access user is added to Jump Desktop Connect
+          ansible.builtin.pause:
+            prompt: |-
+              No remote access user is configured in Jump Desktop Connect.
+              In the Connect window that just opened, add yourself (sign in or enter your Connect Code).
+              Press Enter when done.
