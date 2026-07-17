@@ -59,9 +59,11 @@ cask "obs"
 cask "passepartout"
 cask "proxyman"
 cask "selfcontrol"
+cask "slack", args: { adopt: true }
 cask "spokenly"
 cask "stay"
 cask "tableplus"
+cask "the-unarchiver", args: { adopt: true }
 cask "thinkorswim"
 cask "topnotch"
 cask "ungoogled-chromium"
