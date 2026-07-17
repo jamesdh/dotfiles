@@ -1,1 +1,4 @@
-ansible_python_interpreter: "venv/bin/python3"
+# Anchor to the inventory location (the repo root) rather than the process cwd — a relative
+# path here makes every module invocation fail with "module interpreter not found" whenever
+# ansible-playbook runs from any other directory.
+ansible_python_interpreter: "{{ inventory_dir }}/venv/bin/python3"

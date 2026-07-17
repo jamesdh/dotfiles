@@ -314,57 +314,44 @@ raycast:
     - cloudStorage
     - removableVolumes
   # macOS permissions (TCC) Raycast needs; each must be granted by hand (TCC can't be
-  # scripted). scope selects the database: system = /Library, user = ~/Library. deeplink is
-  # a Raycast command that forces Raycast to request the permission (so it appears in the
-  # pane / raises the prompt); pane is the Privacy & Security anchor to open for the grant.
+  # scripted). deeplink is a Raycast command that forces Raycast to request the permission
+  # (so it appears in the pane / raises the prompt); pane is the Privacy & Security anchor
+  # printed as the manual fallback for the grant.
   tcc_permissions:
     - name: Accessibility
       service: kTCCServiceAccessibility
-      scope: system
       pane: Privacy_Accessibility
       deeplink: "raycast://extensions/raycast/window-management/left-half"
     - name: Calendar
       service: kTCCServiceCalendar
-      scope: user
       pane: Privacy_Calendars
       deeplink: "raycast://extensions/raycast/calendar/my-schedule"
     - name: Desktop folder
       service: kTCCServiceSystemPolicyDesktopFolder
-      scope: user
       pane: Privacy_FilesAndFolders
       deeplink: "raycast://extensions/raycast/file-search/search-files"
     - name: Documents folder
       service: kTCCServiceSystemPolicyDocumentsFolder
-      scope: user
       pane: Privacy_FilesAndFolders
       deeplink: "raycast://extensions/raycast/file-search/search-files"
     - name: Downloads folder
       service: kTCCServiceSystemPolicyDownloadsFolder
-      scope: user
       pane: Privacy_FilesAndFolders
       deeplink: "raycast://extensions/raycast/file-search/search-files"
 
 jump_desktop:
-  # macOS permissions (TCC) Jump Desktop Connect needs for remote access. Unlike Raycast
-  # there's no deeplink to make Connect request a grant — its TCC rows sit pre-registered in
-  # a denied state, which macOS never re-prompts for — so each is a manual toggle in its pane.
+  # macOS permissions (TCC) Jump Desktop Connect needs for remote access. Connect's own
+  # setup UI (auto-opened after install) walks through granting these, so the playbook just
+  # reopens Connect when any are missing rather than driving the Privacy panes itself.
   tcc_permissions:
     - name: Accessibility
       service: kTCCServiceAccessibility
-      scope: system
-      pane: Privacy_Accessibility
     - name: Screen & System Audio Recording
       service: kTCCServiceScreenCapture
-      scope: system
-      pane: Privacy_ScreenCapture
     - name: Remote Desktop
       service: kTCCServiceRemoteDesktop
-      scope: system
-      pane: Privacy_RemoteDesktop
     - name: Microphone
       service: kTCCServiceMicrophone
-      scope: user
-      pane: Privacy_Microphone
 
 tower:
   license_path: "{{ home_dir }}/Library/Application\ Support/com.fournova.Tower3/extendedLicenseInfo.json"
