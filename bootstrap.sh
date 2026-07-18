@@ -23,16 +23,16 @@ fi
 # lives in ~/.dotfiles-profile and is read by the Brewfile (Ruby) and ansible.
 if [[ ! -f ~/.dotfiles-profile ]]; then
     while true; do
-        read "profile?Machine profile — (1) personal, (2) proximal, (3) neither: "
+        read "profile?Machine profile — (1) personal, (2) proximal, (3) base: "
         case $profile in
             1|personal) echo personal > ~/.dotfiles-profile; break ;;
             2|proximal) echo proximal > ~/.dotfiles-profile; break ;;
-            3|neither|none) : > ~/.dotfiles-profile; break ;;
+            3|base) echo base > ~/.dotfiles-profile; break ;;
             *) echo "Enter 1, 2, or 3." ;;
         esac
     done
 fi
-echo "Machine profile: $(cat ~/.dotfiles-profile 2>/dev/null | grep . || echo none)"
+echo "Machine profile: $(cat ~/.dotfiles-profile)"
 
 # Return 0 if <bundle_id> (arg 2) is granted <service> (arg 1) in the system TCC.db.
 # auth_value 2 = allowed; a denied row or no row both count as not granted.

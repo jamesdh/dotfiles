@@ -5,16 +5,16 @@ instance_eval(File.read("roles/osx/files/Brewfile.nonpriority"))
 instance_eval(File.read("roles/osx/files/Brewfile.mas"))
 instance_eval(File.read("roles/osx/files/Brewfile.fonts"))
 
-# Machine-profile apps: ~/.dotfiles-profile ("personal", "proximal", or empty for
-# deliberately neither — written by bootstrap.sh) selects which set this machine gets.
-# When the file is missing, include NEITHER and warn — a wrong default could push
-# personal-only apps onto the work machine.
+# Machine-profile apps: ~/.dotfiles-profile ("personal", "proximal", or "base" for
+# deliberately none of the extras — written by bootstrap.sh) selects which set this
+# machine gets. When the file is missing or unrecognized, include NEITHER and warn — a
+# wrong default could push personal-only apps onto the work machine.
 profile_path = File.expand_path("~/.dotfiles-profile")
 if File.exist?(profile_path)
   profile = File.read(profile_path).strip
   if %w[personal proximal].include?(profile)
     instance_eval(File.read("roles/osx/files/Brewfile.#{profile}"))
-  elsif !profile.empty?
+  elsif profile != "base"
     warn "~/.dotfiles-profile contains unknown profile #{profile.inspect}; skipping profile apps"
   end
 else
