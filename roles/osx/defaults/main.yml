@@ -339,6 +339,11 @@ raycast:
       pane: Privacy_FilesAndFolders
       deeplink: "raycast://extensions/raycast/file-search/search-files"
 
+istat_menus:
+  # Settings exports live in iCloud; pick the one matching this machine's form factor
+  # (ansible_product_name is the model id, e.g. MacBookPro18,3 or Mac16,10).
+  settings_file: "{{ home_dir }}/iCloud/App Configs/iStat Menus {{ 'Laptop' if 'Book' in ansible_product_name else 'Desktop' }}.ismp7"
+
 jump_desktop:
   # macOS permissions (TCC) Jump Desktop Connect needs for remote access. Connect's own
   # setup UI (auto-opened after install) walks through granting these, so the playbook just

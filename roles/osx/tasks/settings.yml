@@ -140,6 +140,10 @@
   tags:
     - jump
 
+- import_tasks: per_app/istat_menus.yml
+  tags:
+    - istat
+
 - import_tasks: per_app/iterm.yml
   tags:
     - iterm

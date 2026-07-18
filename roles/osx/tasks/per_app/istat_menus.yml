@@ -1,0 +1,30 @@
+# Configure iStat Menus by opening the machine-appropriate settings export from iCloud —
+# the app auto-imports a .ismp7 file it's asked to open. Only runs when the app's defaults
+# domain doesn't exist yet (i.e. it has never been launched or imported on this machine):
+# re-importing on every install would pop the import flow each run. License registration
+# stays manual for now (v7 activates online from within the app).
+- name: Check whether iStat Menus has been set up
+  ansible.builtin.command:
+    argv: [defaults, read, com.bjango.istatmenus]
+  register: istat_domain
+  changed_when: false
+  check_mode: no
+  failed_when: false
+
+- name: Import iStat Menus settings on first setup
+  when: istat_domain.rc != 0
+  block:
+    - name: Materialize the settings export from iCloud
+      ansible.builtin.command:
+        argv: [brctl, download, "{{ istat_menus.settings_file }}"]
+      changed_when: false
+
+    - name: Check the settings export exists
+      ansible.builtin.stat:
+        path: "{{ istat_menus.settings_file }}"
+      register: istat_settings
+
+    - name: Open the settings export with iStat Menus (auto-imports)
+      ansible.builtin.command:
+        argv: [open, "{{ istat_menus.settings_file }}"]
+      when: istat_settings.stat.exists
