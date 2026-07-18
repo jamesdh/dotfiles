@@ -87,3 +87,25 @@
       args:
         chdir: "{{ github_runner.base_dir }}-{{ item }}"
       loop: "{{ runners_missing }}"
+
+
+# Tahoe's App Data protection ("node would like to access data from other apps") prompts
+# per binary: every instance's bundled node (node20 AND node24) raises its own dialog the
+# first time a job touches foreign app data, stalling CI mid-run. The prompt can't be
+# reliably pre-triggered from a terminal (attribution follows the responsible process), so
+# grant it directly: insert the TCC row a real approval writes, with the csreq compiled
+# from each binary's own designated requirement. Requires the terminal's Full Disk Access.
+- name: Grant each runner node access to app data (TCC)
+  ansible.builtin.shell: |
+    db="$HOME/Library/Application Support/com.apple.TCC/TCC.db"
+    for node in {{ github_runner.base_dir }}-*/externals/node*/bin/node; do
+      granted=$(sqlite3 "$db" "SELECT auth_value FROM access WHERE service='kTCCServiceSystemPolicyAppData' AND client='$node';")
+      [ -n "$granted" ] && continue
+      req=$(codesign -d -r- "$node" 2>&1 | sed -n 's/^designated => //p')
+      blob=$(mktemp); echo "$req" | csreq -r- -b "$blob"
+      hex=$(xxd -p "$blob" | tr -d '\n'); rm -f "$blob"
+      sqlite3 "$db" "INSERT INTO access (service, client, client_type, auth_value, auth_reason, auth_version, csreq, indirect_object_identifier, flags, last_modified, last_reminded) VALUES ('kTCCServiceSystemPolicyAppData', '$node', 1, 5, 2, 1, X'$hex', 'UNUSED', 0, strftime('%s','now'), 0);"
+      echo "granted $node"
+    done
+  register: node_appdata
+  changed_when: "'granted' in node_appdata.stdout"
