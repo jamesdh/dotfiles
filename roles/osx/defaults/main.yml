@@ -339,6 +339,18 @@ raycast:
       pane: Privacy_FilesAndFolders
       deeplink: "raycast://extensions/raycast/file-search/search-files"
 
+btt:
+  app_support: "{{ home_dir }}/Library/Application Support/BetterTouchTool"
+  backup_dir: "{{ home_dir }}/iCloud/App Configs/BetterTouchTool"
+  # BTT also prompts for Automation (Shortcuts Events), Bluetooth, and keystroke access,
+  # but those are Allow-button dialogs it raises itself when running; only these two need
+  # Privacy-pane toggles. Keystroke access rides along with Accessibility (no TCC row).
+  tcc_permissions:
+    - name: Accessibility
+      service: kTCCServiceAccessibility
+    - name: Screen & System Audio Recording
+      service: kTCCServiceScreenCapture
+
 ice:
   settings_file: "{{ home_dir }}/iCloud/App Configs/Ice.plist"
   # Ice's permission onboarding drives these grants; the screen-related "Allow" dialog it

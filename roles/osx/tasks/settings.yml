@@ -148,6 +148,10 @@
   tags:
     - ice
 
+- import_tasks: per_app/bettertouchtool.yml
+  tags:
+    - btt
+
 - import_tasks: per_app/iterm.yml
   tags:
     - iterm

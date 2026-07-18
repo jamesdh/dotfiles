@@ -1,0 +1,103 @@
+# BetterTouchTool: license, settings, and permissions. The license is the .bettertouchtool
+# document from 1Password placed as bettertouchtool.bttlicense in BTT's Application Support
+# dir — the exact file BTT writes there itself when a license is imported by opening it.
+# Settings live in that same dir (SQLite data store, presets, user variables) plus the
+# com.hegenberg.BetterTouchTool defaults domain; both are backed up to iCloud.
+
+# tagged `always` (read-only check): the export and restore guards below need this fact
+# under any tag combination.
+- name: Check whether BetterTouchTool has been set up
+  ansible.builtin.command:
+    argv: [defaults, read, com.hegenberg.BetterTouchTool]
+  register: btt_domain
+  changed_when: false
+  check_mode: no
+  failed_when: false
+  tags:
+    - always
+
+- name: Check whether BetterTouchTool is licensed
+  ansible.builtin.stat:
+    path: "{{ btt.app_support }}/bettertouchtool.bttlicense"
+  register: btt_license
+
+- name: Install the BetterTouchTool license from 1Password
+  when: not btt_license.stat.exists
+  block:
+    - name: Ensure BetterTouchTool's Application Support dir exists
+      ansible.builtin.file:
+        path: "{{ btt.app_support }}"
+        state: directory
+
+    - name: Place the license file
+      ansible.builtin.copy:
+        content: "{{ lookup('community.general.onepassword_doc', 'BetterTouchTool - James Hardwick.bettertouchtool', vault='Dotfiles', service_account_token=op_sa_token) }}"
+        dest: "{{ btt.app_support }}/bettertouchtool.bttlicense"
+        mode: "0644"
+
+# Manual/on-demand only: overwrites the iCloud copy with THIS machine's settings.
+# Excluded from default installs via --skip-tags=export; run with `make settings.export`.
+# The domain guard keeps an unconfigured machine from clobbering the backup.
+- name: Export BetterTouchTool settings to iCloud
+  when: btt_domain.rc == 0
+  tags:
+    - export
+  block:
+    - name: Sync BetterTouchTool's Application Support dir to iCloud
+      ansible.builtin.command:
+        argv: [rsync, -a, --delete, "--exclude=Logs/", "--exclude=Backups/", "{{ btt.app_support }}/", "{{ btt.backup_dir }}/appsupport/"]
+
+    - name: Export BetterTouchTool defaults
+      ansible.builtin.command:
+        argv: [defaults, export, com.hegenberg.BetterTouchTool, "{{ btt.backup_dir }}/defaults.plist"]
+
+- name: Restore BetterTouchTool settings on first setup
+  when: btt_domain.rc != 0
+  block:
+    - name: Materialize the backup from iCloud
+      ansible.builtin.shell: "find '{{ btt.backup_dir }}' -type f -exec brctl download {} \\; 2>/dev/null || true"
+      changed_when: false
+
+    - name: Check a backup exists in iCloud
+      ansible.builtin.stat:
+        path: "{{ btt.backup_dir }}/defaults.plist"
+      register: btt_backup
+
+    - name: Restore settings from the backup
+      when: btt_backup.stat.exists
+      block:
+        - name: Restore BetterTouchTool's Application Support dir
+          ansible.builtin.command:
+            argv: [rsync, -a, "{{ btt.backup_dir }}/appsupport/", "{{ btt.app_support }}/"]
+
+        - name: Import BetterTouchTool defaults
+          ansible.builtin.command:
+            argv: [defaults, import, com.hegenberg.BetterTouchTool, "{{ btt.backup_dir }}/defaults.plist"]
+
+# BTT raises its own permission prompts once running, so open it and pause when the
+# pane-toggle grants are missing. Interactive, hence the permissions tag.
+- name: Grant BetterTouchTool the macOS permissions it needs
+  tags:
+    - permissions
+  block:
+    - name: Detect BetterTouchTool's missing macOS permissions
+      ansible.builtin.include_tasks: tcc_missing_permissions.yml
+      vars:
+        tcc_client: com.hegenberg.BetterTouchTool
+        tcc_permissions: "{{ btt.tcc_permissions }}"
+
+    - name: Walk through BetterTouchTool's permission prompts
+      when: tcc_missing_permissions | length > 0
+      block:
+        - name: Open BetterTouchTool
+          ansible.builtin.command:
+            argv: [open, -a, BetterTouchTool]
+          changed_when: false
+
+        - name: Wait while BetterTouchTool's permissions are granted
+          ansible.builtin.pause:
+            prompt: |-
+              BetterTouchTool still needs: {{ tcc_missing_permissions | map(attribute='name') | join(', ') }}
+              Approve its prompts (it may also ask for Shortcuts control, Bluetooth, and
+              keystroke access — allow those too).
+              Press Enter when done.
