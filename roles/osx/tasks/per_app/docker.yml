@@ -23,3 +23,13 @@
   retries: 24
   delay: 5
   when: docker_engine.rc != 0
+
+# Docker Desktop's privileged helper has been seen creating /usr/local/bin mode 700,
+# making its CLI symlinks (and the whole dir) unreadable — runner jobs then fail with
+# "docker: command not found" plus EACCES stat noise on every /usr/local/bin probe.
+- name: Ensure /usr/local/bin is world-readable
+  become: yes
+  ansible.builtin.file:
+    path: /usr/local/bin
+    state: directory
+    mode: "0755"
