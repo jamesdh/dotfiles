@@ -1,0 +1,73 @@
+# Ice keeps all its settings in a plain defaults domain (@AppStorage), so a fresh machine
+# is configured by importing the iCloud export before first launch. Launch-at-login can't
+# be seeded (SMAppService state lives in the root-owned BackgroundItems database) and the
+# menu-bar spacing tweak needs a logout, so both stay manual in the app.
+
+# tagged `always` (read-only check): both the export guard and the seed guard below need
+# this fact, and any other tag combo (--tags=export, --skip-tags=export) would leave it
+# unregistered for one of them.
+- name: Check whether Ice has been set up
+  ansible.builtin.command:
+    argv: [defaults, read, com.jordanbaird.Ice]
+  register: ice_domain
+  changed_when: false
+  check_mode: no
+  failed_when: false
+  tags:
+    - always
+
+# Manual/on-demand only: overwrites the iCloud copy with THIS machine's settings.
+# Excluded from default installs via --skip-tags=export; run with `make settings.export`.
+# The domain guard keeps an unconfigured machine from clobbering the backup.
+- name: Export Ice settings to iCloud
+  ansible.builtin.command:
+    argv: [defaults, export, com.jordanbaird.Ice, "{{ ice.settings_file }}"]
+  when: ice_domain.rc == 0
+  tags:
+    - export
+
+- name: Seed Ice settings on first setup
+  when: ice_domain.rc != 0
+  block:
+    - name: Materialize the settings export from iCloud
+      ansible.builtin.command:
+        argv: [brctl, download, "{{ ice.settings_file }}"]
+      changed_when: false
+
+    - name: Check the settings export exists
+      ansible.builtin.stat:
+        path: "{{ ice.settings_file }}"
+      register: ice_settings
+
+    - name: Import Ice settings
+      ansible.builtin.command:
+        argv: [defaults, import, com.jordanbaird.Ice, "{{ ice.settings_file }}"]
+      when: ice_settings.stat.exists
+
+# Ice's own onboarding walks through granting these, so open it and pause when any are
+# missing. Interactive, hence the permissions tag (run via `make install.permissions`).
+- name: Grant Ice the macOS permissions it needs
+  tags:
+    - permissions
+  block:
+    - name: Detect Ice's missing macOS permissions
+      ansible.builtin.include_tasks: tcc_missing_permissions.yml
+      vars:
+        tcc_client: com.jordanbaird.Ice
+        tcc_permissions: "{{ ice.tcc_permissions }}"
+
+    - name: Walk through Ice's permission onboarding
+      when: tcc_missing_permissions | length > 0
+      block:
+        - name: Open Ice
+          ansible.builtin.command:
+            argv: [open, -a, Ice]
+          changed_when: false
+
+        - name: Wait while Ice's permissions are granted
+          ansible.builtin.pause:
+            prompt: |-
+              Ice still needs: {{ tcc_missing_permissions | map(attribute='name') | join(', ') }}
+              Grant them in the Ice window that just opened — and while you're there, enable
+              "Launch at login" (not automatable) if this is a fresh setup.
+              Press Enter when done.

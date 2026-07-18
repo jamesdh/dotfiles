@@ -339,6 +339,16 @@ raycast:
       pane: Privacy_FilesAndFolders
       deeplink: "raycast://extensions/raycast/file-search/search-files"
 
+ice:
+  settings_file: "{{ home_dir }}/iCloud/App Configs/Ice.plist"
+  # Ice's permission onboarding drives these grants; the screen-related "Allow" dialog it
+  # also shows is macOS's screen-capture re-authorization, not a third TCC service.
+  tcc_permissions:
+    - name: Accessibility
+      service: kTCCServiceAccessibility
+    - name: Screen & System Audio Recording
+      service: kTCCServiceScreenCapture
+
 istat_menus:
   # Settings exports live in iCloud; pick the one matching this machine's form factor
   # (ansible_product_name is the model id, e.g. MacBookPro18,3 or Mac16,10).

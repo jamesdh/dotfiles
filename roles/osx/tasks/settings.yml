@@ -144,6 +144,10 @@
   tags:
     - istat
 
+- import_tasks: per_app/ice.yml
+  tags:
+    - ice
+
 - import_tasks: per_app/iterm.yml
   tags:
     - iterm
