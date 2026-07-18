@@ -1,0 +1,81 @@
+# GitHub self-hosted runners for the org: count instances, each in its own dir
+# (actions-runner-<n>) with its own registration and launchd service (svc.sh).
+# Registration tokens are 1-hour, org-wide, multi-use — mint one per run via gh when
+# possible, else pause for a pasted token (org settings -> Actions -> Runners -> New).
+# A token can also be supplied with -e runner_reg_token=... .
+- name: Check which runner instances are configured
+  ansible.builtin.stat:
+    path: "{{ github_runner.base_dir }}-{{ item }}/.runner"
+  loop: "{{ range(1, github_runner.count + 1) | list }}"
+  register: runner_instances
+
+- name: Determine missing runner instances
+  ansible.builtin.set_fact:
+    runners_missing: "{{ runner_instances.results | rejectattr('stat.exists') | map(attribute='item') | list }}"
+
+- name: Register missing runner instances
+  when: runners_missing | length > 0
+  block:
+    - name: Mint a registration token via gh
+      ansible.builtin.command:
+        argv: [gh, api, -X, POST, "orgs/{{ github_runner.org }}/actions/runners/registration-token", --jq, .token]
+      register: runner_token_api
+      failed_when: false
+      no_log: true
+      when: runner_reg_token | default('') == ''
+
+    - name: Ask for a registration token when gh can't mint one
+      ansible.builtin.pause:
+        prompt: |-
+          gh could not mint a runner registration token (PAT lacks org runner admin).
+          Get one from https://github.com/organizations/{{ github_runner.org }}/settings/actions/runners/new
+          and paste it here
+      register: runner_token_answer
+      when:
+        - runner_reg_token | default('') == ''
+        - runner_token_api.rc != 0
+
+    - name: Determine the registration token
+      ansible.builtin.set_fact:
+        runner_token: "{{ runner_reg_token | default(runner_token_api.stdout | default('') if runner_token_api.rc | default(1) == 0 else runner_token_answer.user_input | default(''), true) | trim }}"
+      no_log: true
+
+    - name: Download the runner package
+      ansible.builtin.get_url:
+        url: "https://github.com/actions/runner/releases/download/v{{ github_runner.version }}/actions-runner-osx-arm64-{{ github_runner.version }}.tar.gz"
+        dest: "/tmp/actions-runner-osx-arm64-{{ github_runner.version }}.tar.gz"
+        checksum: "sha256:{{ github_runner.sha256 }}"
+
+    - name: Create instance directories
+      ansible.builtin.file:
+        path: "{{ github_runner.base_dir }}-{{ item }}"
+        state: directory
+      loop: "{{ runners_missing }}"
+
+    # command tar, not ansible.builtin.unarchive: the latter demands GNU tar on macOS.
+    - name: Extract the runner into each instance
+      ansible.builtin.command:
+        argv: [tar, xzf, "/tmp/actions-runner-osx-arm64-{{ github_runner.version }}.tar.gz", -C, "{{ github_runner.base_dir }}-{{ item }}"]
+        creates: "{{ github_runner.base_dir }}-{{ item }}/config.sh"
+      loop: "{{ runners_missing }}"
+
+    - name: Register each instance with the org
+      ansible.builtin.command:
+        argv:
+          - ./config.sh
+          - --unattended
+          - --url
+          - "{{ github_runner.org_url }}"
+          - --token
+          - "{{ runner_token }}"
+          - --name
+          - "{{ ansible_hostname }}-{{ item }}"
+        chdir: "{{ github_runner.base_dir }}-{{ item }}"
+      loop: "{{ runners_missing }}"
+      no_log: true
+
+    - name: Install and start each instance's launchd service
+      ansible.builtin.shell: ./svc.sh install && ./svc.sh start
+      args:
+        chdir: "{{ github_runner.base_dir }}-{{ item }}"
+      loop: "{{ runners_missing }}"

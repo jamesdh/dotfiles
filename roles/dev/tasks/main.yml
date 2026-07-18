@@ -10,3 +10,7 @@
     - brew_diff.changed
     - not ansible_check_mode
   changed_when: brew_diff.changed
+
+- import_tasks: github_runner.yml
+  tags:
+    - runner
