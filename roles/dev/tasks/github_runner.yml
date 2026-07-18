@@ -3,10 +3,18 @@
 # Registration tokens are 1-hour, org-wide, multi-use — mint one per run via gh when
 # possible, else pause for a pasted token (org settings -> Actions -> Runners -> New).
 # A token can also be supplied with -e runner_reg_token=... .
+# LocalHostName, not ansible_hostname: the kernel hostname lags System Settings renames.
+- name: Read this machine's local host name
+  ansible.builtin.command:
+    argv: [scutil, --get, LocalHostName]
+  register: local_host_name
+  changed_when: false
+  check_mode: no
+
 - name: Check which runner instances are configured
   ansible.builtin.stat:
     path: "{{ github_runner.base_dir }}-{{ item }}/.runner"
-  loop: "{{ range(1, github_runner.count + 1) | list }}"
+  loop: "{{ range(1, github_runner.count | int + 1) | list }}"
   register: runner_instances
 
 - name: Determine missing runner instances
@@ -69,7 +77,7 @@
           - --token
           - "{{ runner_token }}"
           - --name
-          - "{{ ansible_hostname }}-{{ item }}"
+          - "{{ local_host_name.stdout | trim }}-{{ item }}"
         chdir: "{{ github_runner.base_dir }}-{{ item }}"
       loop: "{{ runners_missing }}"
       no_log: true

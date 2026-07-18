@@ -3,7 +3,7 @@ github_runner:
   org_url: https://github.com/moltenbits
   version: "2.335.1"
   sha256: e1a9bc7a3661e06fa0b129d15c2064fe65dc81a431001d8958a9db1409b73769
-  # How many runner instances this machine hosts; each lives in actions-runner-<n>
-  # with its own registration and launchd service.
-  count: 3
+  # One runner instance per 5 cores (10-core mini -> 2, 16-core -> 3); each lives in
+  # actions-runner-<n> with its own registration and launchd service.
+  count: "{{ (ansible_processor_vcpus | int / 5) | int }}"
   base_dir: "{{ home_dir }}/actions-runner"
