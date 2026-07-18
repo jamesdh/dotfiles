@@ -48,8 +48,9 @@
 
 # Machine-profile apps: ~/.dotfiles-profile ("personal", "proximal", or empty for
 # deliberately neither — written by bootstrap.sh) selects which extra Brewfile this
-# machine gets. A missing or unrecognized profile installs neither and warns — a wrong
-# default could push personal-only apps onto the work machine.
+# machine gets. When the file is missing, prompt for it right here (pause captures typed
+# input) and persist the answer. An unrecognized value installs neither and warns — a
+# wrong default could push personal-only apps onto the work machine.
 - name: Read the machine profile
   ansible.builtin.command:
     argv: [cat, "{{ home_dir }}/.dotfiles-profile"]
@@ -58,16 +59,37 @@
   check_mode: no
   failed_when: false
 
-- name: Warn when the machine profile is missing or unknown
+- name: Prompt for the machine profile when the file is missing
+  ansible.builtin.pause:
+    prompt: "~/.dotfiles-profile is missing. Which profile is this machine? (personal / proximal / neither)"
+  register: machine_profile_answer
+  when: machine_profile.rc != 0
+
+- name: Determine the effective machine profile
+  ansible.builtin.set_fact:
+    machine_profile_value: "{{ (machine_profile.stdout if machine_profile.rc == 0 else machine_profile_answer.user_input | default('')) | trim | lower }}"
+
+- name: Persist the prompted machine profile
+  ansible.builtin.copy:
+    content: "{{ '' if machine_profile_value == 'neither' else machine_profile_value ~ '\n' }}"
+    dest: "{{ home_dir }}/.dotfiles-profile"
+    mode: "0644"
+  when:
+    - machine_profile.rc != 0
+    - machine_profile_value in ['personal', 'proximal', 'neither']
+
+- name: Warn when the machine profile is unrecognized
   ansible.builtin.debug:
-    msg: "~/.dotfiles-profile is {{ 'missing' if machine_profile.rc != 0 else 'unrecognized' }} — skipping profile-specific apps. Write personal or proximal to it, or leave it empty for neither."
-  when: machine_profile.rc != 0 or (machine_profile.stdout | trim != '' and machine_profile.stdout | trim not in ['personal', 'proximal'])
+    msg: "Machine profile '{{ machine_profile_value }}' is not personal/proximal/neither — skipping profile-specific apps. Write personal or proximal to ~/.dotfiles-profile, or leave it empty for neither."
+  when:
+    - machine_profile_value not in ['personal', 'proximal', 'neither']
+    - machine_profile_value != ''
 
 - name: Install profile-specific Homebrew Apps
-  shell: brew bundle --file=roles/osx/files/Brewfile.{{ machine_profile.stdout | trim }}
+  shell: brew bundle --file=roles/osx/files/Brewfile.{{ machine_profile_value }}
   register: brew_diff
   changed_when: '"Installing" in brew_diff.stdout'
-  when: machine_profile.stdout | default('') | trim in ['personal', 'proximal']
+  when: machine_profile_value in ['personal', 'proximal']
 
 - name: Install profile-specific Homebrew Apps - Changed output
   debug:
