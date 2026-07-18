@@ -152,6 +152,12 @@
   tags:
     - btt
 
+# Laptops only: the Pro license has 2 seats and there's no use for it on the desktops.
+- import_tasks: per_app/betterdisplay.yml
+  when: "'Book' in ansible_product_name"
+  tags:
+    - betterdisplay
+
 - import_tasks: per_app/iterm.yml
   tags:
     - iterm

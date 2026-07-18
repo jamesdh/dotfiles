@@ -339,6 +339,13 @@ raycast:
       pane: Privacy_FilesAndFolders
       deeplink: "raycast://extensions/raycast/file-search/search-files"
 
+betterdisplay:
+  bin: /Applications/BetterDisplay.app/Contents/MacOS/BetterDisplay
+  settings_file: "{{ home_dir }}/iCloud/App Configs/BetterDisplay.plist"
+  tcc_permissions:
+    - name: Accessibility
+      service: kTCCServiceAccessibility
+
 btt:
   app_support: "{{ home_dir }}/Library/Application Support/BetterTouchTool"
   backup_dir: "{{ home_dir }}/iCloud/App Configs/BetterTouchTool"

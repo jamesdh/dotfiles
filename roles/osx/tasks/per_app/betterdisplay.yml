@@ -1,0 +1,119 @@
+# BetterDisplay: settings via a defaults-domain export in iCloud, Accessibility via the
+# shared TCC flow, and the Pro license via the app's documented manageLicense CLI. The
+# Paddle activation files (*.padl in App Support) are machine-bound, so each machine
+# activates fresh rather than restoring them from a backup.
+
+# tagged `always` (read-only check): the export and seed guards below need this fact
+# under any tag combination.
+- name: Check whether BetterDisplay has been set up
+  ansible.builtin.command:
+    argv: [defaults, read, pro.betterdisplay.BetterDisplay]
+  register: betterdisplay_domain
+  changed_when: false
+  check_mode: no
+  failed_when: false
+  tags:
+    - always
+
+# Manual/on-demand only: overwrites the iCloud copy with THIS machine's settings.
+# Excluded from default installs via --skip-tags=export; run with `make settings.export`.
+# The domain guard keeps an unconfigured machine from clobbering the backup.
+- name: Export BetterDisplay settings to iCloud
+  ansible.builtin.command:
+    argv: [defaults, export, pro.betterdisplay.BetterDisplay, "{{ betterdisplay.settings_file }}"]
+  when: betterdisplay_domain.rc == 0
+  tags:
+    - export
+
+- name: Seed BetterDisplay settings on first setup
+  when: betterdisplay_domain.rc != 0
+  block:
+    - name: Materialize the settings export from iCloud
+      ansible.builtin.command:
+        argv: [brctl, download, "{{ betterdisplay.settings_file }}"]
+      changed_when: false
+
+    - name: Check the settings export exists
+      ansible.builtin.stat:
+        path: "{{ betterdisplay.settings_file }}"
+      register: betterdisplay_settings
+
+    - name: Import BetterDisplay settings
+      ansible.builtin.command:
+        argv: [defaults, import, pro.betterdisplay.BetterDisplay, "{{ betterdisplay.settings_file }}"]
+      when: betterdisplay_settings.stat.exists
+
+- name: Grant BetterDisplay the macOS permissions it needs
+  tags:
+    - permissions
+  block:
+    - name: Detect BetterDisplay's missing macOS permissions
+      ansible.builtin.include_tasks: tcc_missing_permissions.yml
+      vars:
+        tcc_client: pro.betterdisplay.BetterDisplay
+        tcc_permissions: "{{ betterdisplay.tcc_permissions }}"
+
+    - name: Walk through BetterDisplay's permission prompts
+      when: tcc_missing_permissions | length > 0
+      block:
+        - name: Open BetterDisplay
+          ansible.builtin.command:
+            argv: [open, -a, BetterDisplay]
+          changed_when: false
+
+        - name: Wait while BetterDisplay's permissions are granted
+          ansible.builtin.pause:
+            prompt: |-
+              BetterDisplay still needs: {{ tcc_missing_permissions | map(attribute='name') | join(', ') }}
+              Approve its prompts.
+              Press Enter when done.
+
+# Try the unattended CLI activation first; it has been seen to fail ("Activation failed"
+# after a 10s timeout) where the in-app flow succeeds with the same credentials, so fall
+# back to a pause for manual registration. Interactive-capable, hence the permissions tag.
+- name: Ensure BetterDisplay Pro is activated
+  tags:
+    - permissions
+  block:
+    - name: Check BetterDisplay's license activation
+      ansible.builtin.command:
+        argv: ["{{ betterdisplay.bin }}", manageLicense, -status]
+      register: betterdisplay_license
+      changed_when: false
+      check_mode: no
+
+    - name: Activate BetterDisplay Pro
+      when: "'Not activated' in betterdisplay_license.stdout"
+      block:
+        - name: Activate via the CLI with the 1Password license
+          ansible.builtin.command:
+            argv:
+              - "{{ betterdisplay.bin }}"
+              - manageLicense
+              - -activate
+              - "-email={{ lookup('community.general.onepassword', 'BetterDisplay Pro', field='email', vault='Dotfiles', service_account_token=op_sa_token) | trim }}"
+              - "-key={{ lookup('community.general.onepassword', 'BetterDisplay Pro', field='license key', vault='Dotfiles', service_account_token=op_sa_token) | trim }}"
+          failed_when: false
+
+        - name: Re-check the activation
+          ansible.builtin.command:
+            argv: ["{{ betterdisplay.bin }}", manageLicense, -status]
+          register: betterdisplay_license_after
+          changed_when: false
+          check_mode: no
+
+        - name: Fall back to manual registration
+          when: "'Not activated' in betterdisplay_license_after.stdout"
+          block:
+            - name: Open BetterDisplay for manual registration
+              ansible.builtin.command:
+                argv: [open, -a, BetterDisplay]
+              changed_when: false
+
+            - name: Wait while BetterDisplay Pro is registered
+              ansible.builtin.pause:
+                prompt: |-
+                  CLI activation failed. Register BetterDisplay Pro in the app
+                  (Settings -> the Pro/License section) with the email and license key from
+                  the "BetterDisplay Pro" item in the Dotfiles 1Password vault.
+                  Press Enter when done.
