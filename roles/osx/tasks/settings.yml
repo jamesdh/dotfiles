@@ -183,3 +183,7 @@
 # - import_tasks: per_app/appstore.yml
 #   tags:
 #     - appstore
+
+- import_tasks: per_app/docker.yml
+  tags:
+    - docker

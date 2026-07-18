@@ -1,0 +1,25 @@
+# Ensure Docker Desktop is running and the engine is ready. First launch may show a
+# license/onboarding dialog — the readiness wait surfaces that instead of hanging forever.
+- name: Check whether the Docker engine is running
+  ansible.builtin.command:
+    argv: [/Applications/Docker.app/Contents/Resources/bin/docker, info]
+  register: docker_engine
+  changed_when: false
+  check_mode: no
+  failed_when: false
+
+- name: Start Docker Desktop
+  ansible.builtin.command:
+    argv: [open, -g, -a, Docker]
+  when: docker_engine.rc != 0
+
+- name: Wait for the Docker engine to be ready
+  ansible.builtin.command:
+    argv: [/Applications/Docker.app/Contents/Resources/bin/docker, info]
+  register: docker_engine_ready
+  changed_when: false
+  check_mode: no
+  until: docker_engine_ready.rc == 0
+  retries: 24
+  delay: 5
+  when: docker_engine.rc != 0
