@@ -8,15 +8,21 @@
     # Requires ansible-core 2.21+ (ansible/ansible#86762).
     ansible_worker_session_isolation: false
   pre_tasks:
-    # Both desktop-app lookups here share this task's single biometric authorization —
-    # the only 1Password dialog a run costs. Every other lookup in the play passes
-    # `vault='Dotfiles', service_account_token=op_sa_token`, which bypasses the
-    # desktop app entirely (no per-task authorization dialogs, works tty-less).
-    # The vault kwarg is mandatory: the plugin refuses service-account auth without it.
-    - name: Retrieve 1Password service-account token and become password
+    # Bootstrap the service-account token via the desktop app — the one 1Password dialog a
+    # run costs, since the token can't be fetched with the token it is fetching.
+    - name: Retrieve 1Password service-account token
       ansible.builtin.set_fact:
         op_sa_token: "{{ lookup('community.general.onepassword', '1Password', field='dotfiles service account') }}"
-        ansible_become_password: "{{ lookup('community.general.onepassword', 'Personal MacBook', field='password') }}"
+      no_log: true
+      tags: ['always']
+
+    # Everything else — including the become password — reads from the Dotfiles vault via
+    # the token, bypassing the desktop app (no dialog, works tty-less). Split from the
+    # token task above: a set_fact value can't reference op_sa_token set in the same task.
+    # The vault kwarg is mandatory: the plugin refuses service-account auth without it.
+    - name: Retrieve the become password
+      ansible.builtin.set_fact:
+        ansible_become_password: "{{ lookup('community.general.onepassword', 'Personal MacBook', field='password', vault='Dotfiles', service_account_token=op_sa_token) }}"
       no_log: true
       tags: ['always']
   roles:
