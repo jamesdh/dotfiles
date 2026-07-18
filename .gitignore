@@ -13,3 +13,5 @@ venv
 # app-level settings live in roles/osx/defaults/main.yml (com.googlecode.iterm2).
 # See roles/osx/files/iTerm/README.md.
 roles/osx/files/iTerm/com.googlecode.iterm2.plist
+*.iml
+.idea/
