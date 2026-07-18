@@ -402,6 +402,11 @@ code:
 spaceballs:
   config_dir: "{{ home_dir }}/iCloud/App Configs/spaceballs"
   config_file: "{{ home_dir }}/iCloud/App Configs/spaceballs/settings.json"
+  tcc_permissions:
+    - name: Accessibility
+      service: kTCCServiceAccessibility
+    - name: Screen & System Audio Recording
+      service: kTCCServiceScreenCapture
 
 iterm:
   app_dir: "{{ home_dir }}/Library/Application\ Support/iTerm2"

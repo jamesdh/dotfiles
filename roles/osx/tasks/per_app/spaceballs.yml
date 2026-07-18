@@ -52,3 +52,30 @@
   when: spaceballs_bin.rc == 0
   tags:
     - spaceballs
+
+# Spaceballs raises its own permission prompts once running, so open it and pause when the
+# pane-toggle grants are missing. Interactive, hence the permissions tag.
+- name: Grant Spaceballs the macOS permissions it needs
+  tags:
+    - permissions
+  block:
+    - name: Detect Spaceballs' missing macOS permissions
+      ansible.builtin.include_tasks: tcc_missing_permissions.yml
+      vars:
+        tcc_client: com.moltenbits.spaceballs
+        tcc_permissions: "{{ spaceballs.tcc_permissions }}"
+
+    - name: Walk through Spaceballs' permission prompts
+      when: tcc_missing_permissions | length > 0
+      block:
+        - name: Open Spaceballs
+          ansible.builtin.command:
+            argv: [open, -a, Spaceballs]
+          changed_when: false
+
+        - name: Wait while Spaceballs' permissions are granted
+          ansible.builtin.pause:
+            prompt: |-
+              Spaceballs still needs: {{ tcc_missing_permissions | map(attribute='name') | join(', ') }}
+              Approve its prompts (or enable it in the Privacy panes).
+              Press Enter when done.
