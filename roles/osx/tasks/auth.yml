@@ -1,13 +1,20 @@
-# Extend the sudo password timeout (macOS default 5 min) so privileged work — especially
-# the brew-cask / mas sudos during an install — re-prompts less. The timeout is a sliding
-# window refreshed on each sudo use, so this is minutes of inactivity before re-auth.
+# Sudo timestamp tuning, as a validated drop-in:
+#   timestamp_timeout — minutes a sudo auth stays valid (macOS default 5). A sliding
+#     window refreshed on each use, so it's minutes of inactivity before re-auth.
+#   timestamp_type=global — key the ticket to the user, not the tty (macOS default).
+#     The `sudo -v` priming in the make targets runs on make's terminal; ansible's become
+#     and the brew-cask / mas sudos run in other tty contexts and otherwise miss that
+#     per-tty ticket, forcing a fresh password prompt mid-run. Global makes one auth cover
+#     every process the user owns — the whole point of priming sudo up front.
 # Validated with visudo before install so a malformed drop-in can't lock sudo out; the
 # filename has no dot (#includedir skips sudoers.d files containing '.').
-- name: Extend the sudo timestamp timeout
+- name: Tune the sudo timestamp (longer timeout, user-global ticket)
   become: yes
   ansible.builtin.copy:
     dest: /etc/sudoers.d/timestamp_timeout
-    content: "Defaults timestamp_timeout={{ sudo_timestamp_timeout }}\n"
+    content: |
+      Defaults timestamp_timeout={{ sudo_timestamp_timeout }}
+      Defaults timestamp_type=global
     owner: root
     group: wheel
     mode: "0440"
