@@ -1,5 +1,9 @@
 apps_dir: /Applications
 
+# Minutes a sudo authentication stays valid — a sliding window refreshed on each use, so
+# it's minutes of inactivity before re-auth. Bumped from the macOS default of 5.
+sudo_timestamp_timeout: 10
+
 finder_dels:
   - 'Recents'
   - 'Creative Cloud Files'

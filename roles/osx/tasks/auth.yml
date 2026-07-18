@@ -1,3 +1,21 @@
+# Extend the sudo password timeout (macOS default 5 min) so privileged work — especially
+# the brew-cask / mas sudos during an install — re-prompts less. The timeout is a sliding
+# window refreshed on each sudo use, so this is minutes of inactivity before re-auth.
+# Validated with visudo before install so a malformed drop-in can't lock sudo out; the
+# filename has no dot (#includedir skips sudoers.d files containing '.').
+- name: Extend the sudo timestamp timeout
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/timestamp_timeout
+    content: "Defaults timestamp_timeout={{ sudo_timestamp_timeout }}\n"
+    owner: root
+    group: wheel
+    mode: "0440"
+    validate: /usr/sbin/visudo -cf %s
+  tags:
+    - touchid
+    - sudo
+
 # Do sudo using Touch ID
 - name: Set content of sudo file as fact
   set_fact:
