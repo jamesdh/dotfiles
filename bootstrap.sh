@@ -18,17 +18,18 @@ EOF
     return 1 2>/dev/null || exit 1
 fi
 
-# Machine profile: selects which profile-specific app set (Brewfile.personal /
-# Brewfile.proximal) and per-app setup apply to this machine. Asked once; the answer
-# lives in ~/.dotfiles-profile and is read by the Brewfile (Ruby) and ansible.
+# Machine profile: selects which profile role (roles/personal, roles/proximal,
+# roles/dev — or none for "base") runs after the shared roles. Asked once; the answer
+# lives in ~/.dotfiles-profile and is read by the aggregate Brewfile (Ruby) and ansible.
 if [[ ! -f ~/.dotfiles-profile ]]; then
     while true; do
-        read "profile?Machine profile — (1) personal, (2) proximal, (3) base: "
+        read "profile?Machine profile — (1) personal, (2) proximal, (3) dev, (4) base: "
         case $profile in
             1|personal) echo personal > ~/.dotfiles-profile; break ;;
             2|proximal) echo proximal > ~/.dotfiles-profile; break ;;
-            3|base) echo base > ~/.dotfiles-profile; break ;;
-            *) echo "Enter 1, 2, or 3." ;;
+            3|dev) echo dev > ~/.dotfiles-profile; break ;;
+            4|base) echo base > ~/.dotfiles-profile; break ;;
+            *) echo "Enter 1-4." ;;
         esac
     done
 fi

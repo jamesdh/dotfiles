@@ -25,8 +25,51 @@
         ansible_become_password: "{{ lookup('community.general.onepassword', 'Personal MacBook', field='password', vault='Dotfiles', service_account_token=op_sa_token) }}"
       no_log: true
       tags: ['always']
+
+    # Machine profile: selects which profile role (personal / proximal / dev) runs after
+    # the shared roles; "base" runs none. Prompt and persist when the file is missing.
+    - name: Read the machine profile
+      ansible.builtin.command:
+        argv: [cat, "{{ home_dir }}/.dotfiles-profile"]
+      register: machine_profile_file
+      changed_when: false
+      check_mode: no
+      failed_when: false
+      tags: ['always']
+
+    - name: Prompt for the machine profile when the file is missing
+      ansible.builtin.pause:
+        prompt: "~/.dotfiles-profile is missing. Which profile is this machine? (personal / proximal / dev / base)"
+      register: machine_profile_answer
+      when: machine_profile_file.rc != 0
+      tags: ['always']
+
+    - name: Determine the effective machine profile
+      ansible.builtin.set_fact:
+        machine_profile: "{{ (machine_profile_file.stdout if machine_profile_file.rc == 0 else machine_profile_answer.user_input | default('')) | trim | lower }}"
+      tags: ['always']
+
+    - name: Persist the prompted machine profile
+      ansible.builtin.copy:
+        content: "{{ machine_profile }}\n"
+        dest: "{{ home_dir }}/.dotfiles-profile"
+        mode: "0644"
+      when:
+        - machine_profile_file.rc != 0
+        - machine_profile in ['personal', 'proximal', 'dev', 'base']
+      tags: ['always']
+
+    - name: Warn when the machine profile is unrecognized
+      ansible.builtin.debug:
+        msg: "Machine profile '{{ machine_profile }}' is not personal/proximal/dev/base — skipping the profile role. Write one of those to ~/.dotfiles-profile."
+      when: machine_profile not in ['personal', 'proximal', 'dev', 'base']
+      tags: ['always']
   roles:
       - { role: base, tags: ['base', 'priority']}
       - { role: ssh, tags: ['ssh', 'priority']}
       - { role: osx, tags: ['osx']}
       - { role: projects, tags: [projects]}
+      # Profile roles build on everything above; exactly one runs (none for "base").
+      - { role: personal, tags: ['personal'], when: machine_profile == 'personal' }
+      - { role: proximal, tags: ['proximal'], when: machine_profile == 'proximal' }
+      - { role: dev, tags: ['dev'], when: machine_profile == 'dev' }
