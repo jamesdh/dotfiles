@@ -46,9 +46,10 @@
     - not ansible_check_mode
   changed_when: brew_diff.changed
 
-# Machine-profile apps: ~/.dotfiles-profile ("personal" or "proximal", written by
-# bootstrap.sh) selects which extra Brewfile this machine gets. Missing/unknown profile
-# installs neither — a wrong default could push personal-only apps onto the work machine.
+# Machine-profile apps: ~/.dotfiles-profile ("personal", "proximal", or empty for
+# deliberately neither — written by bootstrap.sh) selects which extra Brewfile this
+# machine gets. A missing or unrecognized profile installs neither and warns — a wrong
+# default could push personal-only apps onto the work machine.
 - name: Read the machine profile
   ansible.builtin.command:
     argv: [cat, "{{ home_dir }}/.dotfiles-profile"]
@@ -57,10 +58,10 @@
   check_mode: no
   failed_when: false
 
-- name: Warn when the machine profile is missing
+- name: Warn when the machine profile is missing or unknown
   ansible.builtin.debug:
-    msg: "~/.dotfiles-profile is missing or not personal/proximal — skipping profile-specific apps. Re-run bootstrap or write the profile name to that file."
-  when: machine_profile.stdout | default('') | trim not in ['personal', 'proximal']
+    msg: "~/.dotfiles-profile is {{ 'missing' if machine_profile.rc != 0 else 'unrecognized' }} — skipping profile-specific apps. Write personal or proximal to it, or leave it empty for neither."
+  when: machine_profile.rc != 0 or (machine_profile.stdout | trim != '' and machine_profile.stdout | trim not in ['personal', 'proximal'])
 
 - name: Install profile-specific Homebrew Apps
   shell: brew bundle --file=roles/osx/files/Brewfile.{{ machine_profile.stdout | trim }}
