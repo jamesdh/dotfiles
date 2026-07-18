@@ -1,2 +1,3 @@
 cask "docker-desktop"
+cask "glkvm"
 # cask "mysides"  # disabled upstream 2025-10-13; sidebar setup paused, likely removing
