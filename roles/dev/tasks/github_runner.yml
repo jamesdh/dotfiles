@@ -109,3 +109,46 @@
     done
   register: node_appdata
   changed_when: "'granted' in node_appdata.stdout"
+
+# Jobs can touch FDA-protected paths, and a node without Full Disk Access fails there
+# with no prompt at all — confusing, silent CI breakage. FDA can only be toggled by hand,
+# but the flow is automatable up to that click: nodes not yet listed in the pane get
+# auto-registered by a denied FDA-path touch (via launchd, so TCC attributes the access
+# to node itself rather than this FDA-holding terminal), then the pane opens and we pause
+# while each node's toggle is switched on.
+- name: Grant runner nodes Full Disk Access
+  tags:
+    - permissions
+  block:
+    - name: Register and detect runner nodes lacking Full Disk Access
+      ansible.builtin.shell: |
+        db="/Library/Application Support/com.apple.TCC/TCC.db"
+        for node in {{ github_runner.base_dir }}-*/externals/node*/bin/node; do
+          granted=$(sqlite3 "$db" "SELECT auth_value FROM access WHERE service='kTCCServiceSystemPolicyAllFiles' AND client='$node';")
+          if [ "$granted" != "2" ]; then
+            if [ -z "$granted" ]; then
+              label="fda-probe-$RANDOM"
+              launchctl submit -l "$label" -- "$node" -e 'try{require("fs").readdirSync(process.env.HOME+"/Library/Mail")}catch(e){}' 2>/dev/null
+              sleep 5; launchctl remove "$label" 2>/dev/null || true
+            fi
+            echo "$node"
+          fi
+        done
+      register: nodes_no_fda
+      changed_when: false
+      check_mode: no
+
+    - name: Walk through enabling Full Disk Access for the runner nodes
+      when: nodes_no_fda.stdout_lines | length > 0
+      block:
+        - name: Open the Full Disk Access pane
+          ansible.builtin.command:
+            argv: [open, "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"]
+          changed_when: false
+
+        - name: Wait while the runner nodes are granted Full Disk Access
+          ansible.builtin.pause:
+            prompt: |-
+              Switch ON Full Disk Access for each of these in the pane that just opened:
+              {{ nodes_no_fda.stdout_lines | join('\n') }}
+              Press Enter when done.
