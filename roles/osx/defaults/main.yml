@@ -369,9 +369,10 @@ ice:
       service: kTCCServiceScreenCapture
 
 istat_menus:
-  # Settings exports live in iCloud; pick the one matching this machine's form factor
-  # (ansible_product_name is the model id, e.g. MacBookPro18,3 or Mac16,10).
-  settings_file: "{{ home_dir }}/iCloud/App Configs/iStat Menus {{ 'Laptop' if 'Book' in ansible_product_name else 'Desktop' }}.ismp7"
+  # Settings exports live in iCloud; pick the one matching this machine's form factor.
+  # battery_section is registered early in tasks/settings.yml (tagged always) — modern
+  # Apple Silicon model ids no longer contain "Book", so battery presence is the signal.
+  settings_file: "{{ home_dir }}/iCloud/App Configs/iStat Menus {{ 'Laptop' if battery_section.rc == 0 else 'Desktop' }}.ismp7"
 
 jump_desktop:
   # macOS permissions (TCC) Jump Desktop Connect needs for remote access. Connect's own

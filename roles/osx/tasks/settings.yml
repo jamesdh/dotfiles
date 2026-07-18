@@ -3,12 +3,17 @@
 #   shell: "displayplacer 'res:1800x1169 hz:120 color_depth:8 enabled:true scaling:on origin:(0,0) degree:0'"
 #   changed_when: false
 
+# tagged `always`: this is also the repo's laptop-vs-desktop signal (modern Apple Silicon
+# model ids like Mac16,10 no longer contain "Book", so ansible_product_name can't be
+# trusted for that) — tag-filtered runs of the gated imports below still need it registered.
 - name: Check whether a "Battery Power" section exists
   shell: pmset -g custom | grep -q '^Battery Power'
   register: battery_section
   ignore_errors: true
   changed_when: false
   check_mode: no  # read-only probe; must run in --check or the parse below sees a skipped register
+  tags:
+    - always
 
 - name: Check current displaysleep values for both Battery and AC power
   shell: |
@@ -154,7 +159,7 @@
 
 # Laptops only: the Pro license has 2 seats and there's no use for it on the desktops.
 - import_tasks: per_app/betterdisplay.yml
-  when: "'Book' in ansible_product_name"
+  when: battery_section.rc == 0
   tags:
     - betterdisplay
 

@@ -18,6 +18,21 @@ EOF
     return 1 2>/dev/null || exit 1
 fi
 
+# Machine profile: selects which profile-specific app set (Brewfile.personal /
+# Brewfile.proximal) and per-app setup apply to this machine. Asked once; the answer
+# lives in ~/.dotfiles-profile and is read by the Brewfile (Ruby) and ansible.
+if [[ ! -f ~/.dotfiles-profile ]]; then
+    while true; do
+        read "profile?Machine profile — (1) personal, (2) proximal: "
+        case $profile in
+            1|personal) echo personal > ~/.dotfiles-profile; break ;;
+            2|proximal) echo proximal > ~/.dotfiles-profile; break ;;
+            *) echo "Enter 1 or 2." ;;
+        esac
+    done
+fi
+echo "Machine profile: $(cat ~/.dotfiles-profile)"
+
 # Return 0 if <bundle_id> (arg 2) is granted <service> (arg 1) in the system TCC.db.
 # auth_value 2 = allowed; a denied row or no row both count as not granted.
 tcc_granted() {

@@ -1,0 +1,5 @@
+# Apps for personal machines only — never installed on work machines.
+cask "copilot-money"
+cask "crossover"
+cask "discord"
+cask "thinkorswim"

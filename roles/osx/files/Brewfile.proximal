@@ -1,0 +1,3 @@
+# Apps only the Proximal work machine (MacBook Air) needs.
+cask "microsoft-outlook"
+cask "microsoft-teams"
