@@ -45,6 +45,17 @@
 
   when: not omz.stat.exists
 
+- name: Link custom oh-my-zsh plugins
+  file:
+    src: "{{ role_path }}/files/omz-plugins/{{ item }}"
+    path: "{{ home_dir }}/.oh-my-zsh/custom/plugins/{{ item }}"
+    state: link
+    force: true
+  loop:
+    - sdkman-lazy
+  tags:
+    - dotfiles
+
 - name: Create Atuin config directory
   file:
     path: "{{ home_dir }}/.config/atuin"

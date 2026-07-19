@@ -17,12 +17,10 @@ plugins=(
     nvm     # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nvm
     pyenv   # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/pyenv
     sdk     # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/sdk
+    sdkman-lazy # custom, symlinked from dotfiles roles/base/files/omz-plugins
 )
 
 fpath+=("$HOMEBREW_PREFIX/share/zsh/site-functions")
-
-# Initialize SDKMAN
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 DISABLE_MAGIC_FUNCTIONS=true
 
