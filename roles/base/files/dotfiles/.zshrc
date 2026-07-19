@@ -1,8 +1,5 @@
 #!/bin/zsh
 
-eval "$(pyenv init --path)"
-eval "$(pyenv virtualenv-init -)"
-
 ZSH_THEME=""
 
 zstyle :prompt:pure:path color cyan

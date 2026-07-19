@@ -65,7 +65,9 @@ export NVM_HOMEBREW=$(brew --prefix nvm)
 export NVM_DIR="$HOME/.nvm"
 
 export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
+# Static equivalent of `pyenv init --path` — puts shims first so pyenv works
+# in non-interactive shells too, and the omz pyenv plugin skips its own init
+export PATH="$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH"
 
 export ZSH="$HOME/.oh-my-zsh"
 
