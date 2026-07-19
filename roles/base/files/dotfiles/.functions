@@ -561,7 +561,16 @@ function selfcontrol {
 }
 
 cc() {
-  claude -c --dangerously-skip-permissions --effort max --model opus "$@";
+  # Continue the most recent session for this directory, or start fresh if none
+  # exists (claude -c errors out in that case, and no continue-or-new flag exists
+  # as of 2.1.215). Sessions live in ~/.claude/projects/<cwd with non-alphanumerics
+  # dashed>; if that internal layout ever changes, this degrades to always-fresh.
+  local resume=()
+  local proj=~/.claude/projects/${PWD//[^a-zA-Z0-9]/-}
+  if [[ -d $proj && -n "$(find "$proj" -maxdepth 1 -name '*.jsonl' -print -quit 2>/dev/null)" ]]; then
+    resume=(-c)
+  fi
+  claude $resume --dangerously-skip-permissions --effort max --model opus "$@";
 }
 
 co() {
