@@ -1,0 +1,23 @@
+(() => {
+	const se = Application('System Events');
+	const nc = se.processes.byName('NotificationCenter');
+
+	let targets = [];
+	try {
+		const elems = nc.windows.byName('Notification Center').entireContents();
+		targets = elems.filter(e => {
+			try {
+				return e.subrole() === 'AXNotificationCenterAlert';
+			} catch (_) {
+				return false;
+			}
+		});
+	} catch (_) {
+		// window doesn't exist → no notifications on screen; do nothing
+	}
+
+	if (targets.length > 0) {
+		// last element = oldest notification (newest stacks on top)
+		targets[targets.length - 1].actions.byName('AXPress').perform();
+	}
+})();
