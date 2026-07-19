@@ -1,8 +1,7 @@
-# Lazy-load SDKMAN (sourcing sdkman-init.sh costs ~300ms): expose candidate
-# homes and bins statically, and defer the real init until `sdk` is first
-# used or we enter an .sdkmanrc directory (mirroring sdkman_auto_env, which
-# only checks $PWD). Loading after omz's compinit also means sdkman-init
-# sees compdef and skips its own compinit.
+# Lazy-load SDKMAN: expose candidate homes and bins statically, and defer
+# the real init until `sdk` is first used or we enter an .sdkmanrc directory
+# (mirroring sdkman_auto_env, which only checks $PWD). Loading after omz's
+# compinit also means sdkman-init sees compdef and skips its own compinit.
 
 [[ -d "${SDKMAN_DIR:-$HOME/.sdkman}" ]] || return 0
 
