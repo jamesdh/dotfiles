@@ -135,6 +135,7 @@ _defcd cd.mb.growlrrr   ~/Projects/moltenbits/growlrrr
 _defcd cd.mb.listenly   ~/Projects/moltenbits/listenly
 _defcd cd.mb.spaceballs ~/Projects/moltenbits/spaceballs
 _defcd cd.mb.tt         ~/Projects/moltenbits/teamtempo
+_defcd cd.envoy         ~/Projects/moltenbits/gradle-envoy
 _defcd cd.mb.ttf        ~/Projects/moltenbits/teamtempo/front
 _defcd cd.mb.ttb        ~/Projects/moltenbits/teamtempo/back
 
