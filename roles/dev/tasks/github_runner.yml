@@ -109,5 +109,3 @@
     done
   register: node_appdata
   changed_when: "'granted' in node_appdata.stdout"
-  tags:
-    - permissions
