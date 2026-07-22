@@ -570,7 +570,7 @@ cc() {
   if [[ -d $proj && -n "$(find "$proj" -maxdepth 1 -name '*.jsonl' -print -quit 2>/dev/null)" ]]; then
     resume=(-c)
   fi
-  claude $resume --dangerously-skip-permissions --effort max --model opus "$@";
+  claude $resume --dangerously-skip-permissions "$@";
 }
 
 co() {
