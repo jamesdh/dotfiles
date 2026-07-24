@@ -89,24 +89,31 @@
       loop: "{{ runners_missing }}"
 
 
+
 # Tahoe's App Data protection ("node would like to access data from other apps") prompts
-# per binary: every instance's bundled node (node20 AND node24) raises its own dialog the
-# first time a job touches foreign app data, stalling CI mid-run. The prompt can't be
-# reliably pre-triggered from a terminal (attribution follows the responsible process), so
-# grant it directly with auth_value 2 (persistent allow — a dialog approval writes the
-# Tahoe session-scoped value 5, which a reboot invalidates) and the csreq compiled from
-# each binary's own designated requirement. Requires the terminal's Full Disk Access.
-- name: Grant each runner node access to app data (TCC)
+# per binary the first time a job touches foreign app data — mid-job, stalling CI. Raise
+# the real dialog at install time instead: a launchctl-submitted probe makes node its own
+# responsible process so the prompt actually fires (terminal-run probes are silently
+# allowed via the terminal's FDA and grant nothing), then wait for the approval. macOS
+# records dialog approvals session-scoped (auth_value 5, invalidated by reboot), so
+# promote them to persistent (auth_value 2) once granted.
+- name: Trigger and await the app-data approval for each runner node
   ansible.builtin.shell: |
     db="$HOME/Library/Application Support/com.apple.TCC/TCC.db"
     for node in {{ github_runner.base_dir }}-*/externals*/node*/bin/node; do
       granted=$(sqlite3 "$db" "SELECT auth_value FROM access WHERE service='kTCCServiceSystemPolicyAppData' AND client='$node';")
-      [ -n "$granted" ] && continue
-      req=$(codesign -d -r- "$node" 2>&1 | sed -n 's/^designated => //p')
-      blob=$(mktemp); echo "$req" | csreq -r- -b "$blob"
-      hex=$(xxd -p "$blob" | tr -d '\n'); rm -f "$blob"
-      sqlite3 "$db" "INSERT INTO access (service, client, client_type, auth_value, auth_reason, auth_version, csreq, indirect_object_identifier, flags, last_modified, last_reminded) VALUES ('kTCCServiceSystemPolicyAppData', '$node', 1, 2, 2, 1, X'$hex', 'UNUSED', 0, strftime('%s','now'), 0);"
-      echo "granted $node"
+      if [ -z "$granted" ]; then
+        label="node-appdata-$RANDOM"
+        echo "APPROVE the 'node would like to access data from other apps' dialog for: $node"
+        launchctl submit -l "$label" -- "$node" -e 'for (const d of ["Google","Slack","iTerm2","1Password","Firefox"]) { try { require("fs").readdirSync(process.env.HOME+"/Library/Application Support/"+d) } catch (e) {} }'
+        tries=0
+        until [ -n "$(sqlite3 "$db" "SELECT auth_value FROM access WHERE service='kTCCServiceSystemPolicyAppData' AND client='$node';")" ]; do
+          sleep 2; tries=$((tries+1))
+          if [ $tries -gt 60 ]; then echo "WARNING: no approval recorded for $node (dialog missed?) — jobs may prompt later"; break; fi
+        done
+        launchctl remove "$label" 2>/dev/null || true
+      fi
     done
+    sqlite3 "$db" "UPDATE access SET auth_value=2 WHERE service='kTCCServiceSystemPolicyAppData' AND client LIKE '{{ github_runner.base_dir }}%' AND auth_value=5;"
   register: node_appdata
-  changed_when: "'granted' in node_appdata.stdout"
+  changed_when: "'APPROVE' in node_appdata.stdout"
