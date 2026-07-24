@@ -78,6 +78,7 @@
           - "{{ runner_token }}"
           - --name
           - "{{ local_host_name.stdout | trim }}-{{ item }}"
+          - --disableupdate
         chdir: "{{ github_runner.base_dir }}-{{ item }}"
       loop: "{{ runners_missing }}"
       no_log: true
@@ -98,7 +99,7 @@
 - name: Grant each runner node access to app data (TCC)
   ansible.builtin.shell: |
     db="$HOME/Library/Application Support/com.apple.TCC/TCC.db"
-    for node in {{ github_runner.base_dir }}-*/externals/node*/bin/node; do
+    for node in {{ github_runner.base_dir }}-*/externals*/node*/bin/node; do
       granted=$(sqlite3 "$db" "SELECT auth_value FROM access WHERE service='kTCCServiceSystemPolicyAppData' AND client='$node';")
       [ -n "$granted" ] && continue
       req=$(codesign -d -r- "$node" 2>&1 | sed -n 's/^designated => //p')
