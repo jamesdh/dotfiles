@@ -78,7 +78,6 @@
           - "{{ runner_token }}"
           - --name
           - "{{ local_host_name.stdout | trim }}-{{ item }}"
-          - --disableupdate
         chdir: "{{ github_runner.base_dir }}-{{ item }}"
       loop: "{{ runners_missing }}"
       no_log: true
