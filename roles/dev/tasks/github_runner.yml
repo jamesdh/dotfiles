@@ -87,33 +87,3 @@
       args:
         chdir: "{{ github_runner.base_dir }}-{{ item }}"
       loop: "{{ runners_missing }}"
-
-
-
-# Tahoe's App Data protection ("node would like to access data from other apps") prompts
-# per binary the first time a job touches foreign app data — mid-job, stalling CI. Raise
-# the real dialog at install time instead: a launchctl-submitted probe makes node its own
-# responsible process so the prompt actually fires (terminal-run probes are silently
-# allowed via the terminal's FDA and grant nothing), then wait for the approval. macOS
-# records dialog approvals session-scoped (auth_value 5, invalidated by reboot), so
-# promote them to persistent (auth_value 2) once granted.
-- name: Trigger and await the app-data approval for each runner node
-  ansible.builtin.shell: |
-    db="$HOME/Library/Application Support/com.apple.TCC/TCC.db"
-    for node in {{ github_runner.base_dir }}-*/externals*/node*/bin/node; do
-      granted=$(sqlite3 "$db" "SELECT auth_value FROM access WHERE service='kTCCServiceSystemPolicyAppData' AND client='$node';")
-      if [ -z "$granted" ]; then
-        label="node-appdata-$RANDOM"
-        echo "APPROVE the 'node would like to access data from other apps' dialog for: $node"
-        launchctl submit -l "$label" -- "$node" -e 'for (const d of ["Google","Slack","iTerm2","1Password","Firefox"]) { try { require("fs").readdirSync(process.env.HOME+"/Library/Application Support/"+d) } catch (e) {} }'
-        tries=0
-        until [ -n "$(sqlite3 "$db" "SELECT auth_value FROM access WHERE service='kTCCServiceSystemPolicyAppData' AND client='$node';")" ]; do
-          sleep 2; tries=$((tries+1))
-          if [ $tries -gt 60 ]; then echo "WARNING: no approval recorded for $node (dialog missed?) — jobs may prompt later"; break; fi
-        done
-        launchctl remove "$label" 2>/dev/null || true
-      fi
-    done
-    sqlite3 "$db" "UPDATE access SET auth_value=2 WHERE service='kTCCServiceSystemPolicyAppData' AND client LIKE '{{ github_runner.base_dir }}%' AND auth_value=5;"
-  register: node_appdata
-  changed_when: "'APPROVE' in node_appdata.stdout"
