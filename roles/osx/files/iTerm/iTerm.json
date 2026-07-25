@@ -57,40 +57,33 @@
       "Scrollback Lines" : 10000
     },
     {
-      "Rewritable" : true,
-      "Bold Color (Light)" : {
-        "Red Component" : 0.29234963655471802,
-        "Color Space" : "P3",
-        "Blue Component" : 0.67924320697784424,
-        "Alpha Component" : 1,
-        "Green Component" : 0.64873653650283813
-      },
       "Title Components" : 64,
       "Guid" : "\/Users\/jamesdh\/Projects\/jamesdh\/dotfiles",
-      "Name" : "Dotfiles",
+      "Rewritable" : true,
       "Bound Hosts" : [
         "\/Users\/jamesdh\/Projects\/jamesdh\/dotfiles\/*"
       ],
-      "Use Separate Colors for Light and Dark Mode" : true,
       "Working Directory" : "\/Users\/jamesdh\/Projects\/jamesdh\/dotfiles",
-      "Transparency" : 0.20000000000000001,
-      "Custom Directory" : "Yes",
+      "Scrollback Lines" : 10000,
       "Allow Title Setting" : false,
-      "Scrollback Lines" : 10000
+      "Name" : "Dotfiles",
+      "Custom Directory" : "Yes",
+      "Transparency" : 0.20000000000000001,
+      "Use Separate Colors for Light and Dark Mode" : true
     },
     {
       "Title Components" : 36,
-      "Scrollback Lines" : 10000,
+      "Custom Directory" : "Yes",
       "Rewritable" : true,
       "Bound Hosts" : [
         "\/Users\/jamesdh\/Projects\/proximal-health\/*"
       ],
       "Working Directory" : "\/Users\/jamesdh\/Projects\/proximal-health\/platform",
       "Transparency" : 0.20000000000000001,
+      "Scrollback Lines" : 10000,
       "Guid" : "\/Users\/jamesdh\/Projects\/proximal-health",
-      "Name" : "Proximal",
-      "Custom Directory" : "Yes",
       "Allow Title Setting" : false,
+      "Name" : "Proximal",
       "Use Separate Colors for Light and Dark Mode" : true
     },
     {
