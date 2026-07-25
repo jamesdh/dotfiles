@@ -115,12 +115,28 @@ When creating a GitHub issue, write it as if a future session — yours or mine 
 
 Treat one described task as a single lifecycle — **branch → commits → one PR** — where each stage has its own default. Keep them distinct; don't collapse "commit" or "branch" into "open a PR."
 
-- **Branch first, from an up-to-date `main`.** When you start a new task, create its branch *before the first commit* — but sync the base first: switch to `main` and bring it current (`git switch main && git pull --ff-only`), then `git switch -c <kebab-slug>`. Do **not** branch off a stale local `main`, and do **not** branch off whatever branch you happen to be sitting on — it may be old or already merged. Never commit a new task's work directly onto `main`. One task = one branch. (Branching off an out-of-date `main` has caused real problems.)
+- **Branch first, from a *verified* up-to-date base.** When you start a new task, create its branch *before the first commit* — but sync **and verify** the base first (see "Never Branch or Tag Off a Stale Base" below), then `git switch -c <kebab-slug>`. Do **not** branch off a stale local base, and do **not** branch off whatever branch you happen to be sitting on — it may be old or already merged. Never commit a new task's work directly onto the base branch. One task = one branch.
 - **Commit eagerly; no need to ask.** Once the test suite is green, commit. Prefer several small, logical commits on the branch (a refactor, a feature, a bug fix, a passing test) over one giant commit. Commits stay **local** — committing never implies pushing.
 - **Push only when I ask or when opening a PR.** Pushing is a separate, explicit action — not a default that follows from a green commit. Push only when I ask for it ("push"), or as the necessary first step of a PR I've asked you to open. A branch with green local commits stays unpushed until then; don't push it just because the work is done.
 - **Open a PR only when I ask.** Creating a PR is a separate, explicit action — wait for "open a PR" / `gh pr create`. Local commits on the task branch are fine indefinitely until then; the push happens as part of opening the PR.
 - **One described task = one branch = one PR.** Don't split a single task across multiple PRs. If the task has phases or parts, they are *more commits on the same branch* — not new branches or follow-up PRs. If you catch yourself thinking "part A now, part B in a follow-up PR," stop and keep them on one branch.
 - **Fixes to an in-flight PR go *on* that PR.** If I flag a problem with an open PR, push the fix as new commits to that PR's branch and update its body — never a new branch stacked behind it. If new work feels genuinely separate from the open PR, ask before branching rather than stacking.
+
+### Never Branch or Tag Off a Stale Base
+
+This has gone wrong far too many times: a new branch cut from a stale local `main`, or — worse — a **tag** cut from one. Treat the local base branch as **stale until proven current**. It is not enough to run `git pull` and assume it worked; you have to fetch and then confirm with a command whose output you actually read.
+
+Before every `git switch -c <new-branch>` and every `git tag <name>`:
+
+1. **Confirm the base branch name.** It is not always `main` — several of my repos are on `master`. `gh repo view --json defaultBranchRef -q .defaultBranchRef.name` gives the bare name directly. (`git symbolic-ref --short refs/remotes/origin/HEAD` also works but prints `origin/<name>`, and can be unset or stale locally — `git remote set-head origin -a` refreshes it.)
+2. **Fetch explicitly.** `git fetch origin --prune --tags`. Fetching is what refreshes `origin/<base>`; a bare `pull` on the wrong branch does nothing for it.
+3. **Switch and fast-forward.** `git switch <base> && git pull --ff-only`.
+4. **Verify it actually landed.** `git rev-list --left-right --count <base>...origin/<base>` must print `0	0` — left column is commits only on local `<base>` (ahead), right column is commits only on `origin/<base>` (behind). Anything else means ahead, behind, or diverged — **stop and tell me**. Do not branch or tag from it.
+
+- **Read the verification output; don't infer it from exit status.** `rev-list` exits 0 whether the counts are `0	0` or `0	17`, and "Already up to date." from `git pull` only proves the pull ran — not that `origin/<base>` was fetched fresh. The counts are the check that matters.
+- **Tags are stricter than branches, not looser.** A branch off a stale base is annoying; a tag off one ships the wrong commit and takes a delete + re-push + re-release to unwind. Run the same fetch-and-verify, then confirm the commit you're about to tag is the one you mean: `git log -1 --oneline <base>`.
+- **An ahead or diverged local base is a stop, not a fixup.** If local `<base>` has commits `origin/<base>` doesn't, don't rebase, reset, or force anything to make the check pass — surface it to me and let me decide.
+- **Same rule for a fork's `upstream`.** On a fork, `origin/<base>` can itself lag `upstream/<base>`. Fetch and verify against whichever remote is the real source of truth for the work.
 
 ## Link PRs to the Issues They Resolve
 
