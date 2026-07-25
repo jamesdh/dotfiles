@@ -48,11 +48,24 @@
         runner_token: "{{ runner_reg_token | default(runner_token_api.stdout | default('') if runner_token_api.rc | default(1) == 0 else runner_token_answer.user_input | default(''), true) | trim }}"
       no_log: true
 
+    # Resolve the latest runner release at run time — no pinned version to bump. Its
+    # published per-asset SHA-256 (in the release notes) verifies the download.
+    - name: Look up the latest runner release
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/actions/runner/releases/latest
+        return_content: true
+      register: runner_release
+
+    - name: Determine the latest runner version and checksum
+      ansible.builtin.set_fact:
+        runner_version: "{{ runner_release.json.tag_name | regex_replace('^v', '') }}"
+        runner_sha256: "{{ runner_release.json.body | regex_search('BEGIN SHA osx-arm64 -->([a-f0-9]{64})', '\\1') | first }}"
+
     - name: Download the runner package
       ansible.builtin.get_url:
-        url: "https://github.com/actions/runner/releases/download/v{{ github_runner.version }}/actions-runner-osx-arm64-{{ github_runner.version }}.tar.gz"
-        dest: "/tmp/actions-runner-osx-arm64-{{ github_runner.version }}.tar.gz"
-        checksum: "sha256:{{ github_runner.sha256 }}"
+        url: "https://github.com/actions/runner/releases/download/v{{ runner_version }}/actions-runner-osx-arm64-{{ runner_version }}.tar.gz"
+        dest: "/tmp/actions-runner-osx-arm64-{{ runner_version }}.tar.gz"
+        checksum: "sha256:{{ runner_sha256 }}"
 
     - name: Create instance directories
       ansible.builtin.file:
@@ -63,7 +76,7 @@
     # command tar, not ansible.builtin.unarchive: the latter demands GNU tar on macOS.
     - name: Extract the runner into each instance
       ansible.builtin.command:
-        argv: [tar, xzf, "/tmp/actions-runner-osx-arm64-{{ github_runner.version }}.tar.gz", -C, "{{ github_runner.base_dir }}-{{ item }}"]
+        argv: [tar, xzf, "/tmp/actions-runner-osx-arm64-{{ runner_version }}.tar.gz", -C, "{{ github_runner.base_dir }}-{{ item }}"]
         creates: "{{ github_runner.base_dir }}-{{ item }}/config.sh"
       loop: "{{ runners_missing }}"
 
