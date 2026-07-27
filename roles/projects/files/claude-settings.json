@@ -1,5 +1,4 @@
 {
-  "model": "claude-fable-5[1m]",
   "statusLine": {
     "type": "command",
     "command": "bash /Users/jamesdh/.claude/statusline-command.sh"
@@ -8,9 +7,9 @@
     "swift-lsp@claude-plugins-official": true
   },
   "effortLevel": "high",
-  "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
   "preferredNotifChannel": "notifications_disabled",
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "remoteControlAtStartup": true
 }
