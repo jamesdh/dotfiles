@@ -66,3 +66,15 @@
     path: "{{home_dir}}/.claude/statusline-command.sh"
     state: link
     force: true
+
+# Named claude-settings.json because files/settings.json is already the VS Code
+# one. Claude Code writes this file itself (/model, /effort, /config), so it
+# will show as modified here after any such change — that is the point, but it
+# also means a settings write that replaces rather than edits the file would
+# leave a regular file behind and this task would restore the link.
+- name: Link Claude settings to ~/.claude/
+  file:
+    src: "{{role_path}}/files/claude-settings.json"
+    path: "{{home_dir}}/.claude/settings.json"
+    state: link
+    force: true
