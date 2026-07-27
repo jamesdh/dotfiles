@@ -57,3 +57,12 @@
     path: "{{home_dir}}/.claude/CLAUDE.md"
     state: link
     force: true
+
+# Referenced by the statusLine.command entry in ~/.claude/settings.json, which
+# invokes it as `bash <path>` — the exec bit is belt-and-braces.
+- name: Link Claude statusline script to ~/.claude/
+  file:
+    src: "{{role_path}}/files/statusline-command.sh"
+    path: "{{home_dir}}/.claude/statusline-command.sh"
+    state: link
+    force: true
