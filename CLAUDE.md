@@ -67,6 +67,14 @@ Vault files are in:
 
 **op-fast pilot (workspace env):** `roles/projects/files/projects.env` holds 1Password secret *references* (`op://…`), not secrets — it's committed in plaintext and is **not** a vault file. The workspace `.envrc` (`projects.envrc`) resolves the references at direnv-load time via `op-fast` (Homebrew: `cometkim/tap/op-fast`), which caches resolved values in the macOS Keychain — encrypted at rest, ~10ms reads, and still working offline within the TTL (30 days, configured in `roles/osx/files/op-fast/config.toml`). The remaining `*.vault.env` files are candidates for the same conversion, which would eventually retire the encrypt/decrypt workflow above.
 
+## Git Workflow
+
+**No branches, no PRs in this repo — commit straight to `master` and push.** This overrides the general branch-per-task rule in the global agent instructions. It's a single-maintainer config repo, so a feature branch and PR add ceremony without adding review. Do **not** run `git switch -c` for a change here, and do not open a PR.
+
+- **The default branch is `master`, not `main`.**
+- **Still verify the base is current before committing.** Committing directly to `master` makes a stale base *more* likely to bite, not less: `git fetch origin --prune --tags`, then `git rev-list --left-right --count master...origin/master` must print `0	0` before you commit. If it doesn't, stop and say so.
+- **Push is still a separate action** — commit freely, but push only when asked (or when the change is one I asked you to land).
+
 ## Key Locations
 
 | Purpose | Location |
