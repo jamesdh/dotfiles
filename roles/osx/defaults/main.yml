@@ -1,5 +1,12 @@
 apps_dir: /Applications
 
+# Laptop-vs-desktop signal: battery presence, since modern Apple Silicon model ids
+# (Mac16,10) no longer contain "Book" and ansible_product_name can't be trusted for it.
+# A var rather than a registered task on purpose — it's evaluated lazily, only when a
+# consumer references it, so tag-filtered runs that touch none of them never shell out.
+# (As a task it needed `tags: always`, which made it run on every unrelated filtered run.)
+is_laptop: "{{ lookup('pipe', 'pmset -g custom') is search('^Battery Power', multiline=True) }}"
+
 # Minutes a sudo authentication stays valid — a sliding window refreshed on each use, so
 # it's minutes of inactivity before re-auth. Bumped from the macOS default of 5.
 sudo_timestamp_timeout: 10
@@ -374,9 +381,7 @@ ice:
 
 istat_menus:
   # Settings exports live in iCloud; pick the one matching this machine's form factor.
-  # battery_section is registered early in tasks/settings.yml (tagged always) — modern
-  # Apple Silicon model ids no longer contain "Book", so battery presence is the signal.
-  settings_file: "{{ home_dir }}/iCloud/App Configs/iStat Menus {{ 'Laptop' if battery_section.rc == 0 else 'Desktop' }}.ismp7"
+  settings_file: "{{ home_dir }}/iCloud/App Configs/iStat Menus {{ 'Laptop' if is_laptop | bool else 'Desktop' }}.ismp7"
 
 jump_desktop:
   # macOS permissions (TCC) Jump Desktop Connect needs for remote access. Connect's own

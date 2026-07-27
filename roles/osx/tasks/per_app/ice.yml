@@ -3,46 +3,58 @@
 # be seeded (SMAppService state lives in the root-owned BackgroundItems database) and the
 # menu-bar spacing tweak needs a logout, so both stay manual in the app.
 
-# tagged `always` (read-only check): both the export guard and the seed guard below need
-# this fact, and any other tag combo (--tags=export, --skip-tags=export) would leave it
-# unregistered for one of them.
-- name: Check whether Ice has been set up
-  ansible.builtin.command:
-    argv: [defaults, read, com.jordanbaird.Ice]
-  register: ice_domain
-  changed_when: false
-  check_mode: no
-  failed_when: false
-  tags:
-    - always
+# The domain probe below is repeated per block rather than hoisted to a single task: the
+# export block and the seed block are selected by mutually exclusive tag sets (--tags=export
+# vs --skip-tags=export), so one shared probe would have to be tagged `always` — which runs
+# it on every unrelated filtered run.
 
 # Manual/on-demand only: overwrites the iCloud copy with THIS machine's settings.
 # Excluded from default installs via --skip-tags=export; run with `make settings.export`.
 # The domain guard keeps an unconfigured machine from clobbering the backup.
 - name: Export Ice settings to iCloud
-  ansible.builtin.command:
-    argv: [defaults, export, com.jordanbaird.Ice, "{{ ice.settings_file }}"]
-  when: ice_domain.rc == 0
   tags:
     - export
+  block:
+    - name: Check whether Ice has been set up
+      ansible.builtin.command:
+        argv: [defaults, read, com.jordanbaird.Ice]
+      register: ice_domain
+      changed_when: false
+      check_mode: no
+      failed_when: false
+
+    - name: Export the Ice defaults domain
+      ansible.builtin.command:
+        argv: [defaults, export, com.jordanbaird.Ice, "{{ ice.settings_file }}"]
+      when: ice_domain.rc == 0
 
 - name: Seed Ice settings on first setup
-  when: ice_domain.rc != 0
   block:
-    - name: Materialize the settings export from iCloud
+    - name: Check whether Ice has been set up
       ansible.builtin.command:
-        argv: [brctl, download, "{{ ice.settings_file }}"]
+        argv: [defaults, read, com.jordanbaird.Ice]
+      register: ice_domain
       changed_when: false
+      check_mode: no
+      failed_when: false
 
-    - name: Check the settings export exists
-      ansible.builtin.stat:
-        path: "{{ ice.settings_file }}"
-      register: ice_settings
+    - name: Seed from the iCloud export
+      when: ice_domain.rc != 0
+      block:
+        - name: Materialize the settings export from iCloud
+          ansible.builtin.command:
+            argv: [brctl, download, "{{ ice.settings_file }}"]
+          changed_when: false
 
-    - name: Import Ice settings
-      ansible.builtin.command:
-        argv: [defaults, import, com.jordanbaird.Ice, "{{ ice.settings_file }}"]
-      when: ice_settings.stat.exists
+        - name: Check the settings export exists
+          ansible.builtin.stat:
+            path: "{{ ice.settings_file }}"
+          register: ice_settings
+
+        - name: Import Ice settings
+          ansible.builtin.command:
+            argv: [defaults, import, com.jordanbaird.Ice, "{{ ice.settings_file }}"]
+          when: ice_settings.stat.exists
 
 # Ice's own onboarding walks through granting these, so open it and pause when any are
 # missing. Interactive, hence the permissions tag (run via `make install.permissions`).

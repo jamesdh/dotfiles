@@ -3,45 +3,58 @@
 # Paddle activation files (*.padl in App Support) are machine-bound, so each machine
 # activates fresh rather than restoring them from a backup.
 
-# tagged `always` (read-only check): the export and seed guards below need this fact
-# under any tag combination.
-- name: Check whether BetterDisplay has been set up
-  ansible.builtin.command:
-    argv: [defaults, read, pro.betterdisplay.BetterDisplay]
-  register: betterdisplay_domain
-  changed_when: false
-  check_mode: no
-  failed_when: false
-  tags:
-    - always
+# The domain probe below is repeated per block rather than hoisted to a single task: the
+# export block and the seed block are selected by mutually exclusive tag sets (--tags=export
+# vs --skip-tags=export), so one shared probe would have to be tagged `always` — which runs
+# it on every unrelated filtered run.
 
 # Manual/on-demand only: overwrites the iCloud copy with THIS machine's settings.
 # Excluded from default installs via --skip-tags=export; run with `make settings.export`.
 # The domain guard keeps an unconfigured machine from clobbering the backup.
 - name: Export BetterDisplay settings to iCloud
-  ansible.builtin.command:
-    argv: [defaults, export, pro.betterdisplay.BetterDisplay, "{{ betterdisplay.settings_file }}"]
-  when: betterdisplay_domain.rc == 0
   tags:
     - export
+  block:
+    - name: Check whether BetterDisplay has been set up
+      ansible.builtin.command:
+        argv: [defaults, read, pro.betterdisplay.BetterDisplay]
+      register: betterdisplay_domain
+      changed_when: false
+      check_mode: no
+      failed_when: false
+
+    - name: Export the BetterDisplay defaults domain
+      ansible.builtin.command:
+        argv: [defaults, export, pro.betterdisplay.BetterDisplay, "{{ betterdisplay.settings_file }}"]
+      when: betterdisplay_domain.rc == 0
 
 - name: Seed BetterDisplay settings on first setup
-  when: betterdisplay_domain.rc != 0
   block:
-    - name: Materialize the settings export from iCloud
+    - name: Check whether BetterDisplay has been set up
       ansible.builtin.command:
-        argv: [brctl, download, "{{ betterdisplay.settings_file }}"]
+        argv: [defaults, read, pro.betterdisplay.BetterDisplay]
+      register: betterdisplay_domain
       changed_when: false
+      check_mode: no
+      failed_when: false
 
-    - name: Check the settings export exists
-      ansible.builtin.stat:
-        path: "{{ betterdisplay.settings_file }}"
-      register: betterdisplay_settings
+    - name: Seed from the iCloud export
+      when: betterdisplay_domain.rc != 0
+      block:
+        - name: Materialize the settings export from iCloud
+          ansible.builtin.command:
+            argv: [brctl, download, "{{ betterdisplay.settings_file }}"]
+          changed_when: false
 
-    - name: Import BetterDisplay settings
-      ansible.builtin.command:
-        argv: [defaults, import, pro.betterdisplay.BetterDisplay, "{{ betterdisplay.settings_file }}"]
-      when: betterdisplay_settings.stat.exists
+        - name: Check the settings export exists
+          ansible.builtin.stat:
+            path: "{{ betterdisplay.settings_file }}"
+          register: betterdisplay_settings
+
+        - name: Import BetterDisplay settings
+          ansible.builtin.command:
+            argv: [defaults, import, pro.betterdisplay.BetterDisplay, "{{ betterdisplay.settings_file }}"]
+          when: betterdisplay_settings.stat.exists
 
 - name: Grant BetterDisplay the macOS permissions it needs
   tags:

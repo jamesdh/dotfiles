@@ -3,18 +3,6 @@
 #   shell: "displayplacer 'res:1800x1169 hz:120 color_depth:8 enabled:true scaling:on origin:(0,0) degree:0'"
 #   changed_when: false
 
-# tagged `always`: this is also the repo's laptop-vs-desktop signal (modern Apple Silicon
-# model ids like Mac16,10 no longer contain "Book", so ansible_product_name can't be
-# trusted for that) — tag-filtered runs of the gated imports below still need it registered.
-- name: Check whether a "Battery Power" section exists
-  shell: pmset -g custom | grep -q '^Battery Power'
-  register: battery_section
-  ignore_errors: true
-  changed_when: false
-  check_mode: no  # read-only probe; must run in --check or the parse below sees a skipped register
-  tags:
-    - always
-
 - name: Check current displaysleep values for both Battery and AC power
   shell: |
     pmset -g custom | awk '/Battery Power/,/AC Power/ {if ($1 == "displaysleep") print $2}' | head -n 1
@@ -24,7 +12,7 @@
   register: displaysleep_values
   changed_when: false  # No change, as this is only gathering information
   check_mode: no  # read-only probe; must run in --check or the parse below sees a skipped register
-  when: battery_section.rc == 0
+  when: is_laptop | bool
 
 # - name: Debug displaysleep values
 #   debug:
@@ -36,12 +24,12 @@
     battery_sleep: "{{ displaysleep_values.stdout_lines[1] }}"
     ac_displaysleep: "{{ displaysleep_values.stdout_lines[2] }}"
     ac_sleep: "{{ displaysleep_values.stdout_lines[3] }}"
-  when: battery_section.rc == 0
+  when: is_laptop | bool
 
 - name: "Prepare privilege escalation"
   shell: "cliclick w:3000 c:760,415 w:200 c:750,430 w:200 t:{{ ansible_become_password }} w:200 c:815,475 w:500 &"
   when:
-    - battery_section.rc == 0
+    - is_laptop | bool
     - battery_displaysleep != "5" or battery_sleep != "5" or ac_displaysleep != "10" or ac_sleep != "0"
   tags:
     - cliclick
@@ -50,14 +38,14 @@
   shell: "pmset -b displaysleep 5 sleep 5"
   become: true
   when: 
-    - battery_section.rc == 0
+    - is_laptop | bool
     - battery_displaysleep != "5" or battery_sleep != "5"
 
 - name: "Set preferred power settings when connected"
   shell: "pmset -c displaysleep 10 sleep 0"
   become: true
   when: 
-    - battery_section.rc == 0
+    - is_laptop | bool
     - ac_displaysleep != "10" or ac_sleep != "0"
 
 - include_tasks: defaults.yml
@@ -159,7 +147,7 @@
 
 # Laptops only: the Pro license has 2 seats and there's no use for it on the desktops.
 - import_tasks: per_app/betterdisplay.yml
-  when: battery_section.rc == 0
+  when: is_laptop | bool
   tags:
     - betterdisplay
 
