@@ -1,0 +1,17 @@
+# Nightly `brew upgrade` at 02:00 via a LaunchAgent. The plist points straight at the
+# script in this repo (no copy), so script edits take effect without re-running ansible.
+# launchd runs missed StartCalendarInterval jobs once on wake if the machine was asleep.
+- name: Install the nightly brew upgrade LaunchAgent
+  template:
+    src: com.jamesdh.brew-upgrade.plist.j2
+    dest: "{{ home_dir }}/Library/LaunchAgents/com.jamesdh.brew-upgrade.plist"
+    mode: 0644
+  register: brew_upgrade_plist
+
+- name: Reload the nightly brew upgrade LaunchAgent
+  shell: |
+    launchctl bootout gui/{{ ansible_user_uid }}/com.jamesdh.brew-upgrade 2>/dev/null || true
+    launchctl bootstrap gui/{{ ansible_user_uid }} {{ home_dir }}/Library/LaunchAgents/com.jamesdh.brew-upgrade.plist
+  when:
+    - brew_upgrade_plist.changed
+    - not ansible_check_mode
