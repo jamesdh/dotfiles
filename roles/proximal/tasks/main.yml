@@ -1,3 +1,19 @@
+- name: Disable Continuity Clipboard (Universal Clipboard)
+  osx_defaults:
+    domain: com.apple.coreservices.useractivityd
+    key: ClipboardSharingEnabled
+    type: int
+    value: 0
+  register: clipboard_sharing
+  tags:
+    - defaults
+
+- name: Restart useractivityd to apply the Continuity Clipboard change
+  shell: killall useractivityd
+  when: clipboard_sharing.changed
+  tags:
+    - defaults
+
 - name: Install proximal Homebrew apps
   shell: brew bundle --file={{ role_path }}/files/Brewfile
   register: brew_diff
