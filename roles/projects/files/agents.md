@@ -147,6 +147,13 @@ When a PR addresses an existing issue, always include a GitHub closing keyword (
 - **Cross-repo issues need the full reference.** Use `owner/repo#123` syntax (e.g. `Fixes moltenbits/conlingo#42`) when the issue lives in a different repository.
 - **One keyword per issue.** If a PR closes multiple issues, list each with its own keyword: `Fixes #12, fixes #15, closes #18`. A single keyword followed by a comma-list does *not* close all of them.
 
+## 1Password Commit Signing — Don't Block When I'm AFK
+
+My commits are SSH-signed through 1Password (`gpg.format ssh`, signed by `op-ssh-sign`), and signing sometimes requires me to approve an authorization prompt in the 1Password app. When a commit fails with `error: 1Password: failed to fill whole buffer`, it almost always means I'm AFK and the prompt went unanswered — it is not a problem with your work, and not a blocker.
+
+- **Retry once, then commit unsigned and keep going.** The first failure may just be a missed prompt. If the retry also fails, commit with `git commit --no-gpg-sign` and continue the task — don't park the remaining work waiting for me to come back and approve signing.
+- **Note any unsigned commits in your summary.** List which commits went in unsigned so I can re-sign them later if I care to.
+
 ## Commit attribution
 
 When creating git commits or PRs on the user's behalf:
