@@ -10,6 +10,8 @@ export PURE_GIT_PULL=0
 # Exports HOMEBREW_PREFIX and updates the PATH to the appropriate Homebrew bin location
 eval "$(/opt/homebrew/bin/brew shellenv)"
 export HOMEBREW_CASK_OPTS='--no-quarantine'
+# Disable brew's "ask mode" confirmation prompt on upgrade (default-on since Homebrew 6)
+export HOMEBREW_NO_ASK=1
 # If an attached external disk should hold the cache, use it. Prefer the T7 SSD
 # (kept connected across reinstalls); create its Homebrew dir so the cache
 # self-populates. Fall back to the SDXC card if its cache exists.
