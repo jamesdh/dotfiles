@@ -35,9 +35,6 @@ export PATH="$PATH:/Users/jamesdh/.cache/lm-studio/bin"
 # Claude Code
 export PATH="$HOME/.local/bin:$PATH"
 
-# Bun global packages (bun add -g …, e.g. AgentBridge) — Homebrew's bun still links their binaries here
-export PATH="$HOME/.bun/bin:$PATH"
-
 # Make vim the default editor.
 export EDITOR='vim';
 

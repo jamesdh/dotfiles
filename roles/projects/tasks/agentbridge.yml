@@ -1,21 +1,22 @@
 ---
-# AgentBridge (abg) bridges Claude Code and Codex. Bun is its runtime — the CLI
-# is `#!/usr/bin/env bun` and the Claude plugin's MCP server is `bun run …` — and
-# Homebrew provides it (Brewfile.nonpriority), which is why this is not tagged
-# priority. Bun global installs land in ~/.bun/install/global with their binaries
-# linked into ~/.bun/bin (on PATH via .zshenv). Upgrade with
-# `bun update -g @raysonmeng/agentbridge`.
+# AgentBridge (abg) bridges Claude Code and Codex. Installed the way its README
+# says — `npm install -g` — so abg's own update prompt (which runs
+# `npm install -g …@latest`) and `abg doctor` match how it was installed. Bun is
+# still its runtime (the CLI is `#!/usr/bin/env bun`, the plugin's MCP server is
+# `bun run …`) and comes from Brewfile.nonpriority, which is why this is not
+# tagged priority.
 #
-# The package ships a Node postinstall that shells out to `claude plugin
-# marketplace add` / `claude plugin install` and kills running AgentBridge
-# daemons on global installs. The task passes `--ignore-scripts` so lifecycle
-# scripts stay disabled regardless of Bun's trust configuration (Bun blocks them
-# by default, but the task should enforce what it needs): the marketplace and
-# plugin are declared in files/claude-settings.json (extraKnownMarketplaces
-# pointing at this install, plus enabledPlugins), linked into ~/.claude/ by
-# claude.yml, and Claude Code registers them itself on startup. Do not
-# `bun pm -g trust` this package.
-- name: Install AgentBridge (abg) via bun
-  ansible.builtin.command: bun add -g --ignore-scripts @raysonmeng/agentbridge
-  args:
-    creates: "{{home_dir}}/.bun/bin/abg"
+# The package's postinstall does the Claude Code wiring itself: it registers
+# this install as the `agentbridge` plugin marketplace and installs the
+# `agentbridge@agentbridge` plugin (best-effort; needs `bun` and `claude` on
+# PATH, which they are when this runs from an interactive shell). On a global
+# install it also stops any running AgentBridge daemons, so an upgrade restarts
+# them — that is the intended upgrade path. Claude Code records the registered
+# marketplace path in claude-settings.json (extraKnownMarketplaces) itself —
+# don't hand-edit it there: the install lives under the active nvm Node version
+# (~/.nvm/versions/node/<ver>/lib/node_modules), so the path changes with Node
+# upgrades; after one, rerun this tag and the postinstall re-registers it.
+- name: Install AgentBridge (abg) via npm
+  community.general.npm:
+    name: "@raysonmeng/agentbridge"
+    global: true
