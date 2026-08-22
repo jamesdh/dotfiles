@@ -565,14 +565,45 @@ cc() {
   # exists (claude -c errors out in that case, and no continue-or-new flag exists
   # as of 2.1.215). Sessions live in ~/.claude/projects/<cwd with non-alphanumerics
   # dashed>; if that internal layout ever changes, this degrades to always-fresh.
-  local resume=()
+  #
+  # --bridge launches through AgentBridge (abg) instead, paired with Codex (see
+  # `co --bridge`). `abg resume claude` hard-errors without a prior session, so
+  # the same check picks the verb. abg applies --dangerously-skip-permissions
+  # itself (opt out per launch with --safe).
+  local bridge=0 a args=()
+  for a in "$@"; do
+    if [[ $a == --bridge ]]; then bridge=1; else args+=("$a"); fi
+  done
+  local has_session=0
   local proj=~/.claude/projects/${PWD//[^a-zA-Z0-9]/-}
   if [[ -d $proj && -n "$(find "$proj" -maxdepth 1 -name '*.jsonl' -print -quit 2>/dev/null)" ]]; then
-    resume=(-c)
+    has_session=1
   fi
-  claude $resume --dangerously-skip-permissions --model fable "$@";
+  if (( bridge )); then
+    if (( has_session )); then abg resume claude "${args[@]}"; else abg claude "${args[@]}"; fi
+  else
+    local resume=()
+    (( has_session )) && resume=(-c)
+    claude $resume --dangerously-skip-permissions "${args[@]}"
+  fi
 }
 
 co() {
-  codex --yolo -c model_reasoning_effort="xhigh" "$@";
+  # --bridge launches through AgentBridge (abg) instead, paired with Claude (see
+  # `cc --bridge`): resume this directory's current Codex thread, or start a new
+  # one when abg reports none (`abg resume codex` hard-errors in that case, and
+  # `abg codex` only auto-resumes when given no other args). The probe reuses
+  # abg's own thread lookup rather than re-deriving its pair/state layout. abg
+  # applies --yolo itself (opt out per launch with --safe).
+  local bridge=0 a args=()
+  for a in "$@"; do
+    if [[ $a == --bridge ]]; then bridge=1; else args+=("$a"); fi
+  done
+  if (( ! bridge )); then
+    codex --yolo "${args[@]}"
+  elif abg resume 2>/dev/null | grep -q '^abg .*codex resume '; then
+    abg resume codex "${args[@]}"
+  else
+    abg codex --new "${args[@]}"
+  fi
 }
