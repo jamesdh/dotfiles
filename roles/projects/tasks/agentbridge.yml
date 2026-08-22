@@ -1,0 +1,21 @@
+---
+# AgentBridge (abg) bridges Claude Code and Codex. Bun is its runtime — the CLI
+# is `#!/usr/bin/env bun` and the Claude plugin's MCP server is `bun run …` — and
+# Homebrew provides it (Brewfile.nonpriority), which is why this is not tagged
+# priority. Bun global installs land in ~/.bun/install/global with their binaries
+# linked into ~/.bun/bin (on PATH via .zshenv). Upgrade with
+# `bun update -g @raysonmeng/agentbridge`.
+#
+# The package ships a Node postinstall that shells out to `claude plugin
+# marketplace add` / `claude plugin install` and kills running AgentBridge
+# daemons on global installs. The task passes `--ignore-scripts` so lifecycle
+# scripts stay disabled regardless of Bun's trust configuration (Bun blocks them
+# by default, but the task should enforce what it needs): the marketplace and
+# plugin are declared in files/claude-settings.json (extraKnownMarketplaces
+# pointing at this install, plus enabledPlugins), linked into ~/.claude/ by
+# claude.yml, and Claude Code registers them itself on startup. Do not
+# `bun pm -g trust` this package.
+- name: Install AgentBridge (abg) via bun
+  ansible.builtin.command: bun add -g --ignore-scripts @raysonmeng/agentbridge
+  args:
+    creates: "{{home_dir}}/.bun/bin/abg"

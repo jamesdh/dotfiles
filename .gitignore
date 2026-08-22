@@ -15,3 +15,4 @@ venv
 roles/osx/files/iTerm/com.googlecode.iterm2.plist
 *.iml
 .idea/
+/.agentbridge
