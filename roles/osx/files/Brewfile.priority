@@ -13,6 +13,8 @@ brew "pam-reattach"
 brew "wallpaper"
 cask "betterdisplay"
 cask "growlrrr"
+cask "micspresso"
+cask "spaceballs"
 # cask "mysides"  # disabled upstream 2025-10-13; sidebar setup paused, likely removing
 cask "p4v"
 cask "raycast"
