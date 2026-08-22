@@ -1,0 +1,13 @@
+model = "gpt-5.6-sol"
+model_reasoning_effort = "xhigh"
+[projects."/Users/jamesdh/Projects/moltenbits/spaceballs"]
+trust_level = "trusted"
+
+[projects."/Users/jamesdh/Projects/moltenbits/listenly"]
+trust_level = "trusted"
+
+[projects."/Users/jamesdh/Projects/proximal-health/platform"]
+trust_level = "trusted"
+
+[projects."/Users/jamesdh"]
+trust_level = "trusted"

@@ -13,3 +13,15 @@
     path: "{{home_dir}}/.codex/AGENTS.md"
     state: link
     force: true
+
+# Named codex-config.toml because files/ already holds other tools' configs.
+# Like claude-settings.json, Codex writes this file itself (/model, project
+# trust approvals, `codex mcp add`), so it will show as modified here after any
+# such change — that is the point. Codex resolves the symlink and edits the
+# target in place (openai/codex#9445), so the link survives those writes.
+- name: Link Codex config to ~/.codex/
+  file:
+    src: "{{role_path}}/files/codex-config.toml"
+    path: "{{home_dir}}/.codex/config.toml"
+    state: link
+    force: true
