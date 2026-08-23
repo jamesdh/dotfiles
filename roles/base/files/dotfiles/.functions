@@ -600,7 +600,7 @@ co() {
     if [[ $a == --bridge ]]; then bridge=1; else args+=("$a"); fi
   done
   if (( ! bridge )); then
-    codex --yolo "${args[@]}"
+    codex resume --last --yolo "${args[@]}"
   elif abg resume 2>/dev/null | grep -q '^abg .*codex resume '; then
     abg resume codex "${args[@]}"
   else
