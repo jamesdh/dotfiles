@@ -12,31 +12,52 @@
     command: "grrr apps add --appId {{ item.appId }}{{ ' --appIcon ' ~ item.icon if item.icon is defined else '' }}"
     when: not grrr_app.stat.exists
 
-  - name: "Create {{ item.appId }} .claude directory"
+  - name: "Create {{ item.appId }} agent config directories"
     file:
-      path: "{{ item.claude_settings_dir }}"
+      path: "{{ agent_config_dir }}"
       state: directory
       mode: 0755
+    loop:
+      - "{{ item.claude_settings_dir }}"
+      - "{{ item.claude_settings_dir | dirname }}/.codex"
+    loop_control:
+      loop_var: agent_config_dir
+
+  - name: "Generate {{ item.appId }} Claude notification hooks"
+    command:
+      argv:
+        - growlrrr
+        - init
+        - --format
+        - claude
+        - --appId
+        - "{{ item.appId }}"
+    register: grrr_claude_config
+    changed_when: false
+    check_mode: no
 
   - name: "Configure {{ item.appId }} Claude notification hooks"
-    vars:
-      settings:
-        hooks:
-          Stop:
-            - hooks:
-                - type: command
-                  command: "grrr hook notify --appId {{ item.appId }}"
-          Notification:
-            - hooks:
-                - type: command
-                  command: "grrr hook notify --appId {{ item.appId }}"
-          UserPromptSubmit:
-            - hooks:
-                - type: command
-                  command: "grrr hook dismiss --appId {{ item.appId }}"
     copy:
       dest: "{{ item.claude_settings_dir }}/settings.json"
-      content: "{{ settings | to_nice_json }}\n"
+      content: "{{ grrr_claude_config.stdout }}\n"
+
+  - name: "Generate {{ item.appId }} Codex notification hooks"
+    command:
+      argv:
+        - growlrrr
+        - init
+        - --format
+        - codex
+        - --appId
+        - "{{ item.appId }}"
+    register: grrr_codex_config
+    changed_when: false
+    check_mode: no
+
+  - name: "Configure {{ item.appId }} Codex notification hooks"
+    copy:
+      dest: "{{ item.claude_settings_dir | dirname }}/.codex/config.toml"
+      content: "{{ grrr_codex_config.stdout }}\n"
 
   tags:
     - grrr
