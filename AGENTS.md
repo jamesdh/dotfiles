@@ -115,9 +115,6 @@ Codex puts a marker at the **very start** of each `agentMessage` (it must be the
 - `[STATUS]` — progress updates
 - `[FYI]` — background context
 
-### Git operations — Claude only
-Codex MUST NOT run git **write** commands (`commit`, `push`, `pull`, `fetch`, `checkout -b`, `branch`, `merge`, `rebase`, `cherry-pick`, `tag`, `stash`): they write the `.git` directory, which Codex's sandbox blocks, and will hang its session. Read-only git (`status`, `log`, `diff`, `show`, `rev-parse`) is fine for both. Codex reports what it changed; Claude handles branching, committing, and pushing.
-
 ### When to collaborate vs. work solo
 - **Collaborate** when the task benefits from a second perspective, parallel execution, or capabilities the other agent has.
 - **Work solo** for simple, self-contained tasks where the coordination overhead isn't worth it.
