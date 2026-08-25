@@ -109,6 +109,7 @@ notify_pending_upgrade() {
     "$SCRIPT_PATH" "$HOME/Library/Logs/brew-upgrade.log"
 
   grrr send \
+    --appId Homebrew \
     --title "Homebrew updates ready" \
     --subtitle "Downloaded overnight" \
     --sound default \

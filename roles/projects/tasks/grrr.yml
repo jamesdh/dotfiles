@@ -1,6 +1,17 @@
----
-
-- include_tasks: per_app/grrr_app.yml
-  loop: "{{ growlrrr_apps }}"
+- name: Configure repository-backed Growlrrr apps
+  include_tasks: per_app/grrr_app.yml
+  loop: "{{ growlrrr_repo_apps }}"
+  loop_control:
+    label: "{{ item.appId }}"
   tags:
     - grrr
+    - permissions
+
+- name: Configure standalone Growlrrr apps
+  include_tasks: per_app/grrr_app.yml
+  loop: "{{ growlrrr_apps }}"
+  loop_control:
+    label: "{{ item.appId }}"
+  tags:
+    - grrr
+    - permissions

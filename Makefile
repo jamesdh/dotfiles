@@ -73,7 +73,7 @@ install.cliclick: ## Run the cliclick UI-automation app setup steps (excluded fr
 install.cliclick: sudo.prime
 	@source venv/bin/activate && ansible-playbook --tags=cliclick --diff ansible.yml ;\
 
-install.permissions: ## Walk through granting apps (Raycast, Jump Desktop) their macOS permissions (interactive; excluded from other targets)
+install.permissions: ## Walk through granting apps their macOS permissions (interactive; excluded from other targets)
 install.permissions:
 	@source venv/bin/activate && ansible-playbook --tags=permissions --diff ansible.yml ;\
 

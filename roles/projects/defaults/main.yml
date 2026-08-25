@@ -18,4 +18,7 @@ envfiles:
   - { src: ph.env, dest: "{{projects_dir}}/proximal-health" }
 makefiles: "{{vaulted_makefiles}}"
 hooks: "{{vaulted_hooks}}"
-growlrrr_apps: "{{vaulted_growlrrr_apps}}"
+growlrrr_repo_apps: "{{ vaulted_growlrrr_repo_apps }}"
+growlrrr_apps:
+  - appId: Homebrew
+    icon: "{{ playbook_dir }}/roles/projects/files/homebrew.png"
