@@ -3,22 +3,21 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.jamesdh.brew-upgrade</string>
+    <string>com.jamesdh.brew-upgrade-watcher</string>
     <key>ProgramArguments</key>
     <array>
         <string>{{ role_path }}/files/brew-upgrade.sh</string>
-        <string>fetch</string>
+        <string>watch</string>
     </array>
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>2</integer>
-        <key>Minute</key>
-        <integer>0</integer>
-    </dict>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ProcessType</key>
+    <string>Background</string>
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
     <key>StandardOutPath</key>
-    <string>{{ home_dir }}/Library/Logs/brew-upgrade.log</string>
+    <string>{{ home_dir }}/Library/Logs/brew-upgrade-watcher.log</string>
     <key>StandardErrorPath</key>
-    <string>{{ home_dir }}/Library/Logs/brew-upgrade.log</string>
+    <string>{{ home_dir }}/Library/Logs/brew-upgrade-watcher.log</string>
 </dict>
 </plist>

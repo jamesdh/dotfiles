@@ -1,14 +1,14 @@
-# Nightly `brew upgrade` at 02:00 via a LaunchAgent. The plist points straight at the
-# script in this repo (no copy), so script edits take effect without re-running ansible.
-# launchd runs missed StartCalendarInterval jobs once on wake if the machine was asleep.
-- name: Install the nightly brew upgrade LaunchAgent
+# The nightly agent downloads upgrades at 02:00. A second user-session agent watches for
+# a login/unlock and opens the interactive installer in Terminal. Both plists point at the
+# same script in this repo, so script edits take effect without re-running Ansible.
+- name: Install the nightly Homebrew download LaunchAgent
   template:
     src: com.jamesdh.brew-upgrade.plist.j2
     dest: "{{ home_dir }}/Library/LaunchAgents/com.jamesdh.brew-upgrade.plist"
     mode: 0644
   register: brew_upgrade_plist
 
-- name: Reload the nightly brew upgrade LaunchAgent
+- name: Reload the nightly Homebrew download LaunchAgent
   shell: |
     launchctl bootout gui/{{ ansible_user_uid }}/com.jamesdh.brew-upgrade 2>/dev/null || true
     launchctl bootstrap gui/{{ ansible_user_uid }} {{ home_dir }}/Library/LaunchAgents/com.jamesdh.brew-upgrade.plist
@@ -16,56 +16,17 @@
     - brew_upgrade_plist.changed
     - not ansible_check_mode
 
-# Upgrading casks in place needs the TCC "App Management" grant, and under launchd the
-# prompt is attributed to Homebrew's ruby — so left alone, the first 02:00 run raises
-# dialogs nobody is awake to answer. When the grant is missing, run the agent immediately
-# instead so the prompts fire while we're at the machine, then poll the TCC databases
-# until the grant lands (approving the dialog and a manual Privacy-pane add both satisfy
-# it). Interactive, hence the permissions tag — run via `make install.permissions`.
-# Reading the TCC databases requires the terminal's Full Disk Access (granted during
-# bootstrap), same as tcc_missing_permissions.yml. The client is matched by pattern, not
-# path, because the grant may key on any portable-ruby version's binary or on the script.
-- name: Grant the brew upgrade agent the macOS permissions it needs
-  tags:
-    - permissions
-  vars:
-    brew_upgrade_tcc_query: >-
-      SELECT client FROM access WHERE service='kTCCServiceSystemPolicyAppBundles'
-      AND auth_value=2 AND (client LIKE '%ruby%' OR client LIKE '%brew%' OR client LIKE '%bash%');
-  block:
-    - name: Check for Homebrew's App Management grant
-      ansible.builtin.shell: |
-        sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db" "{{ brew_upgrade_tcc_query }}"
-        sqlite3 "{{ home_dir }}/Library/Application Support/com.apple.TCC/TCC.db" "{{ brew_upgrade_tcc_query }}"
-      register: brew_upgrade_tcc_grants
-      changed_when: false
-      check_mode: no
+- name: Install the Homebrew login and unlock watcher LaunchAgent
+  template:
+    src: com.jamesdh.brew-upgrade-watcher.plist.j2
+    dest: "{{ home_dir }}/Library/LaunchAgents/com.jamesdh.brew-upgrade-watcher.plist"
+    mode: 0644
+  register: brew_upgrade_watcher_plist
 
-    - name: Trigger the first-run permission prompts and wait for the grant
-      when:
-        - brew_upgrade_tcc_grants.stdout_lines | length == 0
-        - not ansible_check_mode
-      block:
-        - name: Kick off the first brew upgrade run now
-          ansible.builtin.command:
-            argv: [launchctl, kickstart, "gui/{{ ansible_user_uid }}/com.jamesdh.brew-upgrade"]
-          changed_when: false
-
-        - name: Explain the prompts to approve
-          ansible.builtin.debug:
-            msg: >-
-              A brew upgrade run was just started (log: ~/Library/Logs/brew-upgrade.log).
-              Approve the App Management permission prompt it raises for ruby. TCC only asks
-              once — if the prompt was missed or denied (it won't reappear), enable the ruby
-              entry manually in the pane this opens:
-              open "x-apple.systempreferences:com.apple.preference.security?Privacy_AppBundles"
-
-        - name: Wait for the App Management grant to land
-          ansible.builtin.shell: |
-            sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db" "{{ brew_upgrade_tcc_query }}"
-            sqlite3 "{{ home_dir }}/Library/Application Support/com.apple.TCC/TCC.db" "{{ brew_upgrade_tcc_query }}"
-          register: brew_upgrade_tcc_wait
-          until: brew_upgrade_tcc_wait.stdout_lines | length > 0
-          retries: 90
-          delay: 5
-          changed_when: false
+- name: Reload the Homebrew login and unlock watcher LaunchAgent
+  shell: |
+    launchctl bootout gui/{{ ansible_user_uid }}/com.jamesdh.brew-upgrade-watcher 2>/dev/null || true
+    launchctl bootstrap gui/{{ ansible_user_uid }} {{ home_dir }}/Library/LaunchAgents/com.jamesdh.brew-upgrade-watcher.plist
+  when:
+    - brew_upgrade_watcher_plist.changed
+    - not ansible_check_mode
