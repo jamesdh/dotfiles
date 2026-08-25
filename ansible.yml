@@ -26,7 +26,7 @@
       no_log: true
       tags: ['always']
 
-    # Machine profile: selects which profile role (personal / proximal / dev) runs after
+    # Machine profile: selects which profile role (personal / proximal / ci) runs after
     # the shared roles; "base" runs none. Prompt and persist when the file is missing.
     - name: Read the machine profile
       ansible.builtin.command:
@@ -39,14 +39,19 @@
 
     - name: Prompt for the machine profile when the file is missing
       ansible.builtin.pause:
-        prompt: "~/.dotfiles-profile is missing. Which profile is this machine? (personal / proximal / dev / base)"
+        prompt: "~/.dotfiles-profile is missing. Which profile is this machine? (personal / proximal / ci / base)"
       register: machine_profile_answer
       when: machine_profile_file.rc != 0
       tags: ['always']
 
+    - name: Read the requested machine profile
+      ansible.builtin.set_fact:
+        machine_profile_requested: "{{ (machine_profile_file.stdout if machine_profile_file.rc == 0 else machine_profile_answer.user_input | default('')) | trim | lower }}"
+      tags: ['always']
+
     - name: Determine the effective machine profile
       ansible.builtin.set_fact:
-        machine_profile: "{{ (machine_profile_file.stdout if machine_profile_file.rc == 0 else machine_profile_answer.user_input | default('')) | trim | lower }}"
+        machine_profile: "{{ 'ci' if machine_profile_requested == 'dev' else machine_profile_requested }}"
       tags: ['always']
 
     - name: Persist the prompted machine profile
@@ -56,13 +61,23 @@
         mode: "0644"
       when:
         - machine_profile_file.rc != 0
-        - machine_profile in ['personal', 'proximal', 'dev', 'base']
+        - machine_profile in ['personal', 'proximal', 'ci', 'base']
+      tags: ['always']
+
+    - name: Rename the legacy dev machine profile to ci
+      ansible.builtin.copy:
+        content: "ci\n"
+        dest: "{{ home_dir }}/.dotfiles-profile"
+        mode: "0644"
+      when:
+        - machine_profile_file.rc == 0
+        - machine_profile_requested == 'dev'
       tags: ['always']
 
     - name: Warn when the machine profile is unrecognized
       ansible.builtin.debug:
-        msg: "Machine profile '{{ machine_profile }}' is not personal/proximal/dev/base — skipping the profile role. Write one of those to ~/.dotfiles-profile."
-      when: machine_profile not in ['personal', 'proximal', 'dev', 'base']
+        msg: "Machine profile '{{ machine_profile }}' is not personal/proximal/ci/base — skipping the profile role. Write one of those to ~/.dotfiles-profile."
+      when: machine_profile not in ['personal', 'proximal', 'ci', 'base']
       tags: ['always']
   roles:
       - { role: base, tags: ['base', 'priority']}
@@ -72,4 +87,4 @@
       # Profile roles build on everything above; exactly one runs (none for "base").
       - { role: personal, tags: ['personal'], when: machine_profile == 'personal' }
       - { role: proximal, tags: ['proximal'], when: machine_profile == 'proximal' }
-      - { role: dev, tags: ['dev'], when: machine_profile == 'dev' }
+      - { role: ci, tags: ['ci'], when: machine_profile == 'ci' }

@@ -19,19 +19,24 @@ EOF
 fi
 
 # Machine profile: selects which profile role (roles/personal, roles/proximal,
-# roles/dev — or none for "base") runs after the shared roles. Asked once; the answer
+# roles/ci — or none for "base") runs after the shared roles. Asked once; the answer
 # lives in ~/.dotfiles-profile and is read by the aggregate Brewfile (Ruby) and ansible.
 if [[ ! -f ~/.dotfiles-profile ]]; then
     while true; do
-        read "profile?Machine profile — (1) personal, (2) proximal, (3) dev, (4) base: "
+        read "profile?Machine profile — (1) personal, (2) proximal, (3) ci, (4) base: "
         case $profile in
             1|personal) echo personal > ~/.dotfiles-profile; break ;;
             2|proximal) echo proximal > ~/.dotfiles-profile; break ;;
-            3|dev) echo dev > ~/.dotfiles-profile; break ;;
+            3|ci|dev) echo ci > ~/.dotfiles-profile; break ;;
             4|base) echo base > ~/.dotfiles-profile; break ;;
             *) echo "Enter 1-4." ;;
         esac
     done
+fi
+
+# Preserve existing installations while retiring the old name.
+if [[ "$(tr -d '[:space:]' < ~/.dotfiles-profile)" == "dev" ]]; then
+    echo ci > ~/.dotfiles-profile
 fi
 echo "Machine profile: $(cat ~/.dotfiles-profile)"
 

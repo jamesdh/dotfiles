@@ -1,9 +1,9 @@
-- name: Install dev Homebrew apps
+- name: Install CI Homebrew apps
   shell: brew bundle --file={{ role_path }}/files/Brewfile
   register: brew_diff
   changed_when: '"Installing" in brew_diff.stdout'
 
-- name: Install dev Homebrew apps - Changed output
+- name: Install CI Homebrew apps - Changed output
   debug:
     var: brew_diff.stdout
   when:

@@ -22,7 +22,7 @@ project_owners_by_profile:
   proximal:
     - jamesdh
     - proximal-health
-  dev:
+  ci:
     - jamesdh
     - moltenbits
 active_project_owners: "{{ project_owners_by_profile[machine_profile] | default(project_owners_by_profile.base) }}"
