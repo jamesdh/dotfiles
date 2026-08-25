@@ -8,6 +8,12 @@ export PATH="/opt/homebrew/bin:/usr/bin:/bin"
 export HOMEBREW_NO_ASK=1
 export HOMEBREW_NO_ENV_HINTS=1
 
+# Match bootstrap.sh: prefer the external cache when it is available, but leave
+# HOMEBREW_CACHE undefined so Homebrew chooses its normal cache on other machines.
+if [[ -d /Volumes/SDXC/Homebrew ]]; then
+  export HOMEBREW_CACHE=/Volumes/SDXC/Homebrew
+fi
+
 echo "==> brew upgrade started $(date '+%Y-%m-%d %H:%M:%S')"
 
 # TCC probe: upgrading casks in place needs the "App Management" grant, and macOS only
