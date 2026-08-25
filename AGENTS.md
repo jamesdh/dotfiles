@@ -72,7 +72,7 @@ Vault files are in:
 **No branches, no PRs in this repo — commit straight to `master` and push.** This overrides the general branch-per-task rule in the global agent instructions. It's a single-maintainer config repo, so a feature branch and PR add ceremony without adding review. Do **not** run `git switch -c` for a change here, and do not open a PR.
 
 - **The default branch is `master`, not `main`.**
-- **Still verify the base is current before committing.** Committing directly to `master` makes a stale base *more* likely to bite, not less: `git fetch origin --prune --tags`, then `git rev-list --left-right --count master...origin/master` must print `0	0` before you commit. If it doesn't, stop and say so.
+- **Still verify the base is current before committing.** Fetch the latest remote changes and ensure local `master` includes them. If the remote contains changes missing locally, update local `master` first — fast-forward when possible, otherwise rebase the local commits. Existing unpushed local commits are not a blocker.
 - **Push is still a separate action** — commit freely, but push only when asked (or when the change is one I asked you to land).
 
 ## Key Locations
