@@ -5,7 +5,6 @@
     label: "{{ item.appId }}"
   tags:
     - grrr
-    - permissions
 
 - name: Configure standalone Growlrrr apps
   include_tasks: per_app/grrr_app.yml
@@ -14,4 +13,19 @@
     label: "{{ item.appId }}"
   tags:
     - grrr
+
+- name: Authorize repository-backed Growlrrr app notifications
+  include_tasks: per_app/grrr_app_permissions.yml
+  loop: "{{ growlrrr_repo_apps }}"
+  loop_control:
+    label: "{{ item.appId }}"
+  tags:
+    - permissions
+
+- name: Authorize standalone Growlrrr app notifications
+  include_tasks: per_app/grrr_app_permissions.yml
+  loop: "{{ growlrrr_apps }}"
+  loop_control:
+    label: "{{ item.appId }}"
+  tags:
     - permissions
