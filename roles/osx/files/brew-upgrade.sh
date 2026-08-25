@@ -1,7 +1,8 @@
 #!/bin/bash
 # Two-stage Homebrew upgrades:
 #   fetch   downloads outdated packages at 02:00 without installing them;
-#   watch   waits for an unlocked GUI session and runs one pending upgrade attempt.
+#   watch   sends one actionable notification when the GUI session is unlocked;
+#   install runs the pending upgrade when that notification is clicked.
 set -euo pipefail
 
 export PATH="/opt/homebrew/bin:/usr/bin:/bin"
@@ -10,7 +11,9 @@ export HOMEBREW_NO_ENV_HINTS=1
 
 STATE_DIR="$HOME/Library/Caches/com.jamesdh.brew-upgrade"
 PENDING_FILE="$STATE_DIR/pending"
-ATTEMPTED_FILE="$STATE_DIR/attempted"
+NOTIFIED_FILE="$STATE_DIR/notified"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_PATH="$SCRIPT_DIR/$(basename "$0")"
 
 # Match bootstrap.sh: prefer the external cache when it is available, but leave
 # HOMEBREW_CACHE undefined so Homebrew chooses its normal cache on other machines.
@@ -47,7 +50,7 @@ fetch_upgrades() {
   done <<< "$cask_output"
 
   if (( ${#formulae[@]} == 0 && ${#casks[@]} == 0 )); then
-    rm -f "$PENDING_FILE" "$ATTEMPTED_FILE"
+    rm -f "$PENDING_FILE" "$NOTIFIED_FILE"
     log "Homebrew is already up to date"
     return
   fi
@@ -87,22 +90,38 @@ screen_is_unlocked() {
   ! /usr/bin/grep -Eq 'CGSSessionScreenIsLocked[^,}]*Yes' <<< "$session_state"
 }
 
-attempt_pending_upgrade() {
-  local attempted_tmp
+notify_pending_upgrade() {
+  local execute_command notified_tmp
 
   [[ -s "$PENDING_FILE" ]] || return
-  if [[ -f "$ATTEMPTED_FILE" ]] && cmp -s "$PENDING_FILE" "$ATTEMPTED_FILE"; then
+  if [[ -f "$NOTIFIED_FILE" ]] && cmp -s "$PENDING_FILE" "$NOTIFIED_FILE"; then
     return
   fi
 
-  # Claim this nightly download before starting. If Homebrew fails, later
-  # unlocks do not retry it; the next nightly fetch creates a new generation.
-  attempted_tmp="$(mktemp "$STATE_DIR/attempted.XXXXXX")"
-  cp "$PENDING_FILE" "$attempted_tmp"
-  chmod 600 "$attempted_tmp"
-  mv "$attempted_tmp" "$ATTEMPTED_FILE"
+  if ! command -v grrr >/dev/null; then
+    echo "==> Growlrrr is unavailable; cannot offer the pending Homebrew upgrade" >&2
+    return 1
+  fi
 
-  install_pending_upgrades
+  # Growlrrr executes notification actions with `/bin/sh -c`. Use the script's
+  # absolute path so the action keeps the same cache and pending-state behavior.
+  printf -v execute_command '%q install >> %q 2>&1' \
+    "$SCRIPT_PATH" "$HOME/Library/Logs/brew-upgrade.log"
+
+  grrr send \
+    --title "Homebrew updates ready" \
+    --subtitle "Downloaded overnight" \
+    --sound default \
+    --identifier homebrew-upgrade \
+    --replace \
+    --execute "$execute_command" \
+    "Click to install the downloaded updates."
+
+  notified_tmp="$(mktemp "$STATE_DIR/notified.XXXXXX")"
+  cp "$PENDING_FILE" "$notified_tmp"
+  chmod 600 "$notified_tmp"
+  mv "$notified_tmp" "$NOTIFIED_FILE"
+  log "Sent the pending Homebrew upgrade notification"
 }
 
 watch_for_unlocked_session() {
@@ -110,7 +129,7 @@ watch_for_unlocked_session() {
 
   while true; do
     if [[ -s "$PENDING_FILE" ]] && screen_is_unlocked; then
-      attempt_pending_upgrade || true
+      notify_pending_upgrade || true
     fi
     sleep 10
   done
@@ -131,13 +150,13 @@ install_pending_upgrades() {
 
   if ! brew upgrade; then
     rm -f "$install_manifest"
-    echo "==> Homebrew upgrade failed; it will not be retried until the next nightly download" >&2
+    echo "==> Homebrew upgrade failed; the pending set was preserved" >&2
     return 1
   fi
 
   # Do not erase a newer set downloaded while this installation was running.
   if cmp -s "$install_manifest" "$PENDING_FILE"; then
-    rm -f "$PENDING_FILE" "$ATTEMPTED_FILE"
+    rm -f "$PENDING_FILE" "$NOTIFIED_FILE"
   fi
   rm -f "$install_manifest"
   log "Homebrew upgrade finished"
@@ -146,8 +165,9 @@ install_pending_upgrades() {
 case "${1:-fetch}" in
   fetch) fetch_upgrades ;;
   watch) watch_for_unlocked_session ;;
+  install) install_pending_upgrades ;;
   *)
-    echo "Usage: $0 [fetch|watch]" >&2
+    echo "Usage: $0 [fetch|watch|install]" >&2
     exit 2
     ;;
 esac

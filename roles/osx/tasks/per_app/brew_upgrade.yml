@@ -1,6 +1,6 @@
 # The nightly agent downloads upgrades at 02:00. A second user-session agent watches for
-# a login/unlock and runs `brew upgrade` once when a downloaded set is pending. Both plists
-# point at the same script in this repo, so script edits take effect without re-running Ansible.
+# a login/unlock and sends one actionable Growlrrr notification when a downloaded set is
+# pending. Both plists point at the same script, so edits take effect without re-running Ansible.
 - name: Install the nightly Homebrew download LaunchAgent
   template:
     src: com.jamesdh.brew-upgrade.plist.j2
