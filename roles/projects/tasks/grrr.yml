@@ -3,6 +3,7 @@
   loop: "{{ growlrrr_repo_apps }}"
   loop_control:
     label: "{{ item.appId }}"
+  when: item.owner in active_project_owners
   tags:
     - grrr
 
@@ -19,6 +20,7 @@
   loop: "{{ growlrrr_repo_apps }}"
   loop_control:
     label: "{{ item.appId }}"
+  when: item.owner in active_project_owners
   tags:
     - permissions
 

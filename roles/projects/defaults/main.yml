@@ -13,9 +13,23 @@ etchosts:
   - teamtempo.local
   - api.teamtempo.local
 
+project_owners_by_profile:
+  base:
+    - jamesdh
+  personal:
+    - jamesdh
+    - moltenbits
+  proximal:
+    - jamesdh
+    - proximal-health
+  dev:
+    - jamesdh
+    - moltenbits
+active_project_owners: "{{ project_owners_by_profile[machine_profile] | default(project_owners_by_profile.base) }}"
+
 github: "{{vaulted_github}}"
 envfiles:
-  - { src: ph.env, dest: "{{projects_dir}}/proximal-health" }
+  - { src: ph.env, dest: "{{projects_dir}}/proximal-health", owner: proximal-health }
 makefiles: "{{vaulted_makefiles}}"
 hooks: "{{vaulted_hooks}}"
 growlrrr_repo_apps: "{{ vaulted_growlrrr_repo_apps }}"

@@ -6,6 +6,8 @@
   args:
     chdir: "{{projects_dir}}"
   register: projects_ls
+  changed_when: false
+  check_mode: no
     
 # I mostly just do this because "dotfiles" is initially checked out using https
 # This takes care of fixing it so I can easily modify and push changes 
@@ -18,7 +20,9 @@
   with_subelements:
     - "{{github}}"
     - repos
-  when: "[item.0.org,item.1.name] | join('/') in projects_ls.stdout"
+  when:
+    - item.0.org in active_project_owners
+    - "[item.0.org,item.1.name] | join('/') in projects_ls.stdout"
   tags:
     - priority
 
@@ -30,7 +34,9 @@
   with_subelements:
     - "{{github}}"
     - repos
-  when: "not [item.0.org,item.1.name] | join('/') in projects_ls.stdout"
+  when:
+    - item.0.org in active_project_owners
+    - "not [item.0.org,item.1.name] | join('/') in projects_ls.stdout"
 
 - name: Setup repo pre-commit hooks
   file: 
@@ -49,6 +55,7 @@
     state: link
     force: true
   loop: "{{envfiles}}"
+  when: item.owner in active_project_owners
   tags:
     - envfiles
 
@@ -59,6 +66,7 @@
     state: link
     force: true
   loop: "{{envfiles}}"
+  when: item.owner in active_project_owners
   tags:
     - envfiles
 
@@ -67,6 +75,7 @@
   args:
     chdir: "{{item.dest}}"
   loop: "{{envfiles}}"
+  when: item.owner in active_project_owners
   changed_when: false
   tags:
     - envfiles
@@ -78,22 +87,26 @@
     state: link
     force: true
   loop:
-    - { src: "projects.env",       dest: "{{projects_dir}}/.env" }
-    - { src: "projects.envrc",     dest: "{{projects_dir}}/.envrc" }
-    - { src: "mb.env",             dest: "{{projects_dir}}/moltenbits/.env" }
-    - { src: "mb.envrc",           dest: "{{projects_dir}}/moltenbits/.envrc" }
-    - { src: "jamesdh.envrc",      dest: "{{projects_dir}}/jamesdh/.envrc" }
+    - { src: "projects.env",   dest: "{{projects_dir}}/.env" }
+    - { src: "projects.envrc", dest: "{{projects_dir}}/.envrc" }
+    - { src: "mb.env",         dest: "{{projects_dir}}/moltenbits/.env", owner: moltenbits }
+    - { src: "mb.envrc",       dest: "{{projects_dir}}/moltenbits/.envrc", owner: moltenbits }
+    - { src: "jamesdh.envrc",  dest: "{{projects_dir}}/jamesdh/.envrc", owner: jamesdh }
+  when: item.owner is not defined or item.owner in active_project_owners
   tags:
     - envfiles
 
 - name: Allow direnv on workspace dirs
   shell: direnv allow
   args:
-    chdir: "{{item}}"
+    chdir: "{{item.path}}"
   loop:
-    - "{{projects_dir}}"
-    - "{{projects_dir}}/moltenbits"
-    - "{{projects_dir}}/jamesdh"
+    - { path: "{{projects_dir}}" }
+    - { path: "{{projects_dir}}/moltenbits", owner: moltenbits }
+    - { path: "{{projects_dir}}/jamesdh", owner: jamesdh }
+  loop_control:
+    label: "{{ item.path }}"
+  when: item.owner is not defined or item.owner in active_project_owners
   changed_when: false
   tags:
     - envfiles
@@ -105,5 +118,6 @@
     state: link
     force: true
   loop: "{{makefiles}}"
+  when: item.owner is not defined or item.owner in active_project_owners
   tags:
     - makefiles

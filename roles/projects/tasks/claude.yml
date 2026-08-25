@@ -16,6 +16,7 @@
   loop:
     - "{{home_dir}}/.claude/skills/github-pr-review"
     - "{{home_dir}}/.claude/skills/local-review"
+  when: "'moltenbits' in active_project_owners"
 
 - name: Link Claude github-pr-review skill subdirs
   file:
@@ -29,6 +30,7 @@
     - hooks
     - references
     - templates
+  when: "'moltenbits' in active_project_owners"
 
 - name: Link Claude github-pr-review SKILL.md
   file:
@@ -36,6 +38,7 @@
     path: "{{home_dir}}/.claude/skills/github-pr-review/SKILL.md"
     state: link
     force: true
+  when: "'moltenbits' in active_project_owners"
 
 - name: Link Claude local-review skill
   file:
@@ -43,6 +46,7 @@
     path: "{{home_dir}}/.claude/skills/local-review/SKILL.md"
     state: link
     force: true
+  when: "'moltenbits' in active_project_owners"
 
 - name: Link CLAUDE.md to Projects root
   file:
