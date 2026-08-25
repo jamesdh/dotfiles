@@ -1,8 +1,7 @@
 #!/bin/bash
 # Two-stage Homebrew upgrades:
 #   fetch   downloads outdated packages at 02:00 without installing them;
-#   watch   waits for an unlocked GUI session and opens the installer in Terminal;
-#   install requests sudo/Touch ID and installs exactly the fetched package set.
+#   watch   waits for an unlocked GUI session and runs one pending upgrade attempt.
 set -euo pipefail
 
 export PATH="/opt/homebrew/bin:/usr/bin:/bin"
@@ -11,9 +10,7 @@ export HOMEBREW_NO_ENV_HINTS=1
 
 STATE_DIR="$HOME/Library/Caches/com.jamesdh.brew-upgrade"
 PENDING_FILE="$STATE_DIR/pending"
-PROMPTED_FILE="$STATE_DIR/prompted"
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-SCRIPT_PATH="$SCRIPT_DIR/$(basename "$0")"
+ATTEMPTED_FILE="$STATE_DIR/attempted"
 
 # Match bootstrap.sh: prefer the external cache when it is available, but leave
 # HOMEBREW_CACHE undefined so Homebrew chooses its normal cache on other machines.
@@ -50,7 +47,7 @@ fetch_upgrades() {
   done <<< "$cask_output"
 
   if (( ${#formulae[@]} == 0 && ${#casks[@]} == 0 )); then
-    rm -f "$PENDING_FILE" "$PROMPTED_FILE"
+    rm -f "$PENDING_FILE" "$ATTEMPTED_FILE"
     log "Homebrew is already up to date"
     return
   fi
@@ -90,34 +87,22 @@ screen_is_unlocked() {
   ! /usr/bin/grep -Eq 'CGSSessionScreenIsLocked[^,}]*Yes' <<< "$session_state"
 }
 
-prompt_for_pending_upgrade() {
-  local prompted_tmp
+attempt_pending_upgrade() {
+  local attempted_tmp
 
   [[ -s "$PENDING_FILE" ]] || return
-  if [[ -f "$PROMPTED_FILE" ]] && cmp -s "$PENDING_FILE" "$PROMPTED_FILE"; then
+  if [[ -f "$ATTEMPTED_FILE" ]] && cmp -s "$PENDING_FILE" "$ATTEMPTED_FILE"; then
     return
   fi
 
-  prompted_tmp="$(mktemp "$STATE_DIR/prompted.XXXXXX")"
-  cp "$PENDING_FILE" "$prompted_tmp"
-  chmod 600 "$prompted_tmp"
-  mv "$prompted_tmp" "$PROMPTED_FILE"
+  # Claim this nightly download before starting. If Homebrew fails, later
+  # unlocks do not retry it; the next nightly fetch creates a new generation.
+  attempted_tmp="$(mktemp "$STATE_DIR/attempted.XXXXXX")"
+  cp "$PENDING_FILE" "$attempted_tmp"
+  chmod 600 "$attempted_tmp"
+  mv "$attempted_tmp" "$ATTEMPTED_FILE"
 
-  if ! /usr/bin/osascript - "$SCRIPT_PATH" >/dev/null <<'APPLESCRIPT'
-on run argv
-  set installCommand to (quoted form of (item 1 of argv)) & " install"
-  tell application "Terminal"
-    activate
-    do script installCommand
-  end tell
-end run
-APPLESCRIPT
-  then
-    echo "==> Failed to open the Homebrew upgrade in Terminal" >&2
-    return 1
-  fi
-
-  log "Opened the pending Homebrew upgrade in Terminal"
+  install_pending_upgrades
 }
 
 watch_for_unlocked_session() {
@@ -125,83 +110,34 @@ watch_for_unlocked_session() {
 
   while true; do
     if [[ -s "$PENDING_FILE" ]] && screen_is_unlocked; then
-      prompt_for_pending_upgrade || true
+      attempt_pending_upgrade || true
     fi
     sleep 10
   done
 }
 
-probe_app_management_permission() {
-  local brew_ruby="/opt/homebrew/Library/Homebrew/vendor/portable-ruby/current/bin/ruby"
-
-  # Upgrading casks in place needs macOS App Management permission. Probe while
-  # the user is present so its one-time prompt cannot be stranded overnight.
-  if [[ -x "$brew_ruby" && -d /Applications/iTerm.app ]]; then
-    "$brew_ruby" -e '
-      probe = "/Applications/iTerm.app/.brew-upgrade-tcc-probe"
-      begin
-        File.write(probe, "")
-        File.delete(probe)
-      rescue SystemCallError
-      end
-    ' || true
-  fi
-}
-
 install_pending_upgrades() {
-  local kind package install_manifest failed=0
-  local -a formulae=()
-  local -a casks=()
+  local install_manifest
 
   if [[ ! -s "$PENDING_FILE" ]]; then
-    echo "No downloaded Homebrew upgrades are pending."
     return
   fi
 
   install_manifest="$(mktemp "$STATE_DIR/install.XXXXXX")"
   cp "$PENDING_FILE" "$install_manifest"
 
-  while IFS=$'\t' read -r kind package; do
-    case "$kind" in
-      formula) [[ -n "$package" ]] && formulae+=("$package") ;;
-      cask) [[ -n "$package" ]] && casks+=("$package") ;;
-    esac
-  done < "$install_manifest"
-
-  if (( ${#formulae[@]} == 0 && ${#casks[@]} == 0 )); then
-    echo "No downloaded Homebrew upgrades are pending."
-    rm -f "$install_manifest"
-    return
-  fi
-
-  echo "Downloaded Homebrew upgrades are ready to install."
-  echo "Authenticate with sudo/Touch ID to continue."
-  if ! sudo -v; then
-    rm -f "$install_manifest"
-    return 1
-  fi
-
-  probe_app_management_permission
+  log "Homebrew upgrade started"
   export HOMEBREW_NO_AUTO_UPDATE=1
 
-  if (( ${#formulae[@]} > 0 )); then
-    brew upgrade --formula "${formulae[@]}" || failed=1
-  fi
-  if (( ${#casks[@]} > 0 )); then
-    brew upgrade --cask "${casks[@]}" || failed=1
-  fi
-
-  if (( failed != 0 )); then
+  if ! brew upgrade; then
     rm -f "$install_manifest"
-    echo
-    echo "One or more Homebrew upgrades failed. The pending set was preserved."
-    read -r -p "Press Return to close this window..." || true
+    echo "==> Homebrew upgrade failed; it will not be retried until the next nightly download" >&2
     return 1
   fi
 
   # Do not erase a newer set downloaded while this installation was running.
   if cmp -s "$install_manifest" "$PENDING_FILE"; then
-    rm -f "$PENDING_FILE" "$PROMPTED_FILE"
+    rm -f "$PENDING_FILE" "$ATTEMPTED_FILE"
   fi
   rm -f "$install_manifest"
   log "Homebrew upgrade finished"
@@ -210,9 +146,8 @@ install_pending_upgrades() {
 case "${1:-fetch}" in
   fetch) fetch_upgrades ;;
   watch) watch_for_unlocked_session ;;
-  install) install_pending_upgrades ;;
   *)
-    echo "Usage: $0 [fetch|watch|install]" >&2
+    echo "Usage: $0 [fetch|watch]" >&2
     exit 2
     ;;
 esac
