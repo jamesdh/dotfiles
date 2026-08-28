@@ -40,10 +40,34 @@
     executable: /opt/homebrew/bin/bash # sdkman scripts require Bash 4+, not /bin/sh (3.2)
   loop: "{{sdks}}"
   register: result
-  failed_when: 
+  failed_when:
     - result.rc > 0
     - '"is already installed" not in result.stdout'
-  changed_when: 
+  changed_when:
     - result.rc == 0
     - '"Done installing!" in result.stdout'
     - '"is already installed" not in result.stdout'
+
+# Node comes from nvm (Brewfile.nonpriority); brew's nvm.sh wrapper defaults
+# NVM_DIR to ~/.nvm. The default alias matters beyond nvm itself: .zshrc eagerly
+# prepends the default version's bin to PATH, so it decides which node — and
+# which npm globals (e.g. abg) — every fresh shell and subprocess can see. Left
+# unmanaged it goes stale and hides globals installed under newer versions.
+- name: Check if Node {{node_default_version}} is installed
+  stat:
+    path: "{{home_dir}}/.nvm/versions/node/v{{node_default_version}}"
+  register: node_default
+
+- name: Install Node {{node_default_version}} via nvm
+  shell: "source /opt/homebrew/opt/nvm/nvm.sh --no-use && nvm install {{node_default_version}}"
+  args:
+    executable: /opt/homebrew/bin/bash # nvm requires bash/zsh, not /bin/sh
+  when: not node_default.stat.exists
+
+# Written directly instead of via `nvm alias default` for idempotency and a
+# check-mode diff; the content matches what nvm writes (v-prefixed + newline).
+- name: Set the nvm default alias to {{node_default_version}}
+  copy:
+    content: "v{{node_default_version}}\n"
+    dest: "{{home_dir}}/.nvm/alias/default"
+    mode: "0644"
