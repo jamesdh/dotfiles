@@ -27,9 +27,9 @@ These are the load-bearing fundamentals of design — apply them as defaults, bu
 
 ## Pre-Task Test Validation
 
-Before beginning a new task — a new plan, a new feature, or a distinctly different direction from the prior work — run the project's test suite first. If any tests are failing, stop immediately and notify me. Failing tests should be addressed before starting new work.
-
-Do NOT re-run tests for every follow-up instruction within the same task. Only run them when the work is clearly a new, separate effort.
+- **Trusted CI baseline.** If the branch we are beginning our work from is directly based off `main` with no changes, and `main` is green in CI, do not preface the work with a full test suite run. Trust CI's result for `main` — a local re-run proves nothing it hasn't already proven. 
+- **Untrusted baseline.** Otherwise if the branch is not based off a green CI main, or before beginning a substantially new task on the existing branch — a new plan, a new feature, or a distinctly different direction from the prior work — run the project's test suite first. If any tests are failing, stop immediately and notify me. Failing tests should be addressed before starting new work.
+- **Instruction vs task validation.** Do NOT re-run the full test suite for every follow-up instruction within the same task. Only run the full test suite when the work is clearly a new, separate effort, or if there is legitimate concern the changes might effect the broader application. Isolated tests focused on the work at hand may be run as needed.
 
 ## Testing Requirements
 
