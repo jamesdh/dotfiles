@@ -1,10 +1,30 @@
 # Global Agent Instructions
 
-## Never Give Time Estimates
+## Table of Contents
 
-Never estimate how long work will take — no "half a day," no "a week," no human-calibrated durations of any kind. Agent throughput has no relationship to human effort, and these estimates are always wrong and always annoying. If sizing matters, describe the scope concretely (files touched, commits, steps) or just do the work.
+- [1 General Development Guidance](#1-general-development-guidance)
+  - [1.1 Basic Principles of Good Software Engineering](#11-basic-principles-of-good-software-engineering)
+  - [1.2 Additional Good Practices](#12-additional-good-practices)
+  - [1.3 Pre-Task Test Validation](#13-pre-task-test-validation)
+  - [1.4 Testing Requirements](#14-testing-requirements)
+  - [1.5 Imports Over Fully Qualified Names](#15-imports-over-fully-qualified-names)
+  - [1.6 Eagerly Search the Web](#16-eagerly-search-the-web)
+  - [1.7 Convention Over Configuration](#17-convention-over-configuration)
+  - [1.8 Do the Work, Don't Defer to Me](#18-do-the-work-dont-defer-to-me)
+  - [1.9 Finish the Described Work — Don't Stop to Ask Permission Mid-Task](#19-finish-the-described-work--dont-stop-to-ask-permission-mid-task)
+  - [1.10 Distinguish Questions from Action Requests](#110-distinguish-questions-from-action-requests)
+  - [1.11 Verify Before Asserting](#111-verify-before-asserting)
+  - [1.12 Write GitHub Issues for a Cleared Context](#112-write-github-issues-for-a-cleared-context)
+  - [1.13 Branches, Commits, and PRs](#113-branches-commits-and-prs)
+  - [1.14 Link PRs to the Issues They Resolve](#114-link-prs-to-the-issues-they-resolve)
+  - [1.15 1Password Commit Signing — Don't Block When I'm AFK](#115-1password-commit-signing--dont-block-when-im-afk)
+  - [1.16 Commit attribution](#116-commit-attribution)
+  - [1.17 Agent worktrees](#117-agent-worktrees)
+  - [1.18 Never Give Time Estimates](#118-never-give-time-estimates)
 
-## Basic Principles of Good Software Engineering
+## 1 General Development Guidance
+
+### 1.1 Basic Principles of Good Software Engineering
 
 These are the load-bearing fundamentals of design — apply them as defaults, but treat them as heuristics, not laws. They sometimes pull against each other (DRY vs. KISS, abstraction vs. YAGNI), and the right call is whichever keeps the code simplest to understand and cheapest to change. Reach for them to reason about tradeoffs, not to win arguments by citation.
 
@@ -25,13 +45,29 @@ These are the load-bearing fundamentals of design — apply them as defaults, bu
 - **Law of Demeter (least knowledge).** A unit should talk only to its immediate collaborators, not reach through them (`a.getB().getC().doThing()`). Long reach chains couple you to the internal shape of things you don't own.
 - **Principle of Least Astonishment.** Code should behave the way a reader reasonably expects. Names, signatures, and side effects should hold no surprises; surprising behavior is a defect even when it's technically "correct."
 
-## Pre-Task Test Validation
+### 1.2 Additional Good Practices
 
-- **Trusted CI baseline.** If the branch we are beginning our work from is directly based off `main` with no changes, and `main` is green in CI, do not preface the work with a full test suite run. Trust CI's result for `main` — a local re-run proves nothing it hasn't already proven. 
+Not formal laws or rules of software design, but practices that I've found LLM's specifically experience difficulty with.
+
+- **Every concern should have exactly one owning component, and exactly one code path through it.** A capability that exists must be reached through its owner's public interface — never reimplemented, never reached around, never "just this once."
+- **Before implementing anything, identify the owner.** If the capability or data you need belongs to another component, extend that component's boundary interface. Writing your own query/version of it is the defect, even if your version is correct today.
+- **Close-but-not-quite code means refactor, not fork.** If you find an existing implementation that almost fits, the default is to generalize it at its home, never to copy and adjust. Two "essentially the same" paths is a bug factory, not a convenience.
+- **Visibility widening is an architectural decision, never a mechanical fix.** If your change only compiles after making something public (or package-private things move apart), STOP. You have hit a boundary on purpose. Propose the seam; do not widen and move on.
+- **The current dependency graph is evidence, not justification.** "X can't move because Y uses it" is the beginning of the analysis, not the end — ask whether Y's usage is itself misplaced before concluding the boundary must bend.
+- **A component ownership map.** A short section per component: what it owns, its public surface, what may never bypass it. Agents follow explicit ownership declarations far better than principles; "ALL price reads go through PriceService, no exceptions, see market.pricing" is mechanically checkable by the agent against its own plan.
+
+The following are generally enforceable if ArchUnit or similar is available for use by the project.
+
+- **Every boundary ships with its enforcement.** Compile-time first (package-private + a deliberate public seam), rules for what the compiler can't see (public repositories, jOOQ table classes, method-call inventories). A boundary that exists only in prose will be eroded — by you.
+- **Keep doing what you're doing with enforcement.** The uncomfortable truth is that the doc reduces the failure rate; the compiler and ArchUnit reduce it to zero for the paths they cover. The best line in the doctrine is the one that makes me extend the enforcement whenever I add a boundary — that compounds, because every boundary I'm forced to respect is one you never have to argue with me about again.
+
+### 1.3 Pre-Task Test Validation
+
+- **Trusted CI baseline.** If the branch we are beginning our work from is directly based off `main` with no changes, and `main` is green in CI, do not preface the work with a full test suite run. Trust CI's result for `main` — a local re-run proves nothing it hasn't already proven.
 - **Untrusted baseline.** Otherwise if the branch is not based off a green CI main, or before beginning a substantially new task on the existing branch — a new plan, a new feature, or a distinctly different direction from the prior work — run the project's test suite first. If any tests are failing, stop immediately and notify me. Failing tests should be addressed before starting new work.
 - **Instruction vs task validation.** Do NOT re-run the full test suite for every follow-up instruction within the same task. Only run the full test suite when the work is clearly a new, separate effort, or if there is legitimate concern the changes might effect the broader application. Isolated tests focused on the work at hand may be run as needed.
 
-## Testing Requirements
+### 1.4 Testing Requirements
 
 When adding or modifying features, always write tests that validate the changes. Prefer TDD: write the tests first, then write the code that makes them pass. Writing tests first forces you to think about the API up front and naturally pushes the implementation toward smaller, more encapsulated, more testable units.
 
@@ -41,7 +77,7 @@ When adding or modifying features, always write tests that validate the changes.
 - **Cover edge and failure cases, not just the happy path.** A suite that only exercises the success path misses the bugs that actually ship. Test for null/empty inputs, boundary values, error conditions, invalid state, and concurrency where it applies.
 - **For bug fixes, write the failing test first.** Reproduce the bug in a test that fails for the same reason the bug exists, then write the fix that turns it green. This proves the fix actually addresses the bug *and* prevents it from regressing silently later.
 
-## Imports Over Fully Qualified Names
+### 1.5 Imports Over Fully Qualified Names
 
 Always prefer importing types, functions, and modules at the top of the file over using fully qualified names (FQNs) inline. Inline FQNs are noisy, harder to read, and obscure the file's actual dependencies.
 
@@ -49,7 +85,7 @@ Always prefer importing types, functions, and modules at the top of the file ove
 - **Use inline FQNs only when an import won't work.** Reach for them only when an import would cause a genuine name collision or circular import that can't be resolved another way.
 - **Match the file's existing import style.** When editing existing code, follow the established style of the file/module rather than introducing a new convention.
 
-## Eagerly Search the Web
+### 1.6 Eagerly Search the Web
 
 Treat web search as a primary investigation tool — on par with reading a file or grepping the codebase. Reach for it whenever there's uncertainty about unfamiliar libraries, API behavior, recent tooling changes, cryptic errors, or obscure configuration. Someone has almost certainly already hit and documented what you're looking at — find their answer instead of rediscovering it.
 
@@ -58,7 +94,7 @@ Treat web search as a primary investigation tool — on par with reading a file 
 - **Paste the exact error string into WebSearch.** Use the exact error message (or a distinctive fragment of it) — do not paraphrase.
 - **One non-obvious failure is enough reason to search.** If an attempt didn't work for a reason you don't fully understand, search before trying another variation. You're not "giving up" by searching — you're using the right tool.
 
-## Convention Over Configuration
+### 1.7 Convention Over Configuration
 
 Popular frameworks (Micronaut, Spring, and similar) ship with strong conventions that eliminate boilerplate. Lean on them. Don't restate defaults the framework already provides, and don't reinvent abstractions the framework has already solved idiomatically.
 
@@ -68,7 +104,7 @@ Popular frameworks (Micronaut, Spring, and similar) ship with strong conventions
 - **Raw SQL strings are a last resort, not a default.** If a Data repository or jOOQ can express the query, use that instead. Raw strings lose type safety, refactor support, and SQL-injection guarantees.
 - **Check the docs before writing custom code.** When in doubt about whether a convention exists, the framework almost certainly has one.
 
-## Do the Work, Don't Defer to Me
+### 1.8 Do the Work, Don't Defer to Me
 
 If you have the tools and access to do something yourself, do it. Don't ask me to check, look up, query, or run something on your behalf when you can do it directly.
 
@@ -78,7 +114,7 @@ If you have the tools and access to do something yourself, do it. Don't ask me t
 - **Only ask when the answer truly requires me.** My intent, my preference, credentials I haven't shared, context outside the machine. Asking me to verify what you can verify yourself wastes a round trip and shifts work onto me.
 - **Postgres runs in Docker, not on the host.** I rarely (if ever) have `psql` on the host pointed at a real database. Don't try `psql -U …` directly first and then fall back to Docker after it fails — go straight to `docker compose exec <service> psql …` (or `docker exec`) against the running container. If you can't find the container, check `docker ps` before assuming there's a host install.
 
-## Finish the Described Work — Don't Stop to Ask Permission Mid-Task
+### 1.9 Finish the Described Work — Don't Stop to Ask Permission Mid-Task
 
 When I describe a task or a multi-part piece of work, complete **all** of it in one go. Don't stop partway to summarize progress and ask whether to continue. Keep going until the work is done, the tests pass, and it's committed. A list of parts (e.g. "Phase 2: A, B, and C") is a single mandate to finish A, B, *and* C — not a set of checkpoints to pause at.
 
@@ -87,25 +123,22 @@ When I describe a task or a multi-part piece of work, complete **all** of it in 
 - **Don't self-impose scope reductions.** "I'll do the UI now and the streaming later" needs my explicit sign-off. If I asked for the whole thing, deliver the whole thing; don't unilaterally split it and hand part back to me.
 - **Only stop early when you are genuinely blocked or done.** Blocked = a decision only I can make (a credential I haven't shared, an irreversible/destructive action needing sign-off, a real ambiguity that changes the outcome), or tests that fail and you can't fix. "This next part is big / infra-heavy / careful" is *not* a reason to stop — it's the work.
 - **Effort and context length are not reasons to stop.** If the task is large, work through it; if you're running low on context, say so and keep going as far as you can rather than parking it back on me.
-
-### This Is a Persistence Rule, Not a Task-Selection Rule
-
-Why this rule exists: it guards against premature stopping — an agent inventing checkpoints inside an assigned task and halting at the first one, so that long-running work ends up abandoned shortly after it began. The rule's entire domain is *pushing a task I assigned through to done*. It grants **zero** authority over what happens *next*. Do not read "keep going" as license to start, resume, or expand work I didn't just direct.
-
+- **This is a persistence rule, not a task-selection rule.** It guards against premature stopping — an agent inventing checkpoints inside an assigned task and halting at the first one, so that long-running work ends up abandoned shortly after it began. The rule's entire domain is *pushing a task I assigned through to done*. It grants **zero** authority over what happens *next*. Do not read "keep going" as license to start, resume, or expand work I didn't just direct.
 - **The rule applies inside a task I gave you — nowhere else.** Once the thing I most recently asked for is complete, the turn ends and control returns to me. "Keep going" means keep going *on that task*, not keep going *in general*.
 - **An interjected instruction ends the turn when it completes.** If I interrupt in-progress work with a side instruction ("file an issue for that", "clean up those branches"), finishing that instruction is the whole turn — especially when I've said something like "we won't fix this now" or "we're in the middle of something else." Do not swing back into the interrupted task on your own initiative; resuming it is my call, even though the task is still open.
 - **Ambiguity about scope resolves toward stopping, not toward more work.** If it's unclear whether I've taken the wheel back, assume I have and end the turn. The only place to err toward action is *inside* a task I explicitly assigned and haven't interrupted.
 
-## A Question Gets an Answer, Not an Implementation
+### 1.10 Distinguish Questions from Action Requests
 
-The rule above is about *described work* — directives. A question is not a directive. When I **ask** something, answer it; don't jump straight into implementing a change off the back of it. This is the counterweight to "finish the described work": finish what I told you to do, but don't manufacture work out of what I merely asked about.
+A sentence's grammatical form does not determine whether it authorizes work. Some questions seek information or a decision; others are ordinary, polite ways of requesting an action. Interpret the request by its practical meaning and context.
 
-- **Treat questions as questions.** "Is it possible to…", "Can we…", "Should we…", "Do we…", "What if…", "Why don't we…" are requests for information, feasibility, or a recommendation — not instructions to build. Answer, lay out the options/tradeoffs, and stop there.
-- **A question is often me thinking, not me deciding.** I may be weighing whether it's worth doing, comparing it against another approach, or heading somewhere you can't see. Implementing pre-empts my decision and can churn the branch with work I never asked for.
-- **Wait for the build signal.** Only start changing code on an explicit instruction — "do it", "add it", "implement", "make the change", "go" — or when it's unambiguously part of a task I already directed. "Can we?" is not "do it."
-- **If a question might be an implied request, don't assume "yes, build it."** Answer it, say what you'd do and recommend, and let me give the go-ahead — or ask which I want. Erring toward action here is as wrong as erring toward stopping mid-task; calibrate to whether I gave a directive or asked a question.
+- **Answer exploratory questions without implementing.** Questions about feasibility, design, preference, consequences, or alternatives usually mean I am evaluating a decision. Explain the options and stop.
+- **Act on clear action requests, even when phrased as questions.** If I ask whether you can or could perform a concrete, scoped action—such as “Can you update this file?” or “Could you fix that test?”—treat it as a request to do the work.
+- **Look for the requested outcome, not just the question mark.** If a reasonable collaborator would understand that I am asking for a deliverable now, proceed. If I am asking whether something is possible or advisable, answer the question.
+- **Resolve genuine ambiguity by answering first.** When both interpretations remain plausible and implementation could create meaningful churn, answer the question, briefly state what you would do, and end by asking whether I want you to proceed. This gives me a simple opportunity to confirm the work with “yes.”
+- **Once an action request is clear, finish it.** Question-form action requests are subject to the same completion rules as explicit commands.
 
-## Verify Before Asserting
+### 1.11 Verify Before Asserting
 
 Before stating any factual claim about timestamps, PR numbers, file contents, code paths, or external data, run the read-only verification command first. Session memory and conversation summaries are not authoritative.
 
@@ -114,7 +147,7 @@ Before stating any factual claim about timestamps, PR numbers, file contents, co
 - **Be especially careful with relative time.** You do not have reliable awareness of the current date/time, and you regularly miscompute things like "today / yesterday / last week / X days ago." Never translate a raw timestamp into a relative phrase without checking the current date (`date`) and the event's actual timestamp side by side. When in doubt, just state the absolute date/time and let me do the math.
 - **Inspect database schemas before querying them.** You regularly hallucinate column or table names that sound plausible but don't exist. Before composing any non-trivial query, look up the actual schema — `\d <table>` (psql), `DESCRIBE <table>` / `SHOW COLUMNS` (MySQL), `information_schema.columns`, or whatever the equivalent is for the database in use. Don't guess column names from context; verify them.
 
-## Write GitHub Issues for a Cleared Context
+### 1.12 Write GitHub Issues for a Cleared Context
 
 When creating a GitHub issue, write it as if a future session — yours or mine — will pick it up cold, with **none** of the conversation context that led to filing it. The reader will not remember our discussion, will not have the same mental model of the problem, and will not have access to the chat history. Externalize everything that matters into the issue body.
 
@@ -123,34 +156,23 @@ When creating a GitHub issue, write it as if a future session — yours or mine 
 - **Include concrete artifacts.** Error messages, file paths and line numbers, exact commands, observed vs expected behavior, relevant SHA/PR refs. Don't hand-wave with "the bug we discussed" — paste the actual evidence.
 - **Richer discussion → longer issue body.** The more context the conversation has built up, the more important it is to dump that context into the issue. Treat the issue as the artifact that captures the discussion, not a placeholder that depends on it.
 
-## Branches, Commits, and PRs
+### 1.13 Branches, Commits, and PRs
 
 Treat one described task as a single lifecycle — **branch → commits → one PR** — where each stage has its own default. Keep them distinct; don't collapse "commit" or "branch" into "open a PR."
 
-- **Branch first, from a *verified* up-to-date base.** When you start a new task, create its branch *before the first commit* — but sync **and verify** the base first (see "Never Branch or Tag Off a Stale Base" below), then `git switch -c <kebab-slug>`. Do **not** branch off a stale local base, and do **not** branch off whatever branch you happen to be sitting on — it may be old or already merged. Never commit a new task's work directly onto the base branch. One task = one branch.
+- **Branch first, from a *verified* up-to-date base.** When you start a new task, create its branch *before the first commit* — but sync **and verify** the base first, then `git switch -c <kebab-slug>`. Do **not** branch off a stale local base, and do **not** branch off whatever branch you happen to be sitting on — it may be old or already merged. Never commit a new task's work directly onto the base branch. One task = one branch.
+- **Never branch or tag from a stale base.** Treat the local base as stale until verified. Before creating any branch or tag, determine the repository's default branch, fetch the source-of-truth remote with pruning and tags, switch to the base and fast-forward it, then run `git rev-list --left-right --count <base>...<remote>/<base>` and read its output. Proceed only when it reports `0 0`; otherwise stop and report the ahead, behind, or diverged state. Before tagging, also confirm the target with `git log -1 --oneline <base>`.
+- **Read the verification output; don't infer it from exit status.** `rev-list` exits 0 whether the counts are `0 0` or `0 17`, and "Already up to date." from `git pull` only proves the pull ran — not that the remote base was fetched fresh. The counts are the check that matters.
+- **Tags are stricter than branches, not looser.** A branch off a stale base is annoying; a tag off one ships the wrong commit and takes a delete + re-push + re-release to unwind. Run the same fetch-and-verify, then confirm the commit you're about to tag is the one you mean: `git log -1 --oneline <base>`.
+- **An ahead or diverged local base is a stop, not a fixup.** If the local base has commits the source-of-truth remote doesn't, don't rebase, reset, or force anything to make the check pass — surface it to me and let me decide.
+- **Same rule for a fork's `upstream`.** On a fork, `origin/<base>` can itself lag `upstream/<base>`. Fetch and verify against whichever remote is the real source of truth for the work.
 - **Commit eagerly; no need to ask.** Once the test suite is green, commit. Prefer several small, logical commits on the branch (a refactor, a feature, a bug fix, a passing test) over one giant commit. Commits stay **local** — committing never implies pushing.
 - **Push only when I ask or when opening a PR.** Pushing is a separate, explicit action — not a default that follows from a green commit. Push only when I ask for it ("push"), or as the necessary first step of a PR I've asked you to open. A branch with green local commits stays unpushed until then; don't push it just because the work is done.
 - **Open a PR only when I ask.** Creating a PR is a separate, explicit action — wait for "open a PR" / `gh pr create`. Local commits on the task branch are fine indefinitely until then; the push happens as part of opening the PR.
 - **One described task = one branch = one PR.** Don't split a single task across multiple PRs. If the task has phases or parts, they are *more commits on the same branch* — not new branches or follow-up PRs. If you catch yourself thinking "part A now, part B in a follow-up PR," stop and keep them on one branch.
 - **Fixes to an in-flight PR go *on* that PR.** If I flag a problem with an open PR, push the fix as new commits to that PR's branch and update its body — never a new branch stacked behind it. If new work feels genuinely separate from the open PR, ask before branching rather than stacking.
 
-### Never Branch or Tag Off a Stale Base
-
-This has gone wrong far too many times: a new branch cut from a stale local `main`, or — worse — a **tag** cut from one. Treat the local base branch as **stale until proven current**. It is not enough to run `git pull` and assume it worked; you have to fetch and then confirm with a command whose output you actually read.
-
-Before every `git switch -c <new-branch>` and every `git tag <name>`:
-
-1. **Confirm the base branch name.** It is not always `main` — several of my repos are on `master`. `gh repo view --json defaultBranchRef -q .defaultBranchRef.name` gives the bare name directly. (`git symbolic-ref --short refs/remotes/origin/HEAD` also works but prints `origin/<name>`, and can be unset or stale locally — `git remote set-head origin -a` refreshes it.)
-2. **Fetch explicitly.** `git fetch origin --prune --tags`. Fetching is what refreshes `origin/<base>`; a bare `pull` on the wrong branch does nothing for it.
-3. **Switch and fast-forward.** `git switch <base> && git pull --ff-only`.
-4. **Verify it actually landed.** `git rev-list --left-right --count <base>...origin/<base>` must print `0	0` — left column is commits only on local `<base>` (ahead), right column is commits only on `origin/<base>` (behind). Anything else means ahead, behind, or diverged — **stop and tell me**. Do not branch or tag from it.
-
-- **Read the verification output; don't infer it from exit status.** `rev-list` exits 0 whether the counts are `0	0` or `0	17`, and "Already up to date." from `git pull` only proves the pull ran — not that `origin/<base>` was fetched fresh. The counts are the check that matters.
-- **Tags are stricter than branches, not looser.** A branch off a stale base is annoying; a tag off one ships the wrong commit and takes a delete + re-push + re-release to unwind. Run the same fetch-and-verify, then confirm the commit you're about to tag is the one you mean: `git log -1 --oneline <base>`.
-- **An ahead or diverged local base is a stop, not a fixup.** If local `<base>` has commits `origin/<base>` doesn't, don't rebase, reset, or force anything to make the check pass — surface it to me and let me decide.
-- **Same rule for a fork's `upstream`.** On a fork, `origin/<base>` can itself lag `upstream/<base>`. Fetch and verify against whichever remote is the real source of truth for the work.
-
-## Link PRs to the Issues They Resolve
+### 1.14 Link PRs to the Issues They Resolve
 
 When a PR addresses an existing issue, always include a GitHub closing keyword (`Fixes #123`, `Closes #123`, `Resolves #123`) in the PR description so that merging the PR auto-closes the issue. A bare `#123` reference renders as a hyperlink but does not close anything on merge.
 
@@ -159,14 +181,14 @@ When a PR addresses an existing issue, always include a GitHub closing keyword (
 - **Cross-repo issues need the full reference.** Use `owner/repo#123` syntax (e.g. `Fixes moltenbits/conlingo#42`) when the issue lives in a different repository.
 - **One keyword per issue.** If a PR closes multiple issues, list each with its own keyword: `Fixes #12, fixes #15, closes #18`. A single keyword followed by a comma-list does *not* close all of them.
 
-## 1Password Commit Signing — Don't Block When I'm AFK
+### 1.15 1Password Commit Signing — Don't Block When I'm AFK
 
 My commits are SSH-signed through 1Password (`gpg.format ssh`, signed by `op-ssh-sign`), and signing sometimes requires me to approve an authorization prompt in the 1Password app. When a commit fails with `error: 1Password: failed to fill whole buffer`, it almost always means I'm AFK and the prompt went unanswered — it is not a problem with your work, and not a blocker.
 
 - **Retry once, then commit unsigned and keep going.** The first failure may just be a missed prompt. If the retry also fails, commit with `git commit --no-gpg-sign` and continue the task — don't park the remaining work waiting for me to come back and approve signing.
 - **Note any unsigned commits in your summary.** List which commits went in unsigned so I can re-sign them later if I care to.
 
-## Commit attribution
+### 1.16 Commit attribution
 
 When creating git commits or PRs on the user's behalf:
 
@@ -174,7 +196,7 @@ When creating git commits or PRs on the user's behalf:
 - **Don't add "Generated with [Claude Code]" footers to PR bodies.** Same rule for PR descriptions.
 - **Commits should appear under the user's identity only.** No assistant or tool attribution anywhere in the commit metadata.
 
-### Agent worktrees
+### 1.17 Agent worktrees
 
 When spawning background agents with `isolation: "worktree"`:
 
@@ -184,3 +206,8 @@ When spawning background agents with `isolation: "worktree"`:
     - `git worktree unlock <path>` — agent worktrees are created locked, and GUI clients (Tower) silently refuse to remove locked worktrees.
     - `git worktree move <old-path> <new-path>` to rename the worktree directory to match the slug, so `git worktree list` and Tower's sidebar are readable.
 - **Don't retroactively rename a branch whose PR is already open.** The local branch diverges from the PR's head ref and the PR is stranded.
+
+### 1.18 Never Give Time Estimates
+
+- **Never estimate how long work will take** No "half a day," no "a week," no human-calibrated durations of any kind.
+Agent throughput has no relationship to human effort, and these estimates are always wrong and always annoying. If sizing matters, describe the scope concretely (files touched, commits, steps) or just do the work.
