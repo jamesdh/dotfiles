@@ -4,23 +4,22 @@
 
 - [1 General Development Guidance](#1-general-development-guidance)
   - [1.1 Basic Principles of Good Software Engineering](#11-basic-principles-of-good-software-engineering)
-  - [1.2 Additional Good Practices](#12-additional-good-practices)
-  - [1.3 Pre-Task Test Validation](#13-pre-task-test-validation)
-  - [1.4 Testing Requirements](#14-testing-requirements)
-  - [1.5 Imports Over Fully Qualified Names](#15-imports-over-fully-qualified-names)
-  - [1.6 Eagerly Search the Web](#16-eagerly-search-the-web)
-  - [1.7 Convention Over Configuration](#17-convention-over-configuration)
-  - [1.8 Do the Work, Don't Defer to Me](#18-do-the-work-dont-defer-to-me)
-  - [1.9 Finish the Described Work — Don't Stop to Ask Permission Mid-Task](#19-finish-the-described-work--dont-stop-to-ask-permission-mid-task)
-  - [1.10 Distinguish Questions from Action Requests](#110-distinguish-questions-from-action-requests)
-  - [1.11 Verify Before Asserting](#111-verify-before-asserting)
-  - [1.12 Write GitHub Issues for a Cleared Context](#112-write-github-issues-for-a-cleared-context)
-  - [1.13 Branches, Commits, and PRs](#113-branches-commits-and-prs)
-  - [1.14 Link PRs to the Issues They Resolve](#114-link-prs-to-the-issues-they-resolve)
-  - [1.15 1Password Commit Signing — Don't Block When I'm AFK](#115-1password-commit-signing--dont-block-when-im-afk)
-  - [1.16 Commit attribution](#116-commit-attribution)
-  - [1.17 Agent worktrees](#117-agent-worktrees)
-  - [1.18 Never Give Time Estimates](#118-never-give-time-estimates)
+  - [1.2 Pre-Task Test Validation](#12-pre-task-test-validation)
+  - [1.3 Testing Requirements](#13-testing-requirements)
+  - [1.4 Imports Over Fully Qualified Names](#14-imports-over-fully-qualified-names)
+  - [1.5 Eagerly Search the Web](#15-eagerly-search-the-web)
+  - [1.6 Convention Over Configuration](#16-convention-over-configuration)
+  - [1.7 Do the Work, Don't Defer to Me](#17-do-the-work-dont-defer-to-me)
+  - [1.8 Finish the Described Work — Don't Stop to Ask Permission Mid-Task](#18-finish-the-described-work--dont-stop-to-ask-permission-mid-task)
+  - [1.9 Distinguish Questions from Action Requests](#19-distinguish-questions-from-action-requests)
+  - [1.10 Verify Before Asserting](#110-verify-before-asserting)
+  - [1.11 Write GitHub Issues for a Cleared Context](#111-write-github-issues-for-a-cleared-context)
+  - [1.12 Branches, Commits, and PRs](#112-branches-commits-and-prs)
+  - [1.13 Link PRs to the Issues They Resolve](#113-link-prs-to-the-issues-they-resolve)
+  - [1.14 1Password Commit Signing — Don't Block When I'm AFK](#114-1password-commit-signing--dont-block-when-im-afk)
+  - [1.15 Commit attribution](#115-commit-attribution)
+  - [1.16 Agent worktrees](#116-agent-worktrees)
+  - [1.17 Never Give Time Estimates](#117-never-give-time-estimates)
 
 ## 1 General Development Guidance
 
@@ -44,30 +43,23 @@ These are the load-bearing fundamentals of design — apply them as defaults, bu
 - **Composition Over Inheritance.** Build behavior by combining small parts rather than extending deep class hierarchies. Composition is more flexible and avoids the fragile-base-class coupling that inheritance creates.
 - **Law of Demeter (least knowledge).** A unit should talk only to its immediate collaborators, not reach through them (`a.getB().getC().doThing()`). Long reach chains couple you to the internal shape of things you don't own.
 - **Principle of Least Astonishment.** Code should behave the way a reader reasonably expects. Names, signatures, and side effects should hold no surprises; surprising behavior is a defect even when it's technically "correct."
+- **Information Hiding.** Each module should own the design decisions and knowledge likely to change, exposing them only through a stable interface. Callers must not reach around that interface or duplicate the module's knowledge elsewhere.
+- **GRASP Information Expert.** Assign a responsibility to the component that has the information needed to fulfill it. When a capability belongs to an existing component, extend that component's public boundary instead of creating a competing implementation.
+- **Rule of Three.** A little duplication is often cheaper than a premature abstraction; introduce a shared abstraction once repetition reveals a stable pattern. When an existing owned implementation already nearly fits, refactor it at its source rather than forking it.
+- **Refactoring.** Improve internal structure through small, behavior-preserving changes. Generalize or reorganize existing code at its authoritative home instead of copying and modifying it elsewhere.
+- **Principle of Least Privilege.** Give code, users, and components only the access and visibility they need. Treat widening a public or package boundary as an architectural decision, not a mechanical compilation fix.
+- **Stable Dependencies Principle.** Dependencies should point toward components that are more stable and less likely to change. Treat the current dependency graph as evidence to examine, not proof that existing dependency directions are correct.
+- **Bounded Contexts and Context Maps.** Keep each domain model internally consistent within an explicit boundary, and document how bounded contexts relate. Record what each component owns, what it exposes, and which paths may not bypass it.
+- **Architectural Fitness Functions and Architecture Tests.** Express important boundaries and quality attributes as executable checks. Prefer compile-time enforcement; use ArchUnit or equivalent tests for rules the compiler cannot express, and extend that enforcement whenever a new boundary is introduced.
+- **Evolutionary Architecture.** Evolve architecture incrementally using feedback and fitness functions rather than treating the initial design as fixed. Keep structural changes small, testable, and aligned with current requirements.
 
-### 1.2 Additional Good Practices
-
-Not formal laws or rules of software design, but practices that I've found LLM's specifically experience difficulty with.
-
-- **Every concern should have exactly one owning component, and exactly one code path through it.** A capability that exists must be reached through its owner's public interface — never reimplemented, never reached around, never "just this once."
-- **Before implementing anything, identify the owner.** If the capability or data you need belongs to another component, extend that component's boundary interface. Writing your own query/version of it is the defect, even if your version is correct today.
-- **Close-but-not-quite code means refactor, not fork.** If you find an existing implementation that almost fits, the default is to generalize it at its home, never to copy and adjust. Two "essentially the same" paths is a bug factory, not a convenience.
-- **Visibility widening is an architectural decision, never a mechanical fix.** If your change only compiles after making something public (or package-private things move apart), STOP. You have hit a boundary on purpose. Propose the seam; do not widen and move on.
-- **The current dependency graph is evidence, not justification.** "X can't move because Y uses it" is the beginning of the analysis, not the end — ask whether Y's usage is itself misplaced before concluding the boundary must bend.
-- **A component ownership map.** A short section per component: what it owns, its public surface, what may never bypass it. Agents follow explicit ownership declarations far better than principles; "ALL price reads go through PriceService, no exceptions, see market.pricing" is mechanically checkable by the agent against its own plan.
-
-The following are generally enforceable if ArchUnit or similar is available for use by the project.
-
-- **Every boundary ships with its enforcement.** Compile-time first (package-private + a deliberate public seam), rules for what the compiler can't see (public repositories, jOOQ table classes, method-call inventories). A boundary that exists only in prose will be eroded — by you.
-- **Keep doing what you're doing with enforcement.** The uncomfortable truth is that the doc reduces the failure rate; the compiler and ArchUnit reduce it to zero for the paths they cover. The best line in the doctrine is the one that makes me extend the enforcement whenever I add a boundary — that compounds, because every boundary I'm forced to respect is one you never have to argue with me about again.
-
-### 1.3 Pre-Task Test Validation
+### 1.2 Pre-Task Test Validation
 
 - **Trusted CI baseline.** If the branch we are beginning our work from is directly based off `main` with no changes, and `main` is green in CI, do not preface the work with a full test suite run. Trust CI's result for `main` — a local re-run proves nothing it hasn't already proven.
 - **Untrusted baseline.** Otherwise if the branch is not based off a green CI main, or before beginning a substantially new task on the existing branch — a new plan, a new feature, or a distinctly different direction from the prior work — run the project's test suite first. If any tests are failing, stop immediately and notify me. Failing tests should be addressed before starting new work.
 - **Instruction vs task validation.** Do NOT re-run the full test suite for every follow-up instruction within the same task. Only run the full test suite when the work is clearly a new, separate effort, or if there is legitimate concern the changes might effect the broader application. Isolated tests focused on the work at hand may be run as needed.
 
-### 1.4 Testing Requirements
+### 1.3 Testing Requirements
 
 When adding or modifying features, always write tests that validate the changes. Prefer TDD: write the tests first, then write the code that makes them pass. Writing tests first forces you to think about the API up front and naturally pushes the implementation toward smaller, more encapsulated, more testable units.
 
@@ -77,7 +69,7 @@ When adding or modifying features, always write tests that validate the changes.
 - **Cover edge and failure cases, not just the happy path.** A suite that only exercises the success path misses the bugs that actually ship. Test for null/empty inputs, boundary values, error conditions, invalid state, and concurrency where it applies.
 - **For bug fixes, write the failing test first.** Reproduce the bug in a test that fails for the same reason the bug exists, then write the fix that turns it green. This proves the fix actually addresses the bug *and* prevents it from regressing silently later.
 
-### 1.5 Imports Over Fully Qualified Names
+### 1.4 Imports Over Fully Qualified Names
 
 Always prefer importing types, functions, and modules at the top of the file over using fully qualified names (FQNs) inline. Inline FQNs are noisy, harder to read, and obscure the file's actual dependencies.
 
@@ -85,7 +77,7 @@ Always prefer importing types, functions, and modules at the top of the file ove
 - **Use inline FQNs only when an import won't work.** Reach for them only when an import would cause a genuine name collision or circular import that can't be resolved another way.
 - **Match the file's existing import style.** When editing existing code, follow the established style of the file/module rather than introducing a new convention.
 
-### 1.6 Eagerly Search the Web
+### 1.5 Eagerly Search the Web
 
 Treat web search as a primary investigation tool — on par with reading a file or grepping the codebase. Reach for it whenever there's uncertainty about unfamiliar libraries, API behavior, recent tooling changes, cryptic errors, or obscure configuration. Someone has almost certainly already hit and documented what you're looking at — find their answer instead of rediscovering it.
 
@@ -94,7 +86,7 @@ Treat web search as a primary investigation tool — on par with reading a file 
 - **Paste the exact error string into WebSearch.** Use the exact error message (or a distinctive fragment of it) — do not paraphrase.
 - **One non-obvious failure is enough reason to search.** If an attempt didn't work for a reason you don't fully understand, search before trying another variation. You're not "giving up" by searching — you're using the right tool.
 
-### 1.7 Convention Over Configuration
+### 1.6 Convention Over Configuration
 
 Popular frameworks (Micronaut, Spring, and similar) ship with strong conventions that eliminate boilerplate. Lean on them. Don't restate defaults the framework already provides, and don't reinvent abstractions the framework has already solved idiomatically.
 
@@ -104,7 +96,7 @@ Popular frameworks (Micronaut, Spring, and similar) ship with strong conventions
 - **Raw SQL strings are a last resort, not a default.** If a Data repository or jOOQ can express the query, use that instead. Raw strings lose type safety, refactor support, and SQL-injection guarantees.
 - **Check the docs before writing custom code.** When in doubt about whether a convention exists, the framework almost certainly has one.
 
-### 1.8 Do the Work, Don't Defer to Me
+### 1.7 Do the Work, Don't Defer to Me
 
 If you have the tools and access to do something yourself, do it. Don't ask me to check, look up, query, or run something on your behalf when you can do it directly.
 
@@ -114,7 +106,7 @@ If you have the tools and access to do something yourself, do it. Don't ask me t
 - **Only ask when the answer truly requires me.** My intent, my preference, credentials I haven't shared, context outside the machine. Asking me to verify what you can verify yourself wastes a round trip and shifts work onto me.
 - **Postgres runs in Docker, not on the host.** I rarely (if ever) have `psql` on the host pointed at a real database. Don't try `psql -U …` directly first and then fall back to Docker after it fails — go straight to `docker compose exec <service> psql …` (or `docker exec`) against the running container. If you can't find the container, check `docker ps` before assuming there's a host install.
 
-### 1.9 Finish the Described Work — Don't Stop to Ask Permission Mid-Task
+### 1.8 Finish the Described Work — Don't Stop to Ask Permission Mid-Task
 
 When I describe a task or a multi-part piece of work, complete **all** of it in one go. Don't stop partway to summarize progress and ask whether to continue. Keep going until the work is done, the tests pass, and it's committed. A list of parts (e.g. "Phase 2: A, B, and C") is a single mandate to finish A, B, *and* C — not a set of checkpoints to pause at.
 
@@ -128,7 +120,7 @@ When I describe a task or a multi-part piece of work, complete **all** of it in 
 - **An interjected instruction ends the turn when it completes.** If I interrupt in-progress work with a side instruction ("file an issue for that", "clean up those branches"), finishing that instruction is the whole turn — especially when I've said something like "we won't fix this now" or "we're in the middle of something else." Do not swing back into the interrupted task on your own initiative; resuming it is my call, even though the task is still open.
 - **Ambiguity about scope resolves toward stopping, not toward more work.** If it's unclear whether I've taken the wheel back, assume I have and end the turn. The only place to err toward action is *inside* a task I explicitly assigned and haven't interrupted.
 
-### 1.10 Distinguish Questions from Action Requests
+### 1.9 Distinguish Questions from Action Requests
 
 A sentence's grammatical form does not determine whether it authorizes work. Some questions seek information or a decision; others are ordinary, polite ways of requesting an action. Interpret the request by its practical meaning and context.
 
@@ -138,7 +130,7 @@ A sentence's grammatical form does not determine whether it authorizes work. Som
 - **Resolve genuine ambiguity by answering first.** When both interpretations remain plausible and implementation could create meaningful churn, answer the question, briefly state what you would do, and end by asking whether I want you to proceed. This gives me a simple opportunity to confirm the work with “yes.”
 - **Once an action request is clear, finish it.** Question-form action requests are subject to the same completion rules as explicit commands.
 
-### 1.11 Verify Before Asserting
+### 1.10 Verify Before Asserting
 
 Before stating any factual claim about timestamps, PR numbers, file contents, code paths, or external data, run the read-only verification command first. Session memory and conversation summaries are not authoritative.
 
@@ -147,7 +139,7 @@ Before stating any factual claim about timestamps, PR numbers, file contents, co
 - **Be especially careful with relative time.** You do not have reliable awareness of the current date/time, and you regularly miscompute things like "today / yesterday / last week / X days ago." Never translate a raw timestamp into a relative phrase without checking the current date (`date`) and the event's actual timestamp side by side. When in doubt, just state the absolute date/time and let me do the math.
 - **Inspect database schemas before querying them.** You regularly hallucinate column or table names that sound plausible but don't exist. Before composing any non-trivial query, look up the actual schema — `\d <table>` (psql), `DESCRIBE <table>` / `SHOW COLUMNS` (MySQL), `information_schema.columns`, or whatever the equivalent is for the database in use. Don't guess column names from context; verify them.
 
-### 1.12 Write GitHub Issues for a Cleared Context
+### 1.11 Write GitHub Issues for a Cleared Context
 
 When creating a GitHub issue, write it as if a future session — yours or mine — will pick it up cold, with **none** of the conversation context that led to filing it. The reader will not remember our discussion, will not have the same mental model of the problem, and will not have access to the chat history. Externalize everything that matters into the issue body.
 
@@ -156,7 +148,7 @@ When creating a GitHub issue, write it as if a future session — yours or mine 
 - **Include concrete artifacts.** Error messages, file paths and line numbers, exact commands, observed vs expected behavior, relevant SHA/PR refs. Don't hand-wave with "the bug we discussed" — paste the actual evidence.
 - **Richer discussion → longer issue body.** The more context the conversation has built up, the more important it is to dump that context into the issue. Treat the issue as the artifact that captures the discussion, not a placeholder that depends on it.
 
-### 1.13 Branches, Commits, and PRs
+### 1.12 Branches, Commits, and PRs
 
 Treat one described task as a single lifecycle — **branch → commits → one PR** — where each stage has its own default. Keep them distinct; don't collapse "commit" or "branch" into "open a PR."
 
@@ -172,7 +164,7 @@ Treat one described task as a single lifecycle — **branch → commits → one 
 - **One described task = one branch = one PR.** Don't split a single task across multiple PRs. If the task has phases or parts, they are *more commits on the same branch* — not new branches or follow-up PRs. If you catch yourself thinking "part A now, part B in a follow-up PR," stop and keep them on one branch.
 - **Fixes to an in-flight PR go *on* that PR.** If I flag a problem with an open PR, push the fix as new commits to that PR's branch and update its body — never a new branch stacked behind it. If new work feels genuinely separate from the open PR, ask before branching rather than stacking.
 
-### 1.14 Link PRs to the Issues They Resolve
+### 1.13 Link PRs to the Issues They Resolve
 
 When a PR addresses an existing issue, always include a GitHub closing keyword (`Fixes #123`, `Closes #123`, `Resolves #123`) in the PR description so that merging the PR auto-closes the issue. A bare `#123` reference renders as a hyperlink but does not close anything on merge.
 
@@ -181,14 +173,14 @@ When a PR addresses an existing issue, always include a GitHub closing keyword (
 - **Cross-repo issues need the full reference.** Use `owner/repo#123` syntax (e.g. `Fixes moltenbits/conlingo#42`) when the issue lives in a different repository.
 - **One keyword per issue.** If a PR closes multiple issues, list each with its own keyword: `Fixes #12, fixes #15, closes #18`. A single keyword followed by a comma-list does *not* close all of them.
 
-### 1.15 1Password Commit Signing — Don't Block When I'm AFK
+### 1.14 1Password Commit Signing — Don't Block When I'm AFK
 
 My commits are SSH-signed through 1Password (`gpg.format ssh`, signed by `op-ssh-sign`), and signing sometimes requires me to approve an authorization prompt in the 1Password app. When a commit fails with `error: 1Password: failed to fill whole buffer`, it almost always means I'm AFK and the prompt went unanswered — it is not a problem with your work, and not a blocker.
 
 - **Retry once, then commit unsigned and keep going.** The first failure may just be a missed prompt. If the retry also fails, commit with `git commit --no-gpg-sign` and continue the task — don't park the remaining work waiting for me to come back and approve signing.
 - **Note any unsigned commits in your summary.** List which commits went in unsigned so I can re-sign them later if I care to.
 
-### 1.16 Commit attribution
+### 1.15 Commit attribution
 
 When creating git commits or PRs on the user's behalf:
 
@@ -196,7 +188,7 @@ When creating git commits or PRs on the user's behalf:
 - **Don't add "Generated with [Claude Code]" footers to PR bodies.** Same rule for PR descriptions.
 - **Commits should appear under the user's identity only.** No assistant or tool attribution anywhere in the commit metadata.
 
-### 1.17 Agent worktrees
+### 1.16 Agent worktrees
 
 When spawning background agents with `isolation: "worktree"`:
 
@@ -207,7 +199,7 @@ When spawning background agents with `isolation: "worktree"`:
     - `git worktree move <old-path> <new-path>` to rename the worktree directory to match the slug, so `git worktree list` and Tower's sidebar are readable.
 - **Don't retroactively rename a branch whose PR is already open.** The local branch diverges from the PR's head ref and the PR is stranded.
 
-### 1.18 Never Give Time Estimates
+### 1.17 Never Give Time Estimates
 
 - **Never estimate how long work will take** No "half a day," no "a week," no human-calibrated durations of any kind.
 Agent throughput has no relationship to human effort, and these estimates are always wrong and always annoying. If sizing matters, describe the scope concretely (files touched, commits, steps) or just do the work.
