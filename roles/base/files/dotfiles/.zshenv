@@ -12,14 +12,17 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 export HOMEBREW_CASK_OPTS='--no-quarantine'
 # Disable brew's "ask mode" confirmation prompt on upgrade (default-on since Homebrew 6)
 export HOMEBREW_NO_ASK=1
-# If an attached external disk should hold the cache, use it. Prefer the T7 SSD
-# (kept connected across reinstalls); create its Homebrew dir so the cache
-# self-populates. Fall back to the SDXC card if its cache exists.
-if [[ -d /Volumes/T7 ]]; then
-    mkdir -p /Volumes/T7/Homebrew
-    export HOMEBREW_CACHE=/Volumes/T7/Homebrew
+# If an attached external disk should hold the cache, use it. Prefer ExtSSD and
+# create its Homebrew dir so the cache self-populates. Fall back to the SDXC card,
+# then the T7 SSD.
+if [[ -d /Volumes/ExtSSD ]]; then
+    mkdir -p /Volumes/ExtSSD/Homebrew
+    export HOMEBREW_CACHE=/Volumes/ExtSSD/Homebrew
 elif [[ -d /Volumes/SDXC/Homebrew ]]; then
     export HOMEBREW_CACHE=/Volumes/SDXC/Homebrew
+elif [[ -d /Volumes/T7 ]]; then
+    mkdir -p /Volumes/T7/Homebrew
+    export HOMEBREW_CACHE=/Volumes/T7/Homebrew
 fi
 
 # Needed for Krew (kubernetes)
