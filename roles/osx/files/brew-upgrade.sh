@@ -15,10 +15,16 @@ NOTIFIED_FILE="$STATE_DIR/notified"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SCRIPT_PATH="$SCRIPT_DIR/$(basename "$0")"
 
-# Match bootstrap.sh: prefer the external cache when it is available, but leave
+# Match bootstrap.sh: prefer ExtSSD, fall back to SDXC and then T7, and leave
 # HOMEBREW_CACHE undefined so Homebrew chooses its normal cache on other machines.
-if [[ -d /Volumes/SDXC/Homebrew ]]; then
+if [[ -d /Volumes/ExtSSD ]]; then
+  mkdir -p /Volumes/ExtSSD/Homebrew
+  export HOMEBREW_CACHE=/Volumes/ExtSSD/Homebrew
+elif [[ -d /Volumes/SDXC/Homebrew ]]; then
   export HOMEBREW_CACHE=/Volumes/SDXC/Homebrew
+elif [[ -d /Volumes/T7 ]]; then
+  mkdir -p /Volumes/T7/Homebrew
+  export HOMEBREW_CACHE=/Volumes/T7/Homebrew
 fi
 
 mkdir -p "$STATE_DIR"
