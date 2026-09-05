@@ -5,16 +5,7 @@
     "command": "bash /Users/jamesdh/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "swift-lsp@claude-plugins-official": true,
-    "agentbridge@agentbridge": true
-  },
-  "extraKnownMarketplaces": {
-    "agentbridge": {
-      "source": {
-        "source": "directory",
-        "path": "/Users/jamesdh/.nvm/versions/node/v24.16.0/lib/node_modules/@raysonmeng/agentbridge"
-      }
-    }
+    "swift-lsp@claude-plugins-official": true
   },
   "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,

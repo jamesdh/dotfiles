@@ -37,8 +37,3 @@
   import_tasks: codex.yml
   tags:
     - codex
-
-- name: Configure AgentBridge
-  import_tasks: agentbridge.yml
-  tags:
-    - agentbridge

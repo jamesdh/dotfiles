@@ -51,7 +51,7 @@
 # Node comes from nvm (Brewfile.nonpriority); brew's nvm.sh wrapper defaults
 # NVM_DIR to ~/.nvm. The default alias matters beyond nvm itself: .zshrc eagerly
 # prepends the default version's bin to PATH, so it decides which node — and
-# which npm globals (e.g. abg) — every fresh shell and subprocess can see. Left
+# which npm globals — every fresh shell and subprocess can see. Left
 # unmanaged it goes stale and hides globals installed under newer versions.
 - name: Check if Node {{node_default_version}} is installed
   stat:
