@@ -1,5 +1,5 @@
-model = "gpt-5.6-sol"
-model_reasoning_effort = "xhigh"
+model = "gpt-6-astra"
+model_reasoning_effort = "medium"
 [projects."/Users/jamesdh/Projects/moltenbits/spaceballs"]
 trust_level = "trusted"
 
@@ -12,5 +12,21 @@ trust_level = "trusted"
 [projects."/Users/jamesdh"]
 trust_level = "trusted"
 
+[projects."/Users/jamesdh/Projects/jamesdh/dotfiles"]
+trust_level = "trusted"
+
+[projects."/Users/jamesdh/Projects/moltenbits/growlrrr"]
+trust_level = "trusted"
+
+[projects."/Users/jamesdh/Projects/moltenbits/micspresso"]
+trust_level = "trusted"
+
+[projects."/Users/jamesdh/Projects/moltenbits/sideband"]
+trust_level = "trusted"
+
 [tui]
 status_line = ["model-with-reasoning", "context-used", "context-window-size", "used-tokens", "weekly-limit", "git-branch", "pull-request-number"]
+status_line_use_colors = true
+
+[notice]
+hide_rate_limit_model_nudge = true
