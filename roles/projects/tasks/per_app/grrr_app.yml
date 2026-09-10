@@ -55,10 +55,15 @@
         changed_when: false
         check_mode: no
 
+      # Merged, not copied: the same settings.json also carries hooks other tools
+      # register (Sideband's, via `sideband init`). A whole-file copy would drop
+      # them on every run. `replace` retires stale Growlrrr entries (an old appId)
+      # instead of accumulating them beside the current ones.
       - name: "Configure {{ item.appId }} Claude notification hooks"
-        copy:
-          dest: "{{ item.claude_settings_dir }}/settings.json"
-          content: "{{ grrr_claude_config.stdout }}\n"
+        claude_hooks:
+          path: "{{ item.claude_settings_dir }}/settings.json"
+          hooks: "{{ (grrr_claude_config.stdout | from_json).hooks }}"
+          replace: '^grrr hook '
 
       - name: "Generate {{ item.appId }} Codex notification hooks"
         command:

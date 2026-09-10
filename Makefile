@@ -97,6 +97,9 @@ compare.filtered: list.tags sudo.prime
 	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
 	ansible-playbook --check --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
 
+test: ## Run the unit tests for the custom Ansible modules in library/
+	@venv/bin/python -m unittest discover -s tests
+
 list.tags: ## Lists all playbook tags that could be filtered upon
 	@TAGS=$$(bash -c 'source venv/bin/activate && ansible-playbook --list-tags ansible.yml | grep "TASK TAGS"') ;\
 	echo $$TAGS
