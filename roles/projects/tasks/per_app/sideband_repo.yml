@@ -1,0 +1,32 @@
+---
+# One repository: sideband_repo is its path, sideband_repo_label its org/name. A worktree's .git is a file, a
+# clone's a directory; stat covers both. A repo the repos task has not cloned
+# yet (or an owner's repo removed by hand) is skipped, not failed.
+- name: "Check {{ sideband_repo_label }} is a git repository"
+  stat:
+    path: "{{ sideband_repo }}/.git"
+  register: sideband_repo_git
+
+- name: "Predict Sideband changes in {{ sideband_repo_label }}"
+  command:
+    argv: ["{{ sideband_bin }}", doctor]
+    chdir: "{{ sideband_repo }}"
+  register: sideband_doctor
+  check_mode: no
+  changed_when: sideband_doctor.stdout is search('(?m)^Not initialized|^\s+(claude|codex) (skill|hook)\s+(missing|stale)\s')
+  when: ansible_check_mode and sideband_repo_git.stat.exists
+
+- name: "Initialize Sideband in {{ sideband_repo_label }}"
+  command:
+    argv: ["{{ sideband_bin }}", init]
+    chdir: "{{ sideband_repo }}"
+  register: sideband_init
+  changed_when: sideband_init.stdout is search('(?m)^\s+(claude|codex) (skill|hook)\s+(added|updated)\s')
+  when: not ansible_check_mode and sideband_repo_git.stat.exists
+
+- name: "Remind to trust the Codex hooks in {{ sideband_repo_label }}"
+  debug:
+    msg: "Sideband registered or changed Codex hook definitions in {{ sideband_repo }}/.codex/hooks.json. Codex skips them until you run /hooks there and trust them."
+  when:
+    - sideband_init is not skipped
+    - sideband_init.stdout is search('(?m)^\s+codex hook\s+(added|updated)\s')

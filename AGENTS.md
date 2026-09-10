@@ -65,6 +65,10 @@ Vault files are in:
 
 **Committing — encrypt first:** The `*.vault.*` files are normally left **decrypted** in the working tree so they're usable day-to-day. That means they routinely show as modified in `git status` even when you haven't edited them — that diff is just the plaintext form, *not* a real change. **Always run `make secrets.encrypt` before committing** so commits never contain plaintext secrets; treat a dirty vault file as "needs encrypting," not "unrelated change." (A cleaner setup — e.g. sourcing these straight from 1Password — would avoid the decrypted-by-default state; worth exploring, but this works for now.)
 
+**Sideband (Claude Code ↔ Codex):** `roles/projects/tasks/sideband.yml` (tag `sideband`, runs after the claude/codex tasks) runs `sideband init` in every cloned repo of the active owners. `init` owns the wiring — the private `.git/sideband/` state, both user-level skills, and the hooks it merges into `<repo>/.claude/settings.json` and `<repo>/.codex/hooks.json` — and is safe to rerun, so a real run always calls it and reads its `added`/`updated` item statuses for `changed`; in check mode the command module never runs, so the read-only `sideband doctor` stands in and predicts from its `missing`/`stale` statuses. The binary comes from `Brewfile.nonpriority` (`moltenbits/tap/sideband`); `crossSessionInbound: accept` is already in `claude-settings.json`. Two things Ansible cannot do: Codex only runs hooks you have trusted via `/hooks` in that repo (the task prints a reminder whenever init adds or changes Codex definitions), and in repos that track `.claude/settings.json` the hook diff is yours to commit — the task never commits other repositories.
+
+**Custom module `library/claude_hooks`:** merges hook groups into a Claude Code settings.json instead of replacing the file, so tools that share the file (Growlrrr's notification hooks from `growlrrr init`, Sideband's from `sideband init`) never clobber each other; `replace` retires stale groups owned by the same tool (an old appId). Use it for any task that registers hooks — never `copy` a generated settings.json over an existing one. Unit tests live in `tests/`; run them with `make test`.
+
 **op-fast pilot (workspace env):** `roles/projects/files/projects.env` holds 1Password secret *references* (`op://…`), not secrets — it's committed in plaintext and is **not** a vault file. The workspace `.envrc` (`projects.envrc`) resolves the references at direnv-load time via `op-fast` (Homebrew: `cometkim/tap/op-fast`), which caches resolved values in the macOS Keychain — encrypted at rest, ~10ms reads, and still working offline within the TTL (30 days, configured in `roles/osx/files/op-fast/config.toml`). The remaining `*.vault.env` files are candidates for the same conversion, which would eventually retire the encrypt/decrypt workflow above.
 
 ## Git Workflow
@@ -83,7 +87,7 @@ Vault files are in:
 | Brewfiles | `roles/osx/files/Brewfile*` |
 | Shell dotfiles | `roles/base/files/dotfiles/` |
 | Per-app config tasks | `roles/osx/tasks/per_app/` |
-| Custom Ansible module | `library/osx_defaults.py` |
+| Custom Ansible modules | `library/osx_defaults.py`, `library/claude_hooks.py` (tests in `tests/`, `make test`) |
 | Projects config | `roles/projects/defaults/main.yml` |
 
 ## Conventions

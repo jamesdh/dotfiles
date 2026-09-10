@@ -37,3 +37,8 @@
   import_tasks: codex.yml
   tags:
     - codex
+
+- name: Configure Sideband
+  import_tasks: sideband.yml
+  tags:
+    - sideband

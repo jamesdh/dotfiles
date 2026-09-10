@@ -1,0 +1,38 @@
+---
+# Sideband (moltenbits/tap/sideband, Brewfile.nonpriority) lets Claude Code and
+# Codex talk through a journal under each repository's .git. `sideband init` is
+# the owner of the per-repo wiring — state dir, both user-level skills, and the
+# hooks it merges into <repo>/.claude/settings.json and <repo>/.codex/hooks.json —
+# and reruns are safe, so every cloned repo just gets `init`. The command module
+# never runs in check mode, so `doctor` (read-only) stands in there and predicts
+# from its item statuses; on a real run `init` always runs and its own statuses
+# decide changed. `crossSessionInbound: accept` (needed for pushes into Claude
+# Code) is already in files/claude-settings.json. What Ansible cannot do: Codex
+# only runs a hook once it is trusted via /hooks, so a reminder prints whenever
+# init adds or updates the Codex definitions.
+- name: Check for the sideband executable
+  stat:
+    path: "{{ sideband_bin }}"
+  register: sideband_bin_stat
+
+- name: Note that sideband is not installed yet
+  debug:
+    msg: "{{ sideband_bin }} is missing (installed from Brewfile.nonpriority); repository initialization is skipped until it exists."
+  when: ansible_check_mode and not sideband_bin_stat.stat.exists
+
+- name: Require sideband on a real run
+  fail:
+    msg: "{{ sideband_bin }} is missing. Install it (Brewfile.nonpriority: moltenbits/tap/sideband) before running the sideband tag."
+  when: not ansible_check_mode and not sideband_bin_stat.stat.exists
+
+- name: Initialize Sideband in each repository
+  include_tasks: per_app/sideband_repo.yml
+  loop: "{{ github | subelements('repos') }}"
+  loop_control:
+    label: "{{ item.0.org }}/{{ item.1.name }}"
+  vars:
+    sideband_repo_label: "{{ item.0.org }}/{{ item.1.name }}"
+    sideband_repo: "{{ projects_dir }}/{{ sideband_repo_label }}"
+  when:
+    - sideband_bin_stat.stat.exists
+    - item.0.org in active_project_owners

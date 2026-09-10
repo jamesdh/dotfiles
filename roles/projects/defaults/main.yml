@@ -8,6 +8,10 @@ sdks:
 
 node_default_version: "24.19.0"
 
+# Homebrew puts it here; sideband init also writes this absolute path into the
+# hooks it registers, so the two stay in step.
+sideband_bin: /opt/homebrew/bin/sideband
+
 etchosts: 
   - db
   - postgres
