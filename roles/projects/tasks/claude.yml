@@ -77,9 +77,9 @@
 # Not a symlink: Claude Code saves /model, /effort, /plugin and /config choices
 # into this file, so a linked copy drifts per machine. The repo holds only the
 # portable defaults and they are deep-merged into the live file: tracked keys
-# win, untracked keys survive. model / effortLevel / modelSettings are
-# deliberately not tracked so /model and /effort stay per-machine. A leftover
-# symlink from the old setup is read through, then replaced by a real file.
+# win, untracked keys survive. model is tracked; effortLevel / modelSettings
+# are deliberately not, so /effort stays per-machine. A leftover symlink from
+# the old setup is read through, then replaced by a real file.
 - name: Check for existing Claude settings
   stat:
     path: "{{home_dir}}/.claude/settings.json"

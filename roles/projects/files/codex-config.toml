@@ -3,7 +3,6 @@
 # the live file — [projects.*] trust levels, [hooks.state.*] trusted hashes,
 # anything Codex writes for itself — is left alone and never tracked.
 model = "gpt-6-astra"
-model_reasoning_effort = "medium"
 
 [tui]
 status_line = ["model-with-reasoning", "context-used", "context-window-size", "used-tokens", "weekly-limit", "git-branch", "pull-request-number"]

@@ -21,8 +21,8 @@
 # trusted hashes (openai/codex#14601, still open) — so a linked file drifts on
 # every machine. Instead the repo holds only portable defaults and they are
 # deep-merged into the live file: tracked keys win, untracked keys survive.
-# Changing a default is a deliberate edit to files/codex-config.toml, not a
-# /model in the TUI. A leftover symlink from the old setup is read through, then
+# model is tracked; model_reasoning_effort is deliberately not, so it stays
+# per-machine. A leftover symlink from the old setup is read through, then
 # replaced by a real file.
 - name: Check for existing Codex config
   stat:

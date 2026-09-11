@@ -4,6 +4,7 @@
     "pr": "",
     "sessionUrl": false
   },
+  "model": "claude-fable-5-1[1m]",
   "statusLine": {
     "type": "command",
     "command": "bash /Users/jamesdh/.claude/statusline-command.sh"
