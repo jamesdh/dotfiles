@@ -15,13 +15,38 @@
     force: true
 
 # Named codex-config.toml because files/ already holds other tools' configs.
-# Like claude-settings.json, Codex writes this file itself (/model, project
-# trust approvals, `codex mcp add`), so it will show as modified here after any
-# such change — that is the point. Codex resolves the symlink and edits the
-# target in place (openai/codex#9445), so the link survives those writes.
-- name: Link Codex config to ~/.codex/
-  file:
-    src: "{{role_path}}/files/codex-config.toml"
+#
+# Not a symlink: Codex writes machine-specific state into the same file it reads
+# config from — [projects.<abs path>] trust levels and [hooks.state.<abs path>]
+# trusted hashes (openai/codex#14601, still open) — so a linked file drifts on
+# every machine. Instead the repo holds only portable defaults and they are
+# deep-merged into the live file: tracked keys win, untracked keys survive.
+# Changing a default is a deliberate edit to files/codex-config.toml, not a
+# /model in the TUI. A leftover symlink from the old setup is read through, then
+# replaced by a real file.
+- name: Check for existing Codex config
+  stat:
     path: "{{home_dir}}/.codex/config.toml"
-    state: link
-    force: true
+  register: codex_config_stat
+
+- name: Read existing Codex config
+  slurp:
+    src: "{{home_dir}}/.codex/config.toml"
+  register: codex_config_existing
+  when: codex_config_stat.stat.exists
+
+- name: Remove legacy Codex config symlink
+  file:
+    path: "{{home_dir}}/.codex/config.toml"
+    state: absent
+  when: codex_config_stat.stat.islnk | default(false)
+
+- name: Merge tracked Codex defaults into ~/.codex/config.toml
+  copy:
+    content: >
+      {{ (codex_config_existing.content | b64decode | community.general.from_toml
+          if codex_config_stat.stat.exists else {})
+         | combine(lookup('file', role_path ~ '/files/codex-config.toml') | community.general.from_toml, recursive=true)
+         | community.general.to_toml }}
+    dest: "{{home_dir}}/.codex/config.toml"
+    mode: "0600"

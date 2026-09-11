@@ -72,13 +72,36 @@
     force: true
 
 # Named claude-settings.json because files/settings.json is already the VS Code
-# one. Claude Code writes this file itself (/model, /effort, /config), so it
-# will show as modified here after any such change — that is the point, but it
-# also means a settings write that replaces rather than edits the file would
-# leave a regular file behind and this task would restore the link.
-- name: Link Claude settings to ~/.claude/
-  file:
-    src: "{{role_path}}/files/claude-settings.json"
+# one.
+#
+# Not a symlink: Claude Code saves /model, /effort, /plugin and /config choices
+# into this file, so a linked copy drifts per machine. The repo holds only the
+# portable defaults and they are deep-merged into the live file: tracked keys
+# win, untracked keys survive. model / effortLevel / modelSettings are
+# deliberately not tracked so /model and /effort stay per-machine. A leftover
+# symlink from the old setup is read through, then replaced by a real file.
+- name: Check for existing Claude settings
+  stat:
     path: "{{home_dir}}/.claude/settings.json"
-    state: link
-    force: true
+  register: claude_settings_stat
+
+- name: Read existing Claude settings
+  slurp:
+    src: "{{home_dir}}/.claude/settings.json"
+  register: claude_settings_existing
+  when: claude_settings_stat.stat.exists
+
+- name: Remove legacy Claude settings symlink
+  file:
+    path: "{{home_dir}}/.claude/settings.json"
+    state: absent
+  when: claude_settings_stat.stat.islnk | default(false)
+
+- name: Merge tracked Claude defaults into ~/.claude/settings.json
+  copy:
+    content: >
+      {{ (claude_settings_existing.content | b64decode | from_json
+          if claude_settings_stat.stat.exists else {})
+         | combine(lookup('file', role_path ~ '/files/claude-settings.json') | from_json, recursive=true)
+         | to_nice_json(indent=2) }}
+    dest: "{{home_dir}}/.claude/settings.json"

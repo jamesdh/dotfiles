@@ -2,3 +2,4 @@ ansible==14.1.0
 pyobjc==11.1
 paramiko==3.5.0
 jsondiff==2.2.1
+tomlkit==0.15.1

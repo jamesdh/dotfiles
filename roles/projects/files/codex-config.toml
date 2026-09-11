@@ -1,28 +1,9 @@
+# Portable Codex defaults only. Ansible deep-merges this fragment into
+# ~/.codex/config.toml (see tasks/codex.yml); keys here win, everything else in
+# the live file — [projects.*] trust levels, [hooks.state.*] trusted hashes,
+# anything Codex writes for itself — is left alone and never tracked.
 model = "gpt-6-astra"
 model_reasoning_effort = "medium"
-[projects."/Users/jamesdh/Projects/moltenbits/spaceballs"]
-trust_level = "trusted"
-
-[projects."/Users/jamesdh/Projects/moltenbits/listenly"]
-trust_level = "trusted"
-
-[projects."/Users/jamesdh/Projects/proximal-health/platform"]
-trust_level = "trusted"
-
-[projects."/Users/jamesdh"]
-trust_level = "trusted"
-
-[projects."/Users/jamesdh/Projects/jamesdh/dotfiles"]
-trust_level = "trusted"
-
-[projects."/Users/jamesdh/Projects/moltenbits/growlrrr"]
-trust_level = "trusted"
-
-[projects."/Users/jamesdh/Projects/moltenbits/micspresso"]
-trust_level = "trusted"
-
-[projects."/Users/jamesdh/Projects/moltenbits/sideband"]
-trust_level = "trusted"
 
 [tui]
 status_line = ["model-with-reasoning", "context-used", "context-window-size", "used-tokens", "weekly-limit", "git-branch", "pull-request-number"]
