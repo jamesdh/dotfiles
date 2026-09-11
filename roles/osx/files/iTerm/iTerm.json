@@ -304,7 +304,7 @@
       },
       "Name" : "Home",
       "Load Shell Integration Automatically" : true,
-      "Rewritable" : true,
+      "Rewritable" : false,
       "Transparency" : 0.20000000000000001,
       "Horizontal Spacing" : 1,
       "Cursor Color (Dark)" : {
