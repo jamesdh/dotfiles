@@ -28,6 +28,25 @@
             "command": "grrr hook dismiss --appId Dotfiles"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/opt/homebrew/bin/sideband\" hook prompt --agent claude"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/opt/homebrew/bin/sideband\" hook session-start --agent claude"
+          }
+        ]
       }
     ]
   }

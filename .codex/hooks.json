@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/opt/homebrew/bin/sideband\" hook prompt --agent codex"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/opt/homebrew/bin/sideband\" hook session-start --agent codex"
+          }
+        ]
+      }
+    ]
+  }
+}
