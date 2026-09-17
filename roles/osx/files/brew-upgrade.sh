@@ -1,6 +1,6 @@
 #!/bin/bash
 # Two-stage Homebrew upgrades:
-#   fetch   downloads outdated packages at 02:00 without installing them;
+#   fetch   downloads outdated packages at 06:00 without installing them;
 #   watch   sends one actionable notification when the GUI session is unlocked;
 #   install runs the pending upgrade when that notification is clicked.
 set -euo pipefail
