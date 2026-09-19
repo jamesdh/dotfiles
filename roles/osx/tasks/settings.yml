@@ -65,13 +65,13 @@
   loop_control:
     label: ""
     loop_var: domain_item
-  tags: 
+  tags:
     - defaults
     - priority
 
 - import_tasks: per_app/finder.yml
-  tags: 
-    - finder
+  tags:
+    - apps
 
 - name: "Restart affected services"
   shell: "killall cfprefsd Dock Finder SystemUIServer TouchBarServer"
@@ -119,28 +119,23 @@
   tags:
     - apps
     - priority
-    - code
 
 - import_tasks: per_app/tower.yml
   tags:
     - apps
     - priority
-    - tower
 
 - import_tasks: per_app/raycast.yml
   tags:
     - apps
-    - raycast
 
 - import_tasks: per_app/jump_desktop.yml
   tags:
     - apps
-    - jump
 
 - import_tasks: per_app/istat_menus.yml
   tags:
     - apps
-    - istat
 
 - import_tasks: per_app/thaw.yml
   tags:
@@ -149,19 +144,16 @@
 - import_tasks: per_app/bettertouchtool.yml
   tags:
     - apps
-    - btt
 
 # Laptops only: the Pro license has 2 seats and there's no use for it on the desktops.
 - import_tasks: per_app/betterdisplay.yml
   when: is_laptop | bool
   tags:
     - apps
-    - betterdisplay
 
 - import_tasks: per_app/iterm.yml
   tags:
     - apps
-    - iterm
 
 - import_tasks: per_app/op_fast.yml
   tags:
@@ -171,13 +163,11 @@
 - import_tasks: per_app/spaceballs.yml
   tags:
     - apps
-    - spaceballs
 
 - include_tasks: per_app/passepartout.yml
   loop: "{{ passepartout }}"
   tags:
     - apps
-    - vpn
 
 # - import_tasks: per_app/appstore.yml
 #   tags:
@@ -186,4 +176,3 @@
 - import_tasks: per_app/docker.yml
   tags:
     - apps
-    - docker

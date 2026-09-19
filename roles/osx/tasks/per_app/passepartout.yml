@@ -16,6 +16,3 @@
       dest: "{{ home_dir }}/Downloads/{{ item.file }}"
     when: not vpn_file.stat.exists
 
-  tags:
-    - vpn
-    - passepartout

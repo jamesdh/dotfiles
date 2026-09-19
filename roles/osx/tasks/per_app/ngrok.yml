@@ -8,8 +8,6 @@
   stat:
     path: /opt/homebrew/bin/ngrok
   register: ngrok_bin
-  tags:
-    - ngrok
 
 - name: Check whether the ngrok authtoken is current
   shell: 'grep -qs "authtoken: {{ ngrok.authtoken }}" "{{ home_dir }}/Library/Application Support/ngrok/ngrok.yml"'
@@ -19,8 +17,6 @@
   check_mode: no  # read-only probe; must run in --check or the task below sees a skipped register
   no_log: true
   when: ngrok_bin.stat.exists
-  tags:
-    - ngrok
 
 - name: Configure ngrok authtoken
   command: ngrok config add-authtoken {{ ngrok.authtoken }}
@@ -28,5 +24,3 @@
   when:
     - ngrok_bin.stat.exists
     - ngrok_conf.rc != 0
-  tags:
-    - ngrok

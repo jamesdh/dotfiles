@@ -48,7 +48,8 @@ make apps.diff              # Show apps not in Brewfiles
 ### Tagging
 - `priority` - Essential items for initial setup (runs with logout after)
 - `nonpriority` - Optional items for later
-- Role/feature tags: `osx`, `ssh`, `base`, `projects`, `apps`, `iterm`, `tower`, `code`, etc.
+- Role/feature tags: `osx`, `ssh`, `base`, `projects`, `apps`, `settings`, `permissions`, `export`, etc.
+- **No per-app tags.** `apps` covers installing *and* configuring every app — the per-app imports in `roles/osx/tasks/settings.yml` are all tagged `apps`. Don't add a tag named after an app; use `apps` plus an existing functional tag (`priority`, `permissions`, `export`, `cliclick`) where one applies
 
 ## Secrets
 

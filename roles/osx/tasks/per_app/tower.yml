@@ -6,14 +6,12 @@
     path: "{{ tower.license_path }}"
   register: tower_license
   tags:
-    - tower
     - settings
     - permissions
 
 - name: Register Tower
   when: not tower_license.stat.exists
   tags:
-    - tower
     - settings
     - permissions
   block:

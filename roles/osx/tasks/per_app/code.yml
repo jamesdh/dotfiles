@@ -2,8 +2,6 @@
   stat:
     path: "{{ code.config_path }}"
   register: code_config
-  tags: 
-    - code
 
 - name: Configure VSCode
   block:
@@ -16,5 +14,4 @@
 
   when: not code_config.stat.exists
   tags:
-    - code
     - cliclick
