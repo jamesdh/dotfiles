@@ -137,9 +137,9 @@
   tags:
     - istat
 
-- import_tasks: per_app/ice.yml
+- import_tasks: per_app/thaw.yml
   tags:
-    - ice
+    - thaw
 
 - import_tasks: per_app/bettertouchtool.yml
   tags:

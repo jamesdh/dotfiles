@@ -369,10 +369,10 @@ btt:
     - name: Screen & System Audio Recording
       service: kTCCServiceScreenCapture
 
-ice:
-  settings_file: "{{ home_dir }}/iCloud/App Configs/Ice.plist"
-  # Ice's permission onboarding drives these grants; the screen-related "Allow" dialog it
-  # also shows is macOS's screen-capture re-authorization, not a third TCC service.
+thaw:
+  settings_file: "{{ home_dir }}/iCloud/App Configs/Thaw.plist"
+  # Thaw's onboarding drives these grants. Only Accessibility is required; Screen Recording
+  # is optional upstream (live item previews, wallpaper tinting) but wanted here.
   tcc_permissions:
     - name: Accessibility
       service: kTCCServiceAccessibility
