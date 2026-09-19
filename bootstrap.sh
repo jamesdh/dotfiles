@@ -62,38 +62,25 @@ wait_for_tcc() {
     fi
 }
 
-# Return 0 if <bundle_id> may send Apple Events to System Settings (the "X wants to control
-# System Settings" Automation permission). These rows live in the user TCC.db, keyed by both
-# the client and the controlled app.
-automation_granted() {
-    local bundle="$1"
-    [[ "$(sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" \
-        "SELECT auth_value FROM access WHERE service='kTCCServiceAppleEvents' AND client='$bundle' \
-         AND indirect_object_identifier='com.apple.systempreferences';")" == "2" ]]
+# Return 0 if the terminal hosting this script may send Apple Events to System Settings
+# (the "X wants to control System Settings" Automation permission). These grants live in
+# the user TCC.db, which macOS 27 moved into a protected container that not even Full Disk
+# Access can read, so test the capability instead: the event itself raises the approval
+# prompt when the grant is undecided and fails once it is denied. Only the sending app can
+# be tested this way, so a terminal is checked when it hosts this script and not before.
+host_automation_granted() {
+    osascript -e 'tell application "System Settings" to count windows' >& /dev/null
 }
 
-# The Automation prompt can only be raised by the app that sends the Apple Event, so which
-# grant we can trigger directly depends on which terminal hosts this script.
-HOST_TERM_BUNDLE=com.apple.Terminal
-[[ "$TERM_PROGRAM" == "iTerm.app" ]] && HOST_TERM_BUNDLE=com.googlecode.iterm2
+HOST_TERM=Terminal
+[[ "$TERM_PROGRAM" == "iTerm.app" ]] && HOST_TERM=iTerm
 
-# Block until <bundle_id> (arg 1) is allowed to control System Settings. If it hosts this
-# script, poke System Settings to raise the approval prompt; otherwise the osascript has to
-# be run from inside that app. A denied prompt never re-raises — fix it under
-# Privacy & Security > Automation.
-wait_for_automation() {
-    local bundle="$1" label="$2"
-    if automation_granted "$bundle"; then return; fi
-    if [[ "$bundle" == "$HOST_TERM_BUNDLE" ]]; then
-        osascript -e 'tell application "System Settings" to activate' >& /dev/null
-        echo "Approve the \"$label wants to control System Settings\" prompt."
-    else
-        echo "From inside $label, run:"
-        echo "  osascript -e 'tell application \"System Settings\" to activate'"
-        echo "and approve the control prompt."
-    fi
-    while ! automation_granted "$bundle"; do
-        echo "Waiting for $label to be allowed to control System Settings..."
+# Block until the hosting terminal is allowed to control System Settings. A denied prompt
+# never re-raises — fix it under Privacy & Security > Automation.
+wait_for_host_automation() {
+    while ! host_automation_granted; do
+        echo "Waiting for $HOST_TERM to be allowed to control System Settings" \
+            "(approve the prompt, or enable it under Privacy & Security > Automation)..."
         sleep 1
     done
 }
@@ -116,11 +103,7 @@ fi
 
 # Automation grant (control of System Settings) for whichever terminal hosts this script —
 # ansible/Claude sessions use it to script System Settings (e.g. reading pane anchors).
-if [[ "$HOST_TERM_BUNDLE" == "com.apple.Terminal" ]]; then
-    wait_for_automation com.apple.Terminal Terminal
-else
-    wait_for_automation com.googlecode.iterm2 iTerm
-fi
+wait_for_host_automation
 
 # Install Xcode Command Line Developer Tools if missing
 # Get latest at https://developer.apple.com/download/all/
@@ -251,15 +234,13 @@ python -m venv venv
 source venv/bin/activate
 pip install -q -r requirements.txt
 
-# Same grants for iTerm, in case `make install` is run from it rather than Terminal. iTerm
-# isn't pre-listed in either pane and can't be poked into the Accessibility list from this
+# The same two grants for iTerm, in case `make install` is run from it rather than Terminal
+# (its Automation grant can only be tested once it hosts this script). iTerm isn't
+# pre-listed in either pane and can't be poked into the Accessibility list from this
 # Terminal-hosted script, so add it with the pane's "+" when it opens.
 if [[ -d /Applications/iTerm.app ]]; then
     wait_for_tcc kTCCServiceSystemPolicyAllFiles com.googlecode.iterm2 Privacy_AllFiles "Full Disk Access for iTerm"
     wait_for_tcc kTCCServiceAccessibility com.googlecode.iterm2 Privacy_Accessibility "Accessibility for iTerm"
-    if [[ "$HOST_TERM_BUNDLE" != "com.googlecode.iterm2" ]]; then
-        wait_for_automation com.googlecode.iterm2 iTerm
-    fi
 else
     echo "WARNING: iTerm.app not found; skipping its Full Disk Access / Accessibility setup."
 fi

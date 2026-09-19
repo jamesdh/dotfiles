@@ -1,11 +1,11 @@
 # Query the TCC databases and set tcc_missing_permissions to the entries of tcc_permissions
 # not yet granted to tcc_client. Callers pass:
 #   tcc_client      - the app's bundle id (e.g. com.raycast.macos)
-#   tcc_permissions - list of {name, service, ...}
+#   tcc_permissions - list of {name, service, [scope: user], ...}
 # Both databases (system-wide /Library and per-user ~/Library) are queried for granted
-# services in one shot each. Reading them requires Full Disk Access (granted to the
-# terminal during bootstrap); without it sqlite exits nonzero and the task fails loudly
-# rather than misreporting every permission as missing.
+# services in one shot each. Reading the system-wide one requires Full Disk Access (granted
+# to the terminal during bootstrap); without it sqlite exits nonzero and the task fails
+# loudly rather than misreporting every permission as missing.
 - name: "Read {{ tcc_client }}'s system-wide TCC grants"
   ansible.builtin.command:
     argv:
@@ -16,6 +16,9 @@
   changed_when: false
   check_mode: no
 
+# macOS 27 moved the per-user database into a protected container that not even Full Disk
+# Access can read, so this read is allowed to fail; entries marked scope: user are then
+# unverifiable rather than missing.
 - name: "Read {{ tcc_client }}'s per-user TCC grants"
   ansible.builtin.command:
     argv:
@@ -25,8 +28,16 @@
   register: tcc_user_grants
   changed_when: false
   check_mode: no
+  failed_when: false
 
 # auth_value 2 = allowed; a denied row (0) or a missing row both mean not yet granted.
+# Unverifiable entries ride along only when a verifiable one is missing: that marks a
+# machine still being set up, where they need granting too, while a fully set-up machine
+# isn't re-prompted forever for grants that can no longer be seen.
 - name: "Determine which permissions {{ tcc_client }} still needs"
   ansible.builtin.set_fact:
-    tcc_missing_permissions: "{{ tcc_permissions | rejectattr('service', 'in', tcc_system_grants.stdout_lines + tcc_user_grants.stdout_lines) | list }}"
+    tcc_missing_permissions: "{{ tcc_missing + (tcc_unverifiable if tcc_missing | length > 0 else []) }}"
+  vars:
+    tcc_granted: "{{ tcc_system_grants.stdout_lines + (tcc_user_grants.stdout_lines if tcc_user_grants.rc == 0 else []) }}"
+    tcc_unverifiable: "{{ [] if tcc_user_grants.rc == 0 else tcc_permissions | selectattr('scope', 'defined') | selectattr('scope', 'equalto', 'user') | list }}"
+    tcc_missing: "{{ tcc_permissions | difference(tcc_unverifiable) | rejectattr('service', 'in', tcc_granted) | list }}"

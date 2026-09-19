@@ -327,7 +327,8 @@ raycast:
   # macOS permissions (TCC) Raycast needs; each must be granted by hand (TCC can't be
   # scripted). deeplink is a Raycast command that forces Raycast to request the permission
   # (so it appears in the pane / raises the prompt); pane is the Privacy & Security anchor
-  # printed as the manual fallback for the grant.
+  # printed as the manual fallback for the grant. scope: user marks a grant held in the
+  # per-user TCC database (see per_app/tcc_missing_permissions.yml).
   tcc_permissions:
     - name: Accessibility
       service: kTCCServiceAccessibility
@@ -335,18 +336,22 @@ raycast:
       deeplink: "raycast://extensions/raycast/window-management/left-half"
     - name: Calendar
       service: kTCCServiceCalendar
+      scope: user
       pane: Privacy_Calendars
       deeplink: "raycast://extensions/raycast/calendar/my-schedule"
     - name: Desktop folder
       service: kTCCServiceSystemPolicyDesktopFolder
+      scope: user
       pane: Privacy_FilesAndFolders
       deeplink: "raycast://extensions/raycast/file-search/search-files"
     - name: Documents folder
       service: kTCCServiceSystemPolicyDocumentsFolder
+      scope: user
       pane: Privacy_FilesAndFolders
       deeplink: "raycast://extensions/raycast/file-search/search-files"
     - name: Downloads folder
       service: kTCCServiceSystemPolicyDownloadsFolder
+      scope: user
       pane: Privacy_FilesAndFolders
       deeplink: "raycast://extensions/raycast/file-search/search-files"
 
@@ -396,6 +401,7 @@ jump_desktop:
       service: kTCCServiceRemoteDesktop
     - name: Microphone
       service: kTCCServiceMicrophone
+      scope: user
 
 tower:
   license_path: "{{ home_dir }}/Library/Application\ Support/com.fournova.Tower3/extendedLicenseInfo.json"
