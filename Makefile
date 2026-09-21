@@ -52,8 +52,14 @@ bootstrap:
 sudo.prime:
 	@sudo -v
 
+# Re-sync the venv whenever requirements.txt changes. bootstrap.sh only installs it once,
+# so a machine bootstrapped before a dependency was added would otherwise fail mid-run
+# (e.g. "No module named 'tomlkit'").
+venv/.requirements.stamp: requirements.txt
+	@venv/bin/pip install -q -r requirements.txt && touch $@
+
 install: ## Install everything (except UI-automation steps and settings exports)
-install: sudo.prime
+install: sudo.prime venv/.requirements.stamp
 	@source venv/bin/activate && ansible-playbook --skip-tags=cliclick,export,permissions --diff ansible.yml ;\
 
 install.homelab: ## Install Homelab on remote PC
@@ -61,38 +67,38 @@ install.homelab:
 	@source venv/bin/activate && ansible-playbook --diff homelab.yml ;\
 
 install.priority: ## Install the minimal, highest priority items
-install.priority: sudo.prime
+install.priority: sudo.prime venv/.requirements.stamp
 	@source venv/bin/activate && ansible-playbook --tags=priority --skip-tags=cliclick,export,permissions --diff ansible.yml ;\
 	launchctl reboot logout
 
 install.nonpriority: ## Install remaining, lower priority items
-install.nonpriority: sudo.prime
+install.nonpriority: sudo.prime venv/.requirements.stamp
 	@source venv/bin/activate && ansible-playbook --skip-tags=priority,cliclick,export,permissions --diff ansible.yml ;\
 
 install.cliclick: ## Run the cliclick UI-automation app setup steps (excluded from all other install targets)
-install.cliclick: sudo.prime
+install.cliclick: sudo.prime venv/.requirements.stamp
 	@source venv/bin/activate && ansible-playbook --tags=cliclick --diff ansible.yml ;\
 
 install.permissions: ## Walk through granting apps their macOS permissions (interactive; excluded from other targets)
-install.permissions:
+install.permissions: venv/.requirements.stamp
 	@source venv/bin/activate && ansible-playbook --tags=permissions --diff ansible.yml ;\
 
 settings.export: ## Export app settings (Spacebar/spaceballs) to iCloud — manual, excluded from installs
-settings.export: sudo.prime
+settings.export: sudo.prime venv/.requirements.stamp
 	@source venv/bin/activate && ansible-playbook --tags=export --diff ansible.yml ;\
 
 install.filtered: ## Install optionally filtering on given tags
-install.filtered: list.tags sudo.prime
+install.filtered: list.tags sudo.prime venv/.requirements.stamp
 	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
 	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
 	source venv/bin/activate && ansible-playbook --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
 
 compare: ## Diff checks the ansible playbooks against the current environment
-compare: sudo.prime
+compare: sudo.prime venv/.requirements.stamp
 	@ansible-playbook --check --diff --skip-tags=cliclick,export,permissions ansible.yml
 
 compare.filtered: ## Diff checks the specified playbook tags against the current environment
-compare.filtered: list.tags sudo.prime
+compare.filtered: list.tags sudo.prime venv/.requirements.stamp
 	@INCTAGS=$$(bash -c 'read -p "Included tags? (default is all): " tags; tags=$${tags:-all}; echo $$tags') ;\
 	EXCTAGS=$$(bash -c 'read -p "Excluded tags? (default is none): " tags; echo $$tags') ;\
 	ansible-playbook --check --diff --tags=$$INCTAGS --skip-tags=$$EXCTAGS ansible.yml
