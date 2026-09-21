@@ -131,6 +131,7 @@ _defcd cd.proximal ~/Projects/proximal-health/platform
 _defcd cd.mb            ~/Projects/moltenbits
 _defcd cd.mb.pages      ~/Projects/moltenbits/moltenbits.github.io
 _defcd cd.mb.conlingo   ~/Projects/moltenbits/conlingo
+_defcd cd.mb.envoy      ~/Projects/moltenbits/gradle-envoy
 _defcd cd.mb.gasp       ~/Projects/moltenbits/gasp
 _defcd cd.mb.growlrrr   ~/Projects/moltenbits/growlrrr
 _defcd cd.mb.listenly   ~/Projects/moltenbits/listenly
@@ -138,12 +139,12 @@ _defcd cd.mb.micspresso ~/Projects/moltenbits/micspresso
 _defcd cd.mb.sideband   ~/Projects/moltenbits/sideband
 _defcd cd.mb.spaceballs ~/Projects/moltenbits/spaceballs
 _defcd cd.mb.tt         ~/Projects/moltenbits/teamtempo
-_defcd cd.envoy         ~/Projects/moltenbits/gradle-envoy
 _defcd cd.mb.ttf        ~/Projects/moltenbits/teamtempo/front
 _defcd cd.mb.ttb        ~/Projects/moltenbits/teamtempo/back
 
 # moltenbits — short forms
 _defcd cd.conlingo   ~/Projects/moltenbits/conlingo
+_defcd cd.envoy      ~/Projects/moltenbits/gradle-envoy
 _defcd cd.gasp       ~/Projects/moltenbits/gasp
 _defcd cd.growlrrr   ~/Projects/moltenbits/growlrrr
 _defcd cd.listenly   ~/Projects/moltenbits/listenly
