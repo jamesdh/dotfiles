@@ -20,6 +20,7 @@
       ansible.builtin.command:
         argv: [brctl, download, "{{ istat_menus.settings_file }}"]
       changed_when: false
+      failed_when: false
 
     - name: Check the settings export exists
       ansible.builtin.stat:
