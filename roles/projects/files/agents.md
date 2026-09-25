@@ -5,7 +5,7 @@
 - [1 General Development Guidance](#1-general-development-guidance)
   - [1.1 Basic Principles of Good Software Engineering](#11-basic-principles-of-good-software-engineering)
   - [1.2 Pre-Task Test Validation](#12-pre-task-test-validation)
-  - [1.3 Testing Requirements](#13-testing-requirements)
+  - [1.3 Test-Driven Development, Always](#13-test-driven-development-always)
   - [1.4 Imports Over Fully Qualified Names](#14-imports-over-fully-qualified-names)
   - [1.5 Eagerly Search the Web](#15-eagerly-search-the-web)
   - [1.6 Convention Over Configuration](#16-convention-over-configuration)
@@ -60,15 +60,18 @@ These are the load-bearing fundamentals of design — apply them as defaults, bu
 - **Untrusted baseline.** Otherwise if the branch is not based off a green CI main, or before beginning a substantially new task on the existing branch — a new plan, a new feature, or a distinctly different direction from the prior work — run the project's test suite first. If any tests are failing, stop immediately and notify me. Failing tests should be addressed before starting new work.
 - **Instruction vs task validation.** Do NOT re-run the full test suite for every follow-up instruction within the same task. Only run the full test suite when the work is clearly a new, separate effort, or if there is legitimate concern the changes might effect the broader application. Isolated tests focused on the work at hand may be run as needed.
 
-### 1.3 Testing Requirements
+### 1.3 Test-Driven Development, Always
 
-When adding or modifying features, always write tests that validate the changes. Prefer TDD: write the tests first, then write the code that makes them pass. Writing tests first forces you to think about the API up front and naturally pushes the implementation toward smaller, more encapsulated, more testable units.
+Every change to production code starts with a test that fails. This is not a bug-fix rule; it is the default for all work. Code that is easy to test is smaller, better encapsulated, and cleaner, so writing the test first is how the design gets made, not a check bolted on after.
 
+- **The test defines the intended behavior.** Whether the change is a bug fix or a new feature, the test states what the ultimate intended behavior should be. Write it as a statement of that behavior, not as a description of the code you plan to write.
+- **The order is fixed: failing test, then code, then green.** Write the test, run it, watch it fail for the reason you expect, then write the production code to satisfy the test. The test defines what must be true.
+- **It applies no matter how the work arrived.** A feature request, a bug I reported, a finding from my review, a finding from another agent's review (Codex, a code-review skill, a CI check), something you noticed yourself while working. Do not classify the work first and then decide whether the rule applies. If you are about to change production code, the rule applies.
+- **For wrong behavior, the test must reproduce it.** When the change exists because current behavior is wrong, the failing test fails for the same reason the defect exists. A test that fails for some other reason, or that only passes after the fix, is not proof the fix addresses the defect.
 - **Favor small, composable components.** Write code in reusable, compartmentalized units that are easy to unit test.
 - **Use integration tests when unit tests aren't viable.** e.g., SwiftUI views interacting with macOS system APIs that require the running application. Write integration tests where possible, and acknowledge when manual testing is the only option.
-- **Testability is the design goal.** Code that's easy to test tends to be easier to understand, easier to compose, and easier to maintain.
 - **Cover edge and failure cases, not just the happy path.** A suite that only exercises the success path misses the bugs that actually ship. Test for null/empty inputs, boundary values, error conditions, invalid state, and concurrency where it applies.
-- **For bug fixes, write the failing test first.** Reproduce the bug in a test that fails for the same reason the bug exists, then write the fix that turns it green. This proves the fix actually addresses the bug *and* prevents it from regressing silently later.
+- **Show the failure in the summary.** When you report the work, include that the test failed before the change and passes after. If you skipped test-first for any change, say so explicitly rather than letting it pass unmentioned.
 
 ### 1.4 Imports Over Fully Qualified Names
 
