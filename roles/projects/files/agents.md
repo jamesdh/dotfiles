@@ -22,6 +22,7 @@ The rest of this document is the detail behind these. Each line names the sectio
 16. Imports over inline fully qualified names. (1.4)
 17. Lean on framework conventions. Do not restate defaults or hand-write what the framework provides. (1.6)
 18. One source of truth. Never hand-write a second copy of a set the code already defines, and never bridge a mismatch you introduced. (1.18)
+19. Check existing capabilities before building custom infrastructure. Custom code needs a concrete gap you can show. (1.19)
 
 ## Table of Contents
 
@@ -45,6 +46,7 @@ The rest of this document is the detail behind these. Each line names the sectio
   - [1.16 Agent worktrees](#116-agent-worktrees)
   - [1.17 Never Give Time Estimates](#117-never-give-time-estimates)
   - [1.18 One Source of Truth, Never a Bridge](#118-one-source-of-truth-never-a-bridge)
+  - [1.19 Check Existing Capabilities Before Building Custom Infrastructure](#119-check-existing-capabilities-before-building-custom-infrastructure)
 
 ## 1 General Development Guidance
 
@@ -243,3 +245,13 @@ When two parts of the system must agree — names, a list of kinds, which handle
 - **Generate instead of maintain.** When one side is genuinely external — a wire format, a vendor schema, a config file — derive the mapping from the source of truth at build time rather than maintaining it by hand.
 - **Reviewers treat it as a finding.** A hand-written exhaustive mapping whose arms only return a string, a constant, or a lookup is reported as a defect with a proposed alignment, not accepted as tidy code. This applies to your own review of your work before asking for another.
 - **Ask why the bridge is needed before writing it.** If the honest answer is "because I named these differently" or "because I did not want to touch the other side", the fix is on the other side.
+
+### 1.19 Check Existing Capabilities Before Building Custom Infrastructure
+
+Do not review a custom implementation's mechanics before checking why it needs to exist. This extends [1.6](#16-convention-over-configuration) beyond framework defaults to the language, established libraries, and code the project already has.
+
+- **Check existing capabilities first.** Before writing or approving custom infrastructure, check whether the language, framework, existing project code, or an established library already provides the capability. Read the relevant documentation rather than assuming it does not.
+- **Justify custom code with a concrete gap.** Prefer the existing capability when it meets the requirements. Custom code should address a limitation you can explain with evidence.
+- **Distinguish using a library from delegating the job to it.** Calling a library's low-level builders or printer does not mean the library handles the higher-level job. Check whether we are still implementing something the library — or another established tool — already provides.
+- **Apply the same standard in review.** Correctness, clean code, and passing tests do not establish that custom infrastructure is necessary. Review the choice to build it before reviewing its mechanics.
+- **Keep the investigation proportional.** This applies to infrastructure responsibilities such as schema generation, serialization, parsing, and dependency management — not every application-specific helper.
