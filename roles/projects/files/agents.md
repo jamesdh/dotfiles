@@ -1,7 +1,31 @@
 # Global Agent Instructions
 
+## Hard Rules
+
+The rest of this document is the detail behind these. Each line names the section that explains it.
+
+1. Failing test first, for every production change. The test defines the intended behavior. (1.3)
+2. Do not guess names. Read the definition or grep for it before referencing a field, method, column, config key, or flag. (1.10)
+3. Verify before asserting. Timestamps, file contents, PR numbers, and schemas come from a fresh read, not memory. (1.10)
+4. Inspect the schema before writing a query. (1.10)
+5. Search the web the moment something is unfamiliar or an error is not understood. (1.5)
+6. Do it yourself if you have the tools. Do not ask me to read, query, or run something you can. (1.7)
+7. Finish the described task. Do not stop at a self-invented checkpoint or ask whether to continue. (1.8)
+8. Once the task I asked for is done, stop. Do not start or resume other work. (1.8)
+9. Questions about feasibility or design get an answer, not an implementation. (1.9)
+10. Branch from a verified up-to-date base before the first commit. Read the rev-list counts. (1.12)
+11. Commit freely. Push and open PRs only when asked. (1.12)
+12. One task, one branch, one PR. (1.12)
+13. PRs use closing keywords for the issues they resolve. (1.13)
+14. No attribution trailers in commits or PR bodies. (1.15)
+15. Never give time estimates. (1.17)
+16. Imports over inline fully qualified names. (1.4)
+17. Lean on framework conventions. Do not restate defaults or hand-write what the framework provides. (1.6)
+18. One source of truth. Never hand-write a second copy of a set the code already defines, and never bridge a mismatch you introduced. (1.18)
+
 ## Table of Contents
 
+- [Hard Rules](#hard-rules)
 - [1 General Development Guidance](#1-general-development-guidance)
   - [1.1 Basic Principles of Good Software Engineering](#11-basic-principles-of-good-software-engineering)
   - [1.2 Pre-Task Test Validation](#12-pre-task-test-validation)
@@ -20,6 +44,7 @@
   - [1.15 Commit attribution](#115-commit-attribution)
   - [1.16 Agent worktrees](#116-agent-worktrees)
   - [1.17 Never Give Time Estimates](#117-never-give-time-estimates)
+  - [1.18 One Source of Truth, Never a Bridge](#118-one-source-of-truth-never-a-bridge)
 
 ## 1 General Development Guidance
 
@@ -141,6 +166,7 @@ Before stating any factual claim about timestamps, PR numbers, file contents, co
 - **Query external state, don't describe it from memory.** API responses, schemas, and remote state should always come from a fresh call.
 - **Earlier turns aren't ground truth.** Don't paraphrase from earlier in the conversation as if it were authoritative. Prior turns and summaries can be stale, abbreviated, or wrong.
 - **Be especially careful with relative time.** You do not have reliable awareness of the current date/time, and you regularly miscompute things like "today / yesterday / last week / X days ago." Never translate a raw timestamp into a relative phrase without checking the current date (`date`) and the event's actual timestamp side by side. When in doubt, just state the absolute date/time and let me do the math.
+- **Do not guess names.** Before referencing an existing field, method, column, config key, or flag in code, read its definition or grep for it. If you have not seen it, look it up first.
 - **Inspect database schemas before querying them.** You regularly hallucinate column or table names that sound plausible but don't exist. Before composing any non-trivial query, look up the actual schema — `\d <table>` (psql), `DESCRIBE <table>` / `SHOW COLUMNS` (MySQL), `information_schema.columns`, or whatever the equivalent is for the database in use. Don't guess column names from context; verify them.
 
 ### 1.11 Write GitHub Issues for a Cleared Context
@@ -207,3 +233,13 @@ When spawning background agents with `isolation: "worktree"`:
 
 - **Never estimate how long work will take** No "half a day," no "a week," no human-calibrated durations of any kind.
 Agent throughput has no relationship to human effort, and these estimates are always wrong and always annoying. If sizing matters, describe the scope concretely (files touched, commits, steps) or just do the work.
+
+### 1.18 One Source of Truth, Never a Bridge
+
+When two parts of the system must agree — names, a list of kinds, which handler serves which type, which column holds which field — that agreement has exactly one authoritative home. Any code whose job is to keep two copies in step is a defect, not glue.
+
+- **Recognize the smell.** A switch, map, or table that enumerates every member of a type hierarchy, enum, or schema only to pair each with a name, a constant, or a counterpart is a second copy of that set. So is a helper that translates between two vocabularies you own. Both go stale the moment a member is added, and both exist only because two things that should share an identity do not.
+- **Align instead of translate.** When the mismatch is between things you control, remove it: give them the same name, put the knowledge on the type itself, or let a convention resolve one from the other. Do not add a layer that papers over a difference you could simply not have.
+- **Generate instead of maintain.** When one side is genuinely external — a wire format, a vendor schema, a config file — derive the mapping from the source of truth at build time rather than maintaining it by hand.
+- **Reviewers treat it as a finding.** A hand-written exhaustive mapping whose arms only return a string, a constant, or a lookup is reported as a defect with a proposed alignment, not accepted as tidy code. This applies to your own review of your work before asking for another.
+- **Ask why the bridge is needed before writing it.** If the honest answer is "because I named these differently" or "because I did not want to touch the other side", the fix is on the other side.
