@@ -59,6 +59,7 @@ cask "proxyman"
 cask "selfcontrol"
 cask "slack", args: { adopt: true }
 cask "spokenly"
+cask "t3-code"
 cask "tableplus"
 cask "thaw"
 cask "the-unarchiver", args: { adopt: true }
