@@ -24,6 +24,7 @@ The rest of this document is the detail behind these. Each line names the sectio
 18. One source of truth. Never hand-write a second copy of a set the code already defines, and never bridge a mismatch you introduced. (1.18)
 19. Check existing capabilities before building custom infrastructure. Custom code needs a concrete gap you can show. (1.19)
 20. Weigh every finding against the purpose of the application before escalating it. Noticing is free. Fixing needs a consequence for what the application is for, and a fix worth that consequence. (1.20)
+21. Explain work to a reader who was not there. How it works today first, in the project's words, then each change named once and referred to by that name. (1.21)
 
 ## Table of Contents
 
@@ -49,6 +50,7 @@ The rest of this document is the detail behind these. Each line names the sectio
   - [1.18 One Source of Truth, Never a Bridge](#118-one-source-of-truth-never-a-bridge)
   - [1.19 Check Existing Capabilities Before Building Custom Infrastructure](#119-check-existing-capabilities-before-building-custom-infrastructure)
   - [1.20 Weigh Findings Against the Purpose of the Application](#120-weigh-findings-against-the-purpose-of-the-application)
+  - [1.21 Explain Work to a Reader Who Was Not There](#121-explain-work-to-a-reader-who-was-not-there)
 
 ## 1 General Development Guidance
 
@@ -270,3 +272,17 @@ A recurring failure: an agent notices a technical fault, treats "it is a finding
 - **Reviewer findings are claims, not orders.** A finding from me, from another agent, from a review skill, or from CI gets the same two questions. Challenge findings that cannot show meaningful impact, and say why, rather than implementing them to be safe.
 - **Never drop a finding silently.** A finding that fails the test is still stated: what you noticed, why you judge it not worth pursuing, in a sentence or two. That keeps the decision visible so I can override it, and it is the safeguard against this rule becoming an excuse to skip things that matter. The judgment is yours to make; the record of it is mine to see.
 - **Make the call yourself, then return to the task.** This does not mean asking me to approve every choice. Do the relevance check, state the outcome, and finish the work I actually described.
+
+### 1.21 Explain Work to a Reader Who Was Not There
+
+Agents consistently describe their work in terms nobody outside the session can decode: labels coined mid-task, fragments of identifiers detached from what they act on, vague verbs in place of the concrete action, and sentences where done, proposed, and not-started blur together. The reader of a summary, a commit message, an issue, or a PR body was not there. Write for that reader.
+
+- **Lead with how the relevant part of the system works today.** Describe the current behavior in the project's own words before describing any change to it. The reader needs the baseline before the delta means anything.
+- **Name each change once, then refer to it by that name.** The first mention gives the change a stable label and a full description of what it does to what. Every later mention uses that label and nothing else. Do not re-describe it in new words or let the label drift.
+- **Separate three statements, each in its own sentence.** How things behave without the change. What the change does. What is now true: done, proposed, or not started. A reader must never have to work out which parts of a sentence have happened and which are suggestions.
+- **Every noun names the thing the way the code, the docs, or I name it.** If the project calls it a brief, say brief. Do not rename things to describe them.
+- **Never a word lifted from a class or method name without the thing it acts on.** "The resolver" or "the handler" means nothing on its own. Say what it resolves or handles, in the project's terms.
+- **Never a label coined during the session.** A name you invented while working, however natural it felt by the end, is unknown to everyone else. Use the project's name for the thing, or describe it plainly.
+- **Never a vague verb standing in for a concrete action.** Not "updated the config" but which setting changed to which value. Not "handled the edge case" but what input now produces what result.
+- **Never a pronoun or "the first one" for anything that has a name.** "It", "this", "that one", and "the former" force the reader to resolve a reference they did not watch being made. Use the name.
+- **If a sentence would only make sense to someone who had watched the work, rewrite it.** Apply this test to every sentence in anything that outlives the session.
