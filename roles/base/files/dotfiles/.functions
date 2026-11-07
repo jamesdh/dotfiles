@@ -586,3 +586,19 @@ co() {
 coc() {
   codex resume --last --yolo "$@"
 }
+
+sideband() {
+  # Run whichever Sideband is newer: the Homebrew release, or a dev build that
+  # `just install` put in ~/.local/bin. A dev build reports the release it is
+  # built on plus -dev (1.1.1-dev), which sort -V ranks after that release and
+  # before the next, so a newer release from brew wins over a stale dev build.
+  local brew=${HOMEBREW_PREFIX:-/opt/homebrew}/bin/sideband dev=~/.local/bin/sideband
+  local bv dv
+  bv=$("$brew" --version 2>/dev/null | cut -d' ' -f2)
+  dv=$("$dev" --version 2>/dev/null | cut -d' ' -f2)
+  if [[ -n $dv && $(printf '%s\n%s\n' "$bv" "$dv" | sort -V | tail -1) == "$dv" ]]; then
+    "$dev" "$@"
+  else
+    "$brew" "$@"
+  fi
+}
