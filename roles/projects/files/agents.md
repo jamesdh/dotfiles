@@ -23,6 +23,7 @@ The rest of this document is the detail behind these. Each line names the sectio
 17. Lean on framework conventions. Do not restate defaults or hand-write what the framework provides. (1.6)
 18. One source of truth. Never hand-write a second copy of a set the code already defines, and never bridge a mismatch you introduced. (1.18)
 19. Check existing capabilities before building custom infrastructure. Custom code needs a concrete gap you can show. (1.19)
+20. Weigh every finding against the purpose of the application before escalating it. Noticing is free. Fixing needs a consequence for what the application is for, and a fix worth that consequence. (1.20)
 
 ## Table of Contents
 
@@ -47,6 +48,7 @@ The rest of this document is the detail behind these. Each line names the sectio
   - [1.17 Never Give Time Estimates](#117-never-give-time-estimates)
   - [1.18 One Source of Truth, Never a Bridge](#118-one-source-of-truth-never-a-bridge)
   - [1.19 Check Existing Capabilities Before Building Custom Infrastructure](#119-check-existing-capabilities-before-building-custom-infrastructure)
+  - [1.20 Weigh Findings Against the Purpose of the Application](#120-weigh-findings-against-the-purpose-of-the-application)
 
 ## 1 General Development Guidance
 
@@ -255,3 +257,16 @@ Do not review a custom implementation's mechanics before checking why it needs t
 - **Distinguish using a library from delegating the job to it.** Calling a library's low-level builders or printer does not mean the library handles the higher-level job. Check whether we are still implementing something the library — or another established tool — already provides.
 - **Apply the same standard in review.** Correctness, clean code, and passing tests do not establish that custom infrastructure is necessary. Review the choice to build it before reviewing its mechanics.
 - **Keep the investigation proportional.** This applies to infrastructure responsibilities such as schema generation, serialization, parsing, and dependency management — not every application-specific helper.
+
+### 1.20 Weigh Findings Against the Purpose of the Application
+
+A recurring failure: an agent notices a technical fault, treats "it is a finding" as sufficient reason to fix it, and disappears down a rabbit hole that the project never needed. The fault is often real. That is not the question. The question is whether it matters to what the application is for, and whether fixing it is worth the work. This rule gates escalation — turning a finding into work — not noticing, and not reporting.
+
+- **Keep noticing and keep reporting.** This is not permission to look less carefully or to skip things that are actually important. Every finding still gets surfaced. What changes is what happens next.
+- **Ask whether it affects the purpose of the application, not just whether it is technically wrong.** Something can work non-ideally, show a measurable fault, or be inconsistent with a stricter guarantee, and still have no effect on the result the application exists to produce. Establish who experiences it, what decision or result changes for them, and whether the change under review introduces or worsens it. If you cannot answer those for this application's purpose, it does not escalate.
+- **Then ask whether the fix is worth it.** Even a finding that does affect the end function has to earn its fix. Weigh the work, the risk, and the new surface area against the size of the consequence. A real but minor effect does not justify a large change.
+- **Judge correctness at the resolution the consumer actually needs.** Do not impose stronger guarantees — tighter timing, stricter consistency, more precision — without showing the consumer's result would differ without them.
+- **When a fix starts requiring new infrastructure, revisit the premise.** Growth in the fix is a signal the significance was never established. If the problem exists because of an unnecessary addition, remove the addition rather than building around it.
+- **Reviewer findings are claims, not orders.** A finding from me, from another agent, from a review skill, or from CI gets the same two questions. Challenge findings that cannot show meaningful impact, and say why, rather than implementing them to be safe.
+- **Never drop a finding silently.** A finding that fails the test is still stated: what you noticed, why you judge it not worth pursuing, in a sentence or two. That keeps the decision visible so I can override it, and it is the safeguard against this rule becoming an excuse to skip things that matter. The judgment is yours to make; the record of it is mine to see.
+- **Make the call yourself, then return to the task.** This does not mean asking me to approve every choice. Do the relevance check, state the outcome, and finish the work I actually described.
