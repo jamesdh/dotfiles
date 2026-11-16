@@ -1,0 +1,51 @@
+# T3 Code ships its own background service: `t3 service install` downloads a
+# pinned runtime and writes a user LaunchAgent (com.t3tools.t3code.service,
+# RunAtLoad + KeepAlive), so the server starts at login without the desktop app.
+# Installing it needs no sign-in. What stays manual, because each is a one-time
+# interactive step: `t3 pair` to authorize a browser, and `t3 up` to choose
+# remote access (T3 Connect or LAN).
+#
+# Only one server may own ~/.t3, so once the service runs the desktop app refuses
+# to open on this home. For the same reason the install waits until the desktop
+# app is closed.
+#
+# The launcher only exists after the desktop app has been opened once, so a
+# fresh machine skips this until then. Updates are left to `t3 update`: we only
+# install when the service is missing, because re-running the install from a
+# newer CLI restarts the service and stops running agent turns.
+- name: Check for the t3 CLI
+  stat:
+    path: "{{ home_dir }}/.t3/bin/t3"
+  register: t3_cli
+
+- name: Check T3 Code service status
+  command: "{{ home_dir }}/.t3/bin/t3 status --json"
+  register: t3_status
+  changed_when: false
+  check_mode: no  # read-only probe; must run in --check or the tasks below see a skipped register
+  when: t3_cli.stat.exists
+
+- name: Check whether the T3 Code desktop app is running
+  command: pgrep -f "/Contents/MacOS/T3 Code"
+  register: t3_desktop
+  failed_when: false
+  changed_when: false
+  check_mode: no  # read-only probe; must run in --check or the tasks below see a skipped register
+  when:
+    - t3_cli.stat.exists
+    - not (t3_status.stdout | from_json).service.installed
+
+- name: Install the T3 Code background service
+  command: "{{ home_dir }}/.t3/bin/t3 service install"
+  when:
+    - t3_cli.stat.exists
+    - not (t3_status.stdout | from_json).service.installed
+    - t3_desktop.rc != 0
+
+- name: T3 Code background service skipped
+  debug:
+    msg: "Quit the T3 Code desktop app and re-run to install the background service; both cannot own ~/.t3."
+  when:
+    - t3_cli.stat.exists
+    - not (t3_status.stdout | from_json).service.installed
+    - t3_desktop.rc == 0

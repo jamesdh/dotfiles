@@ -64,6 +64,8 @@
 # After the nonpriority bundle so the binary exists (and is dequarantined) first
 - import_tasks: per_app/ngrok.yml
 
+- import_tasks: per_app/t3_code.yml
+
 - import_tasks: per_app/brew_upgrade.yml
   tags:
     - homebrew
