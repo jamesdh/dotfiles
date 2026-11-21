@@ -38,6 +38,11 @@
   tags:
     - codex
 
+- name: Configure Antigravity
+  import_tasks: antigravity.yml
+  tags:
+    - antigravity
+
 - name: Configure Sideband
   import_tasks: sideband.yml
   tags:

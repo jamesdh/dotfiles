@@ -1,0 +1,12 @@
+---
+- name: Ensure ~/.gemini/config/skills/t3-review exists
+  file:
+    path: "{{home_dir}}/.gemini/config/skills/t3-review"
+    state: directory
+
+- name: Link t3-review skill to ~/.gemini/config/skills/
+  file:
+    src: "{{role_path}}/files/skills/t3-review/SKILL.md"
+    path: "{{home_dir}}/.gemini/config/skills/t3-review/SKILL.md"
+    state: link
+    force: true

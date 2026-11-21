@@ -14,6 +14,18 @@
     state: link
     force: true
 
+- name: Ensure ~/.agents/skills/t3-review exists
+  file:
+    path: "{{home_dir}}/.agents/skills/t3-review"
+    state: directory
+
+- name: Link t3-review skill to ~/.agents/skills/
+  file:
+    src: "{{role_path}}/files/skills/t3-review/SKILL.md"
+    path: "{{home_dir}}/.agents/skills/t3-review/SKILL.md"
+    state: link
+    force: true
+
 # Named codex-config.toml because files/ already holds other tools' configs.
 #
 # Not a symlink: Codex writes machine-specific state into the same file it reads
