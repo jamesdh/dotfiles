@@ -374,16 +374,6 @@ btt:
     - name: Screen & System Audio Recording
       service: kTCCServiceScreenCapture
 
-thaw:
-  settings_file: "{{ home_dir }}/iCloud/App Configs/Thaw.plist"
-  # Thaw's onboarding drives these grants. Only Accessibility is required; Screen Recording
-  # is optional upstream (live item previews, wallpaper tinting) but wanted here.
-  tcc_permissions:
-    - name: Accessibility
-      service: kTCCServiceAccessibility
-    - name: Screen & System Audio Recording
-      service: kTCCServiceScreenCapture
-
 istat_menus:
   # Settings exports live in iCloud; pick the one matching this machine's form factor.
   settings_file: "{{ home_dir }}/iCloud/App Configs/iStat Menus {{ 'Laptop' if is_laptop | bool else 'Desktop' }}.ismp7"
